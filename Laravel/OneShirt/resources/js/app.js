@@ -1,6 +1,6 @@
 import './bootstrap';
 import { createApp } from 'vue';
-import App from './components/App.vue'; // Chemin correct si le fichier est dans components/
+import App from './App.vue'; // Chemin correct si le fichier est dans components/
 import router from './router/index.js';  // Import du routeur
 
 const app = createApp(App);

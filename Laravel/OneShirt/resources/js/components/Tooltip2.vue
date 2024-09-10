@@ -1,0 +1,162 @@
+<template>
+     <!-- Tooltip About -->
+     <div class="tooltip-container-about">
+                <p class="tooltip-target-about">À Propos</p>
+                <div class="tooltip-content-about">
+                    <h2 class="tooltip-heading-about">À Propos</h2>
+                    <div class="tooltip-section-about">
+                        <h3>FAQ</h3>
+                        <p>Je réponds à toutes vos questions !</p>
+                    </div>
+                    <div class="tooltip-section-about">
+                        <h3>Avis vérifiés</h3>
+                        <p>Tous les avis du site</p>
+                    </div>
+                </div>
+            </div>
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        visible: false
+      };
+    }
+  };
+  </script>
+  
+  <style scoped>
+  
+
+/** Tooltip Boutique **/
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-target {
+    cursor: pointer;
+}
+
+.tooltip-content {
+    visibility: hidden;
+    width: 250px;
+    background-color: #ffffff;
+    color: rgb(166, 166, 166);
+    font-weight: 300;
+    text-align: left;
+    padding: 40px 30px;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1;
+    top: 100%; /* Positionne le tooltip juste en dessous de l'élément cible */
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: solid 1px rgb(197, 197, 197);
+}
+
+.tooltip-container:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-heading {
+    margin: 0;
+    font-size: 1.2em;
+    color: black;
+    font-weight: 400; /* Augmente la graisse de la police pour le heading */
+    border-bottom: 1px solid #ddd; /* Ajoute une ligne sous le heading */
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.tooltip-section {
+    margin-bottom: 10px;
+}
+
+.tooltip-section h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: black;
+    font-weight: 300;
+    margin-top: 20px;
+}
+
+.tooltip-section p {
+    margin: 5px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/** Tooltip À Propos **/
+.tooltip-container-about {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-target-about {
+    cursor: pointer;
+}
+
+.tooltip-content-about {
+    visibility: hidden;
+    width: 250px;
+    background-color: #ffffff;
+    color: rgb(166, 166, 166);
+    font-weight: 300;
+    text-align: left;
+    padding: 40px 30px;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1;
+    top: 100%; /* Positionne le tooltip juste en dessous de l'élément cible */
+    left: -85px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: solid 1px rgb(197, 197, 197);
+}
+
+.tooltip-container-about:hover .tooltip-content-about {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-heading-about {
+    margin: 0;
+    font-size: 1.2em;
+    color: black;
+    font-weight: 400; /* Augmente la graisse de la police pour le heading */
+    border-bottom: 1px solid #ddd; /* Ajoute une ligne sous le heading */
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.tooltip-section-about {
+    margin-bottom: 10px;
+}
+
+.tooltip-section-about h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: black;
+    font-weight: 300;
+    margin-top: 20px;
+}
+
+.tooltip-section-about p {
+    margin: 5px 0;
+}
+
+  </style>
+  
