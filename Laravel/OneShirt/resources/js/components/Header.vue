@@ -1,7 +1,9 @@
 <template>
   <header id="header">
     <div class="header-left-hand">
-      <img src="../../../public/images/ONSHIRT NOIR 11.png" class="logo" alt="Logo OneShirt">
+      <router-link to="/">
+        <img src="../../../public/images/ONSHIRT NOIR 11.png" class="logo" alt="Logo OneShirt">
+      </router-link>
       <input class="recherche" type="text" placeholder="Rechercher">
     </div>
     <div class="header-right-hand">
@@ -11,7 +13,9 @@
       <Tooltip2>
         <p>Contact</p>
       </Tooltip2>
-      <button>Connexion</button>
+      <button>
+        <router-link to="/connexion" style=" text-decoration: none;"> Connexion </router-link>
+      </button>
       <button>Panier 0</button>
     </div>
   </header>
@@ -29,8 +33,6 @@ export default {
 </script>
 
 <style scoped>
-/* Header style */
-
 header {
     display: flex;
     align-items: center;
@@ -45,61 +47,68 @@ header {
     z-index: 1000;
 }
 
+.header-left-hand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .header-right-hand {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.header-left-hand {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-grow: 1; 
-}
-
 .recherche {
     border: 1px solid rgb(181, 181, 181);
     padding: 10px;
-    width: 100%;
-    max-width: 500px; 
+    width: 500px;
+    max-width: 500px;
     border-radius: 100px;
     color: black;
-    transition: width 0.3s ease; 
+    transition: width 0.3s ease;
+    margin: 0 auto; /* Permet de centrer la barre de recherche */
 }
 
 .logo {
-    height: 50px; 
+    height: 50px;
     width: auto;
+}
+
+.header-middle {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center; /* Centrer la recherche */
+    padding: 0 20px;
 }
 
 @media (max-width: 768px) {
     .recherche {
-        max-width: 300px; 
+        max-width: 300px;
     }
 
     .logo {
-        height: 40px; 
+        height: 40px;
     }
 }
 
 @media (max-width: 480px) {
     .recherche {
-        max-width: 200px; 
+        max-width: 200px;
     }
 
     .logo {
-        height: 30px; 
+        height: 30px;
     }
 
     .header-right-hand {
-        gap: 10px; 
+        gap: 10px;
     }
 
     header {
-        flex-direction: column; 
+        flex-direction: column;
         height: auto;
-        align-items: flex-start; 
+        align-items: flex-start;
     }
 
     .header-left-hand, .header-right-hand {
@@ -107,13 +116,14 @@ header {
     }
 
     .header-right-hand {
-        order: 2; 
-        justify-content: flex-start; 
-        margin-top: 10px; 
+        order: 2;
+        justify-content: flex-start;
+        margin-top: 10px;
     }
 
     .header-left-hand {
-        order: 1; 
+        order: 1;
     }
 }
+
 </style>
