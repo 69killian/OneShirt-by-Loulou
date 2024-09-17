@@ -7,14 +7,12 @@
       <input class="recherche" type="text" placeholder="Rechercher">
     </div>
     <div class="header-right-hand">
-      <Tooltip1>
-        <p>Blog</p>
-      </Tooltip1>
-      <Tooltip2>
-        <p>Contact</p>
-      </Tooltip2>
+      <Tooltip1/>
+      <Tooltip2/>
+      <p>Blog</p>
+      <router-link to="/contact" style=" text-decoration: none; color: black;">Contact</router-link>
       <button>
-        <router-link to="/connexion" style=" text-decoration: none;"> Connexion </router-link>
+        <router-link to="/connexion" style=" text-decoration: none; color: black;"> Connexion </router-link>
       </button>
       <button>Panier 0</button>
     </div>
