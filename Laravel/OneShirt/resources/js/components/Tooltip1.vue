@@ -12,14 +12,17 @@
                         <p>Les Meilleures figurines aux meilleurs prix !</p>
                     </div>
                     <div class="tooltip-section">
-                        <h3>Cosplays</h3>
-                        <p>Préparez votre Japan Expo avec nos Cosplays Made In France !</p>
+                        <router-link to="/catalog" style="color: black; text-decoration: none; font-size: 1.1em;">Catalogue</router-link>
+                        <p>Visualisez tous vos produit préférés One Piece !</p>
                     </div>
+
                 </div>
             </div>
   </template>
   
   <script>
+import { RouterLink } from 'vue-router';
+
   export default {
     data() {
       return {
