@@ -9,7 +9,7 @@
     <div class="header-right-hand">
       <Tooltip1/>
       <Tooltip2/>
-      <p>Blog</p>
+      <router-link to="/blog" style=" text-decoration: none; color: black;">Blog</router-link>
       <router-link to="/contact" style=" text-decoration: none; color: black;">Contact</router-link>
       <button>
         <router-link to="/connexion" style=" text-decoration: none; color: black;"> Connexion </router-link>
