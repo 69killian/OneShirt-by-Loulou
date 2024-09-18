@@ -5,6 +5,7 @@
       <Reviews/>
       <div class="title-Products-Bottom">Tu aimera aussi :</div>
       <Products/>
+      <Newsletter/>
       <Footer/>
     </div>
   </template>
@@ -15,6 +16,7 @@
   import ProductPageComponent from "@/components/ProductPageComponent.vue";
   import Reviews from "@/components/Reviews.vue"
   import Products from "@/components/Products.vue";
+  import Newsletter from "@/components/Newsletter.vue";
   
   export default {
     components: {
@@ -23,6 +25,7 @@
       Footer,
       Reviews,
       Products,
+      Newsletter,
     },
   };
   </script>

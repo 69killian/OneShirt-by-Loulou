@@ -8,6 +8,7 @@ import Cart from '../../views/Cart.vue';
 import ProductPage from '../../views/ProductPage.vue';
 import Faq from '../../views/Faq.vue';
 import Article from '../../views/Article.vue';
+import ReviewPage from '../../views/ReviewPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
@@ -19,6 +20,7 @@ const routes = [
   { path: '/produit', name: 'ProductPage', component: ProductPage},
   { path: '/faq', name: 'Faq', component: Faq},
   { path: '/article', name: 'Article', component: Article},
+  { path: '/avis', name: 'ReviewPage', component: ReviewPage},
 ];
 
 const router = createRouter({

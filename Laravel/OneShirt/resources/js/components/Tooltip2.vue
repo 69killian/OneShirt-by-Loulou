@@ -9,7 +9,7 @@
                         <p>Je réponds à toutes vos questions !</p>
                     </div>
                     <div class="tooltip-section-about">
-                        <h3>Avis vérifiés</h3>
+                        <router-link to="/avis" style="color: black; text-decoration: none; font-size: 1.1em;">Avis vérifiés</router-link>
                         <p>Tous les avis du site</p>
                     </div>
                 </div>
