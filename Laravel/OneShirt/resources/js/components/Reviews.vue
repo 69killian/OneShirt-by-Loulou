@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="see-more-button">
-      <button>Voir plus d'avis</button>
+      <button>Ton avis compte !</button>
     </div>
   </section>
 </template>

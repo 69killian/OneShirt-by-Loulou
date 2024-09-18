@@ -43,18 +43,25 @@
           <button>Par Avis</button>
         </article>
         <article class="Products">
-          <div v-for="product in products" :key="product.id">
-            <img src="../../../public/images/Image.png" alt="" />
-            <p>{{ product.name }}</p>
-            <p>{{ product.price }}€</p>
-          </div>
+          <router-link
+            v-for="product in products"
+            :key="product.id"
+            :to="'/produit'"
+            class="product-card"
+            style="text-decoration: none; color: black;"
+          >
+            <div>
+              <img src="../../../public/images/Image.png" alt="" />
+              <p>{{ product.name }}</p>
+              <p>{{ product.price }}€</p>
+            </div>
+          </router-link>
         </article>
       </section>
     </section>
   </template>
   
   <script>
-  
   export default {
     data() {
       return {
@@ -75,12 +82,12 @@
         ],
         price: 1,
         products: [
-          { id: 1, name: 'Nom produit', price: 0 },
-          { id: 2, name: 'Text', price: 0 },
-          { id: 3, name: 'Text', price: 0 },
-          { id: 4, name: 'Text', price: 0 },
-          { id: 5, name: 'Text', price: 0 },
-          { id: 6, name: 'Text', price: 0 },
+          { id: 1, name: 'Nom produit', price: 29.99 },
+          { id: 2, name: 'Produit 2', price: 39.99 },
+          { id: 3, name: 'Produit 3', price: 19.99 },
+          { id: 4, name: 'Produit 4', price: 49.99 },
+          { id: 5, name: 'Produit 5', price: 59.99 },
+          { id: 6, name: 'Produit 6', price: 24.99 },
         ],
       };
     },
@@ -100,7 +107,6 @@
   </script>
   
   <style scoped>
-  /* Incluez ici les styles pour le composant MainCatalog.vue */
   .main-catalog {
     display: flex;
     flex-direction: row;
@@ -135,7 +141,7 @@
     border-radius: 10px;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 0.5s ease-out forwards;
+    animation: fadeInUp 0.7s ease-out forwards;
     box-sizing: border-box;
     transition: transform 0.3s ease;
   }
@@ -145,6 +151,12 @@
     max-width: 100%;
     height: auto;
     transition: max-width 0.3s ease;
+  }
+  
+  .product-card:hover div {
+    transform: scale(1.05); /* Agrandir la carte au survol */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
   }
   
   @keyframes fadeInUp {
@@ -193,4 +205,3 @@
     }
   }
   </style>
-  
