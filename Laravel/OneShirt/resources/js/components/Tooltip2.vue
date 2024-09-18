@@ -5,7 +5,7 @@
                 <div class="tooltip-content-about">
                     <h2 class="tooltip-heading-about">À Propos</h2>
                     <div class="tooltip-section-about">
-                        <h3>FAQ</h3>
+                        <router-link to="/faq" style="color: black; text-decoration: none; font-size: 1.1em;">FAQ</router-link>
                         <p>Je réponds à toutes vos questions !</p>
                     </div>
                     <div class="tooltip-section-about">
