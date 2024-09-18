@@ -14,7 +14,10 @@
       <button>
         <router-link to="/connexion" style=" text-decoration: none; color: black;"> Connexion </router-link>
       </button>
-      <button>Panier 0</button>
+      <button>
+        <router-link to="/panier" style="text-decoration: none; color: black">Panier 0</router-link>
+      </button>
+      
     </div>
   </header>
 </template>

@@ -12,7 +12,7 @@
                         <p>Les Meilleures figurines aux meilleurs prix !</p>
                     </div>
                     <div class="tooltip-section">
-                        <router-link to="/catalog" style="color: black; text-decoration: none; font-size: 1.1em;">Catalogue</router-link>
+                        <router-link to="/catalogue" style="color: black; text-decoration: none; font-size: 1.1em;">Catalogue</router-link>
                         <p>Visualisez tous vos produit préférés One Piece !</p>
                     </div>
 
