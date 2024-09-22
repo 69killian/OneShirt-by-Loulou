@@ -13,6 +13,8 @@ import Register from '../../views/Register.vue';
 import Profile from '../../views/Profile.vue';
 import PaymentConnected from '../../views/PaymentConnected.vue';
 import PaymentVisitor from '../../views/PaymentVisitor.vue';
+import PaymentError from '../../views/PaymentError.vue';
+import PaymentSucceed from '../../views/PaymentSucceed.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
@@ -29,6 +31,8 @@ const routes = [
   { path: '/profil', name: 'Profile', component: Profile},
   { path: '/paiementconnecté', name: 'PaymentConnected', component: PaymentConnected},
   { path: '/paiementvisiteur', name: 'PaymentVisitor', component: PaymentVisitor},
+  { path: '/erreurpaiement', name: 'PaymentError', component: PaymentError},
+  { path: '/paiementreussi', name: 'PaymentSucceed', component: PaymentSucceed},
 ];
 
 const router = createRouter({

@@ -47,7 +47,11 @@
         </div>
   
         <div class="button-div-payment">
-          <button type="submit">Procéder au Paiement</button>
+          <button type="submit">
+            <router-link to="/paiementreussi" style="color: black; text-decoration: none;">
+                Procéder au Paiement
+            </router-link>
+          </button>
         </div>
       </form>
     </div>

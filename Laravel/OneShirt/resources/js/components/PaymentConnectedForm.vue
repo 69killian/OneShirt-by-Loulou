@@ -46,7 +46,11 @@
         </div>
   
         <div class="button-div-payment">
-          <button type="submit">Procéder au Paiement</button>
+          <button type="submit">
+            <router-link to="/paiementreussi">
+                Procéder au Paiement
+            </router-link>
+        </button>
         </div>
       </form>
     </div>

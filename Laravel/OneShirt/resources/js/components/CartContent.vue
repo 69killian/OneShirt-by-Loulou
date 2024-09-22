@@ -47,7 +47,7 @@
           <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
           <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
           <button id="checkoutButton">
-            <button id="checkoutButton" @click="proceedToPayment">
+            <button style="color: black; text-decoration: none;" id="checkoutButton" @click="proceedToPayment">
                 Procéder au paiement
             </button>
 
