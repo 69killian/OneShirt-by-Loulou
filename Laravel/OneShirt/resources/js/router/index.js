@@ -10,6 +10,7 @@ import Faq from '../../views/Faq.vue';
 import Article from '../../views/Article.vue';
 import ReviewPage from '../../views/ReviewPage.vue';
 import Register from '../../views/Register.vue';
+import Profile from '../../views/Profile.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
@@ -23,6 +24,7 @@ const routes = [
   { path: '/article', name: 'Article', component: Article},
   { path: '/avis', name: 'ReviewPage', component: ReviewPage},
   { path: '/inscription', name: 'Register', component: Register},
+  { path: '/profil', name: 'Profile', component: Profile},
 ];
 
 const router = createRouter({

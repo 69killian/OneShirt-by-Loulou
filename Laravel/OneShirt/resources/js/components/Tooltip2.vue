@@ -12,20 +12,34 @@
                         <router-link to="/avis" style="color: black; text-decoration: none; font-size: 1.1em;">Avis vérifiés</router-link>
                         <p>Tous les avis du site</p>
                     </div>
+                    <div class="tooltip-section-about">
+                    <!-- Redirection conditionnelle -->
+                    <p @click="redirectToProfileOrLogin" style="color: black; cursor: pointer; font-size: 1.1em;">Mon profil</p>
+                    <p>Accédez à votre profil ou connectez-vous</p>
+                </div>
                 </div>
             </div>
   </template>
-  
+
   <script>
   export default {
     data() {
       return {
-        visible: false
+        isConnected: true // Simule si l'utilisateur est connecté ou non
       };
+    },
+    methods: {
+      redirectToProfileOrLogin() {
+        if (this.isConnected) {
+          this.$router.push('/profil'); // Redirige vers la page profil si connecté
+        } else {
+          this.$router.push('/connexion'); // Redirige vers la page de connexion sinon
+        }
+      }
     }
   };
   </script>
-  
+
   <style scoped>
   
 
