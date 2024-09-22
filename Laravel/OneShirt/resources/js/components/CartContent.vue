@@ -46,7 +46,11 @@
           <h2>Résumé de la Commande</h2>
           <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
           <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
-          <button id="checkoutButton">Passer à la Caisse</button>
+          <button id="checkoutButton">
+            <router-link to="/paiementconnecté">
+                Passer à la Caisse
+            </router-link>
+            </button>
           <div class="card-logos">
             <img src="../../../public/images/cprvfy9q.bmp" alt="Visa">
             <img src="../../../public/images/Mastercard-logo.svg.png" alt="MasterCard">
