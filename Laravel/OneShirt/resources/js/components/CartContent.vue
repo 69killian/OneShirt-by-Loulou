@@ -47,7 +47,7 @@
           <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
           <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
           <button id="checkoutButton">
-            <router-link to="/paiementconnecté">
+            <router-link to="/paiementvisiteur">
                 Passer à la Caisse
             </router-link>
             </button>

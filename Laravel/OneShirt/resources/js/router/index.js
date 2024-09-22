@@ -12,6 +12,7 @@ import ReviewPage from '../../views/ReviewPage.vue';
 import Register from '../../views/Register.vue';
 import Profile from '../../views/Profile.vue';
 import PaymentConnected from '../../views/PaymentConnected.vue';
+import PaymentVisitor from '../../views/PaymentVisitor.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
@@ -27,6 +28,7 @@ const routes = [
   { path: '/inscription', name: 'Register', component: Register},
   { path: '/profil', name: 'Profile', component: Profile},
   { path: '/paiementconnecté', name: 'PaymentConnected', component: PaymentConnected},
+  { path: '/paiementvisiteur', name: 'PaymentVisitor', component: PaymentVisitor},
 ];
 
 const router = createRouter({
