@@ -12,7 +12,7 @@
         
         <div>J'ai oublié mon mot de passe</div>
         <button type="submit">Connexion</button>
-        <div>Nouveau dans l'équipage ?</div>
+        <router-link to="/inscription" style="margin-top: 10px;">Nouveau dans l'équipage ?</router-link>
       </form>
     </div>
   </template>
