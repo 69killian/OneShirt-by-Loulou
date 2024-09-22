@@ -47,9 +47,10 @@
           <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
           <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
           <button id="checkoutButton">
-            <router-link to="/paiementvisiteur">
-                Passer à la Caisse
-            </router-link>
+            <button id="checkoutButton" @click="proceedToPayment">
+                Procéder au paiement
+            </button>
+
             </button>
           <div class="card-logos">
             <img src="../../../public/images/cprvfy9q.bmp" alt="Visa">
@@ -64,32 +65,41 @@
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        totalPrice: '49.98',
-        totalQuantity: 2
-      };
+export default {
+  data() {
+    return {
+      totalPrice: '49.98',
+      totalQuantity: 2,
+      isLoggedIn: false // Change cela en fonction de ton état d'authentification
+    };
+  },
+  methods: {
+    updatePrice() {
+      const quantity1 = parseInt(document.getElementById('quantity1').value);
+      const price1 = parseFloat(document.getElementById('productPrice1').textContent.replace(' €', ''));
+      const totalPrice1 = (quantity1 * price1).toFixed(2);
+  
+      const quantity2 = parseInt(document.getElementById('quantity2').value);
+      const price2 = parseFloat(document.getElementById('productPrice2').textContent.replace(' €', ''));
+      const totalPrice2 = (quantity2 * price2).toFixed(2);
+  
+      const totalQuantity = quantity1 + quantity2;
+      const grandTotal = (parseFloat(totalPrice1) + parseFloat(totalPrice2)).toFixed(2);
+  
+      this.totalPrice = grandTotal;
+      this.totalQuantity = totalQuantity;
     },
-    methods: {
-      updatePrice() {
-        const quantity1 = parseInt(document.getElementById('quantity1').value);
-        const price1 = parseFloat(document.getElementById('productPrice1').textContent.replace(' €', ''));
-        const totalPrice1 = (quantity1 * price1).toFixed(2);
-  
-        const quantity2 = parseInt(document.getElementById('quantity2').value);
-        const price2 = parseFloat(document.getElementById('productPrice2').textContent.replace(' €', ''));
-        const totalPrice2 = (quantity2 * price2).toFixed(2);
-  
-        const totalQuantity = quantity1 + quantity2;
-        const grandTotal = (parseFloat(totalPrice1) + parseFloat(totalPrice2)).toFixed(2);
-  
-        this.totalPrice = grandTotal;
-        this.totalQuantity = totalQuantity;
+    proceedToPayment() {
+      if (this.isLoggedIn) {
+        this.$router.push('/paiementconnecte');
+      } else {
+        this.$router.push('/paiementvisiteur');
       }
     }
   }
-  </script>
+}
+</script>
+
   
   <style scoped>
   /* Styles pour le composant CartContent */
