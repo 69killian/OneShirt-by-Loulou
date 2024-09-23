@@ -1,7 +1,6 @@
 <template>
     <div class="main-contact">
       <h1>Connexion</h1>
-      <p class="description">Fond d'écran One Piece</p>
   
       <form @submit.prevent="handleSubmit"> 
         <label for="name">Nom d'utilisateur ou Mail</label>
@@ -45,6 +44,8 @@ h1 {
     font-size: 5em;
     margin-bottom: 0.5em;
     margin-top: 150px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 p.description {
     font-size: 1.5em;
@@ -100,10 +101,15 @@ button[type="submit"]:hover {
 }
 
 .main-contact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url('../../../public/images/equipage.webp'); /* Remplace par le chemin de ton image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 /* Media Queries pour la Responsivité */

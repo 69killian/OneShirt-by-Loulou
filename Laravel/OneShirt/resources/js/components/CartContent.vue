@@ -113,6 +113,8 @@ export default {
   h1 {
     text-align: center;
     margin-bottom: 20px;
+    text-shadow: none;
+    color: black;
   }
   
   .cart-content {

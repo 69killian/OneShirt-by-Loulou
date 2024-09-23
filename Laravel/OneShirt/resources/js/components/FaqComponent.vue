@@ -1,4 +1,7 @@
 <template>
+    <div class="title-FAQ">
+        <h1>Foire Aux Questions (FAQ)</h1>
+      </div>
     <div class="faq-section">
       <h1>Toutes les questions fréquemment posées</h1>
       <p class="description">D’autres questions ? N’hésitez pas, contactez moi</p>
@@ -53,6 +56,51 @@
   </script>
   
   <style scoped>
+  .title-FAQ {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-image: url('../../../public/images/zoroonepiece.jpg'); /* Met ton image ici */
+    background-size: cover;
+    background-position: center;
+    padding: 250px; 
+    margin: 0;
+  }
+  
+  .title-FAQ h1 {
+    font-size: 40px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Ajout d'un effet d'ombre pour le texte */
+  }
+  
+  /* Media Queries */
+  @media (max-width: 1024px) {
+    .title-FAQ h1 {
+      font-size: 30px;
+    }
+    .title-FAQ {
+      padding: 40px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .title-FAQ h1 {
+      font-size: 24px;
+    }
+    .title-FAQ {
+      padding: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title-FAQ h1 {
+      font-size: 20px;
+    }
+    .title-FAQ {
+      padding: 20px;
+    }
+  }
   .faq-section {
     max-width: 800px;
     margin: 150px auto;
