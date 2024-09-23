@@ -41,14 +41,36 @@ export default {
 <style scoped>
 /* Background et style général */
 .Products {
+  position: relative; /* Nécessaire pour positionner les éléments à l'intérieur */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px;
-  padding: 20px;
+  padding: 60px 30px; /* Ajoute du padding pour le contenu */
   background-color: #3C98EF; /* Couleur de fond */
+  overflow: hidden; /* Pour cacher les débordements éventuels */
 }
+
+.Products::before,
+.Products::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px; /* Ajuste la hauteur de l'ombre intérieure */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent); /* Ombre en haut */
+}
+
+.Products::before {
+  top: 0; /* Positionne l'ombre en haut */
+}
+
+.Products::after {
+  bottom: 0; /* Positionne l'ombre en bas */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent); /* Ombre en bas */
+}
+
 
 /* Animation d'apparition */
 @keyframes fadeInUp {
