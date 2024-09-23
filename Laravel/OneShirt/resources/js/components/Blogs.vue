@@ -80,13 +80,23 @@ export default {
 
 /* Styles par défaut des cartes de blog */
 .blog-card {
-  border: 1px solid rgb(236, 236, 236);
-  padding: 30px;
+  border: 1px solid #2a67a1;
+  padding: 20px;
   border-radius: 10px;
-  box-sizing: border-box;
-  opacity: 0; /* Opacité initiale */
+  background-color: #2f77ba; /* Fond des cartes */
+  opacity: 0; /* Opacité initiale pour l'animation */
   transform: translateY(20px); /* Position initiale */
-  transition: opacity 0.5s ease, transform 0.5s ease; /* Transitions supplémentaires si nécessaire */
+  animation: fadeInUp 0.5s ease-out forwards; /* Animation fadeIn */
+  flex: 1 1 300px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.blog-card:hover {
+  transform: scale(1.05); /* Agrandir la carte au survol */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
 }
 
 /* Styles pour les cartes de blog avec animation */
@@ -102,6 +112,7 @@ export default {
   gap: 150px;
   margin-top: 150px;
   margin-bottom: 150px;
+  background-color: #3C98EF;
 }
 
 .blog-with-title {
@@ -122,7 +133,7 @@ export default {
   font-size: 18px;
   margin-bottom: 70px; 
   margin-top: -70px;
-  color: rgb(103, 103, 103);
+  color: black;
 }
 
 .blog-cards-container {
@@ -141,7 +152,7 @@ export default {
 }
 
 .blog-description {
-  color: rgb(103, 103, 103);
+  color: white;
   font-size: 20px;
   font-weight: 300;
 }

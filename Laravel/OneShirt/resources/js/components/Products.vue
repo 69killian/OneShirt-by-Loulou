@@ -1,140 +1,149 @@
 <template>
-    <section class="Products">
-      <div v-for="(product, index) in products" :key="index" class="product-item">
-        <img src="../../../public/images/Image.png" alt="">
-        <p>{{ product.text }}</p>
-        <p>{{ product.price }}</p>
-      </div>
-    </section>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        products: [
-          { text: 'text', price: '0€' },
-          { text: 'text', price: '0€' },
-          { text: 'text', price: '0€' },
-          { text: 'text', price: '0€' }
-        ]
-      }
-    },
-    mounted() {
-      this.animateProducts();
-    },
-    methods: {
-      animateProducts() {
-        const products = this.$el.querySelectorAll('.product-item');
-        
-        products.forEach((product, index) => {
-          setTimeout(() => {
-            product.style.opacity = '1';
-            product.style.transform = 'translateY(0)';
-          }, 100 * index);
-        });
-      }
+  <section class="Products">
+    <div v-for="(product, index) in products" :key="index" class="product-item">
+      <img src="../../../public/images/Image.png" alt="Product Images">
+      <p>{{ product.text }}</p>
+      <p>{{ product.price }}</p>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      products: [
+        { text: 'Produit 1', price: '20€' },
+        { text: 'Produit 2', price: '25€' },
+        { text: 'Produit 3', price: '30€' },
+        { text: 'Produit 4', price: '35€' }
+      ]
+    }
+  },
+  mounted() {
+    this.animateProducts();
+  },
+  methods: {
+    animateProducts() {
+      const products = this.$el.querySelectorAll('.product-item');
+
+      products.forEach((product, index) => {
+        setTimeout(() => {
+          product.style.opacity = '1';
+          product.style.transform = 'translateY(0)';
+        }, 100 * index);
+      });
     }
   }
-  </script>
-  
-  <style scoped>
-  
-/*Products Style */
+}
+</script>
 
+<style scoped>
+/* Background et style général */
 .Products {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap; /* Permet aux cartes de se réorganiser si nécessaire */
-    gap: 20px; /* Espacement entre les cartes */
-    padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  background-color: #3C98EF; /* Couleur de fond */
 }
 
+/* Animation d'apparition */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Appliquer l'animation aux éléments des produits */
-.Products div {
-    border: 1px solid rgb(236, 236, 236);
-    padding: 20px;
-    border-radius: 10px;
-    opacity: 0; /* Opacité initiale */
-    transform: translateY(20px); /* Position initiale */
-    animation: fadeInUp 0.5s ease-out forwards; /* Propriétés de l'animation */
-    flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis: La carte occupe 300px par défaut */
-    box-sizing: border-box; /* Inclure padding et border dans la taille totale */
-    transition: flex-basis 0.3s ease; /* Animation de transition pour la taille */
+/* Styles des produits */
+.product-item {
+  border: 1px solid #2a67a1;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #2f77ba; /* Fond des cartes */
+  opacity: 0; /* Opacité initiale pour l'animation */
+  transform: translateY(20px); /* Position initiale */
+  animation: fadeInUp 0.5s ease-out forwards; /* Animation fadeIn */
+  flex: 1 1 300px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
-.Products div img {
-    width: 100%; /* L'image prend toute la largeur disponible de la carte */
-    max-width: 100%; /* Largeur maximale initiale de l'image */
-    height: auto; /* Hauteur automatique pour conserver le ratio */
-    transition: max-width 0.3s ease; /* Transition pour la taille de l'image */
+.product-item:hover {
+  transform: scale(1.05); /* Agrandir la carte au survol */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
 }
 
-/* Délai d'animation pour chaque élément */
+.product-item img {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  transition: max-width 0.3s ease;
+}
+
+.product-item p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  color: #ffffff;
+}
+
+.product-item p:first-of-type {
+  font-weight: bold;
+  color: white; /* Couleur du texte des titres des produits */
+}
+
+/* Animation décalée pour chaque produit */
 .Products div:nth-child(1) {
-    animation-delay: 0.1s;
+  animation-delay: 0.1s;
 }
 .Products div:nth-child(2) {
-    animation-delay: 0.2s;
+  animation-delay: 0.2s;
 }
 .Products div:nth-child(3) {
-    animation-delay: 0.3s;
+  animation-delay: 0.3s;
 }
 .Products div:nth-child(4) {
-    animation-delay: 0.4s;
+  animation-delay: 0.4s;
 }
 
+/* Grands écrans */
 @media (min-width: 1916px) {
-    .Products div {
-        flex: 0 1 500px; /* Définit une largeur de base de 500px */
-        max-width: 550px; /* Limite la largeur maximale à 550px */
-        margin: 10px; /* Ajoute un espacement entre les divs */
-    }
-
-    .Products div img {
-        width: 100%; /* L'image occupe toute la largeur du parent */
-        height: auto; /* Maintient le ratio d'aspect de l'image */
-        max-width: 550px; /* Assure que l'image ne dépasse pas la largeur du parent */
-        transition: max-width 0.3s ease; /* Transition douce lors du redimensionnement */
-    }
+  .product-item {
+    flex: 0 1 500px;
+    max-width: 550px;
+    margin: 10px;
+  }
+  .product-item img {
+    max-width: 550px;
+  }
 }
 
-
-/* Styles pour les écrans moyens */
+/* Écrans moyens */
 @media (max-width: 768px) {
-    .Products div {
-        flex: 1 1 200px; /* La carte occupe 200px par défaut sur les écrans moyens */
-    }
-
-    .Products div img {
-        max-width: 150px; /* Réduit la taille maximale de l'image sur les écrans moyens */
-    }
+  .product-item {
+    flex: 1 1 200px;
+  }
+  .product-item img {
+    max-width: 150px;
+  }
 }
 
-/* Styles pour les petits écrans */
+/* Petits écrans */
 @media (max-width: 480px) {
-    .Products div {
-        flex: 1 1 150px; /* La carte occupe 150px par défaut sur les petits écrans */
-    }
-
-    .Products div img {
-        max-width: 100px; /* Réduit encore la taille maximale de l'image sur les petits écrans */
-    }
+  .product-item {
+    flex: 1 1 150px;
+  }
+  .product-item img {
+    max-width: 100px;
+  }
 }
-
-
-
-  </style>
-  
+</style>

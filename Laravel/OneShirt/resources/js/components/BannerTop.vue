@@ -111,6 +111,8 @@ section {
     transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
 
+
+
 .banner1 { background-color: grey; }
 .banner2 { background-color: blue; }
 .banner3 { background-color: green; }
