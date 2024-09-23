@@ -2,7 +2,7 @@
   <header id="header">
     <div class="header-left-hand">
       <router-link to="/">
-        <img src="../../../public/images/ONSHIRT NOIR 11.png" class="logo" alt="Logo OneShirt">
+        <img src="../../../public/images/logosansfondcouleuroneshirt.png" class="logo" alt="Logo OneShirt">
       </router-link>
       <input class="recherche" type="text" placeholder="Rechercher">
     </div>
@@ -38,7 +38,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: aqua;
+    background-color: #8B3CEF;
     position: fixed;
     top: 0;
     left: 0;
@@ -47,6 +47,7 @@ header {
     padding: 0 20px;
     z-index: 1000;
 }
+
 
 .header-left-hand {
     display: flex;
@@ -72,8 +73,9 @@ header {
 }
 
 .logo {
-    height: 50px;
+    height: 150px;
     width: auto;
+    margin-top: 10px;
 }
 
 .header-middle {

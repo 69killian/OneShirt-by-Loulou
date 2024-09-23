@@ -32,7 +32,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-bottom: 150px;
   }
   </style>
   

@@ -31,17 +31,31 @@
   </script>
   
   <style scoped>
-  
+  .main-contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url('../../../public/images/luffytete.png'); /* Remplace par le chemin de ton image */
+  background-size: cover; /* L'image couvre toute la surface */
+  background-position: center; /* Centre l'image */
+  background-repeat: no-repeat; /* Évite de répéter l'image */
+  min-height: 100vh; /* S'assure que l'image couvre toute la hauteur de la vue */
+  padding: 20px;
+}
+
 
 
 h1 {
     font-size: 5em;
     margin-bottom: 0.5em;
     margin-top: 150px;
+    color: white;
 }
 p.description {
     font-size: 1.5em;
     margin-bottom: 2em;
+    color: white;
 }
 form {
     background-color: white;

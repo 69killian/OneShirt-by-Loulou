@@ -48,17 +48,21 @@
   </script>
   
   <style scoped>
-  .title-blogs {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    font-size: 30px;
-    margin: 70px 0 0 0;
-    background-color: #d2d2d2;
-    padding: 150px;
-    text-align: center;
-  }
+ .title-blogs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 30px;
+  margin: 70px 0 0 0;
+  background-image: url('../../../public/images/eausunnyonepiecefond.jpg'); /* Remplace avec l'URL de ton image */
+  background-size: cover; /* L'image couvre toute la surface */
+  background-position: center; /* Centre l'image */
+  padding: 150px;
+  text-align: center;
+  color: white; /* Pour garantir que le texte reste lisible */
+}
+
   
   /* Pour les écrans de taille moyenne */
   @media (max-width: 1024px) {

@@ -97,6 +97,7 @@
     opacity: 0; /* Opacité initiale */
     transform: translateY(20px); /* Position initiale */
     transition: opacity 0.5s ease, transform 0.5s ease; /* Transitions supplémentaires si nécessaire */
+    background-color: #3C98EF;
   }
   
   /** Styles pour le footer avec animation **/
@@ -108,20 +109,20 @@
   
   .footer p {
     font-weight: 300;
-    color: rgb(116, 116, 116);
+    color: white;
     cursor: pointer;
     transition: 0.1s;
     margin-bottom: 30px;
   }
   
   .footer p:hover {
-    color: rgb(165, 165, 165);
+    color: rgb(236, 236, 236);
   }
   
   .bold-footer p {
     font-weight: bold;
     margin-bottom: 30px;
-    color: rgb(56, 56, 56);
+    color: white;
     pointer-events: none;
   }
   
