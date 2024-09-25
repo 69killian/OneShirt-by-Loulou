@@ -115,5 +115,15 @@ section {
 .banner5 { background-color: blue; }
 .banner6 { background-color: green; }
 
+.banner button {
+  background-color: rgb(48, 48, 48);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
   </style>
   

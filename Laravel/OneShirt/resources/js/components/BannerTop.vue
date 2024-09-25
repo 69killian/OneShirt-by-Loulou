@@ -16,7 +16,7 @@
       return {
         banners: [
           { title: 'Titre 1', message: 'Message d\'accueil + CTA 1', button: 'Bouton 1' },
-          { title: 'Titre 2 poto', message: 'Message d\'accueil + CTA 2', button: 'Bouton 2' },
+          { title: 'Titre 2 ', message: 'Message d\'accueil + CTA 2', button: 'Bouton 2' },
           { title: 'Titre 2', message: 'Message d\'accueil + CTA 2', button: 'Bouton 2' }
         ]
       }
@@ -107,6 +107,17 @@ section {
     align-items: center;
     background-color: grey;
     transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.banner button {
+  background-color: rgb(48, 48, 48);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 

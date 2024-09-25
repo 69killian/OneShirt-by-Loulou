@@ -12,10 +12,10 @@
       <router-link to="/blog" style=" text-decoration: none; color: black;">Blog</router-link>
       <router-link to="/contact" style=" text-decoration: none; color: black;">Contact</router-link>
       <button>
-        <router-link to="/connexion" style=" text-decoration: none; color: black;"> Connexion </router-link>
+        <router-link to="/connexion" style=" text-decoration: none; color: #a35dff;"> Connexion </router-link>
       </button>
       <button>
-        <router-link to="/panier" style="text-decoration: none; color: black">Panier 0</router-link>
+        <router-link to="/panier" style="text-decoration: none; color: #a35dff;">Panier 0</router-link>
       </button>
       
     </div>
@@ -84,6 +84,16 @@ header {
     flex-grow: 1;
     justify-content: center; /* Centrer la recherche */
     padding: 0 20px;
+}
+
+header button {
+  background-color: #36175e;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
