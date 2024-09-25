@@ -29,8 +29,9 @@ export default {
     align-items: center;
     justify-content: center;
     gap: 20px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    padding: 50px 0px;
+    background-color: rgb(25,25,25);
+    color: white;
 }
 
 .left-arrow-icon {

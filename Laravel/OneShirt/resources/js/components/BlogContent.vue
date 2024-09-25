@@ -90,7 +90,7 @@
   
   /* Styles par défaut des cartes de blog */
   .blog-card {
-    border: 1px solid rgb(236, 236, 236);
+    border: 1px solid rgb(56, 56, 56);
     padding: 20px;
     border-radius: 10px;
     box-sizing: border-box;
@@ -98,6 +98,7 @@
     transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
     text-decoration: none; /* Enlève la décoration du lien */
+    background-color: rgb(30, 30, 30);
   }
   
   /* Styles pour les cartes de blog avec animation */
@@ -130,9 +131,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    padding: 0 10px;
+    padding: 150px 10px;
+    background-color: rgb(25, 25, 25);
   }
   
   /* Styles pour les images de blog */
@@ -157,7 +157,7 @@
   /* Animation de survol des cartes */
   .blog-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(152, 152, 152, 0.2);
   }
   
   @keyframes fadeInUp {

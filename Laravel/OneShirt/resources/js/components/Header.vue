@@ -62,12 +62,13 @@ header {
 }
 
 .recherche {
-    border: 1px solid rgb(181, 181, 181);
+    border: 1px solid #692bb4;
     padding: 10px;
     width: 500px;
     max-width: 500px;
     border-radius: 100px;
-    color: black;
+    color: white;
+    background-color: #36175e;
     transition: width 0.3s ease;
     margin: 0 auto; /* Permet de centrer la barre de recherche */
 }

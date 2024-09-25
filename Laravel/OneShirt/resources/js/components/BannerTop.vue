@@ -66,15 +66,13 @@
 /* Banner top Style */
 
 section {
-    margin-top: 70px; 
-    margin-left: -9px;
+    margin-top: 69px; 
 }
 
 .banner1 {
     background-color: grey;
     position: fixed;
     left: 0;
-    right: 0;
     height: 300px;
     display: flex;
     flex-direction: column; 

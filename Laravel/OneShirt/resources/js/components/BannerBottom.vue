@@ -67,7 +67,7 @@
 
 section {
     margin-top: 0px; 
-    margin-left: -9px;
+    margin-left: 0px;
 }
 
 .banner4 {

@@ -105,12 +105,14 @@ button[type="submit"]:hover {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-image: url('../../../public/images/equipage.webp'); /* Remplace par le chemin de ton image */
-  background-size: cover;
+  background-image: url('../../../public/images/equipage.webp'); 
+  background-size: cover; /* Augmente la taille de l'image */
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  padding-bottom: 70px
 }
+
 
 /* Media Queries pour la Responsivité */
 @media (max-width: 768px) {
