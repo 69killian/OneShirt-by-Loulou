@@ -7,15 +7,15 @@
       </form>
       <div class="Pros-subscription">
         <div>
-          <p class="title-pros">Title</p>
+          <p class="title-pros">Suis nous par mail</p>
         </div>
-        <p>Body text for whatever you’d like to say. <br> Add main takeaway points, quotes, <br> anecdotes, or even a very very short <br>story. </p>
+        <p>Reçois des mails de qualité sur One Piece:<br> News, Articles, Promos sur ton univers préféré  </p>
       </div>
       <div class="Pros-subscription">
         <div>
-          <p class="title-pros">Title</p>
+          <p class="title-pros">Fini les oublis </p>
         </div>
-        <p>Body text for whatever you’d like to say. <br> Add main takeaway points, quotes, <br> anecdotes, or even a very very short <br>story. </p>
+        <p>Ne rate plus aucune occasions sur les<br> nouveautés OneShirt ! <br></p>
       </div>
     </section>
   </template>

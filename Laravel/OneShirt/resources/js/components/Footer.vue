@@ -11,36 +11,35 @@
       </div>
   
       <div class="footer-usecases">
-        <div class="bold-footer"><p>Use Cases</p></div>
-        <p>UI design</p>
-        <p>UX design</p>
-        <p>Wireframing</p>
-        <p>Diagramming</p>
-        <p>Brainstorming</p>
-        <p>Online whiteboard</p>
-        <p>Team collaboration</p>
+        <div class="bold-footer"><p>Administration</p></div>
+        <p>CroVex Admin</p>
+        <p>Statistiques</p>
+        <router-link to="/profil" style="text-decoration: none; color: white;">Mon Profil</router-link>
+        <p>Promo</p>
+        <p>Fiche Technique</p>
+        <p>Discord</p>
+        <router-link to="/contact" style="text-decoration: none; color: white;">Team collaboration</router-link>
       </div>
   
       <div class="footer-explore">
-        <div class="bold-footer"><p>Explore</p></div>
-        <p>Design</p>
-        <p>Prototyping</p>
-        <p>Development feature</p>
-        <p>Design systems</p>
-        <p>Collaboration Features</p>
-        <p>Design process</p>
-        <p>FigJam</p>
+        <div class="bold-footer"><p>Explorer</p></div>
+        <router-link to="/" style="text-decoration: none; color: white;">Accueil</router-link>
+        <router-link to="/catalogue" style="text-decoration: none; color: white;">Catalogue</router-link>
+        <router-link to="/connexion" style="text-decoration: none; color: white;">Connexion</router-link>
+        <router-link to="/inscription" style="text-decoration: none; color: white;">Inscription</router-link>
+        <router-link to="/blog" style="text-decoration: none; color: white;">Blog</router-link>
+        <router-link to="/panier" style="text-decoration: none; color: white;">Panier</router-link>
+        <router-link to="/faq" style="text-decoration: none; color: white;">Faq</router-link>
       </div>
   
       <div class="footer-ressources">
         <div class="bold-footer"><p>Ressources</p></div>
-        <p>Blog</p>
-        <p>Best practices</p>
-        <p>Colors</p>
-        <p>Color wheel</p>
-        <p>Support</p>
-        <p>Developpers</p>
-        <p>Ressource library</p>
+        <router-link to="/avis" style="text-decoration: none; color: white;">Avis</router-link>
+        <a target="_blank" href="https://www.youtube.com/@LoulouLeZouzou" style="text-decoration: none; color: white;">Chaine de Loulou</a>
+        <a target="_blank" href="https://www.crunchyroll.com/fr/series/GRMG8ZQZR/one-piece?srsltid=AfmBOop2EGWehl0Lw8r5stIPKQz8XdScsG3_f6-jHR43QrkdUzMoEn7A" style="text-decoration: none; color: white;">One Piece</a>
+        <router-link to="/contact" style="text-decoration: none; color: white;">Support</router-link>
+        <p>Developpeurs</p>
+        <a target="_blank" href="https://fr.wikipedia.org/wiki/One_Piece" style="text-decoration: none; color: white;">Librairie de Ressources</a>
       </div>
     </section>
   </template>
@@ -106,25 +105,29 @@
     transform: translateY(0); /* Réinitialise la position */
     animation: fadeInUp 0.5s ease-out forwards; /* Propriétés de l'animation */
   }
-  
-  .footer p {
-    font-weight: 300;
-    color: white;
-    cursor: pointer;
-    transition: 0.1s;
-    margin-bottom: 30px;
-  }
-  
-  .footer p:hover {
-    color: rgb(236, 236, 236);
-  }
-  
-  .bold-footer p {
-    font-weight: bold;
-    margin-bottom: 30px;
-    color: white;
-    pointer-events: none;
-  }
+  .footer p,
+.footer a {
+  display: block; /* Pour que les router-link se comportent comme des <p> */
+  font-weight: 300;
+  color: white;
+  cursor: pointer;
+  transition: 0.1s;
+  margin-bottom: 30px;
+  text-decoration: none; /* Supprimer les soulignements des liens */
+}
+
+.footer p:hover,
+.footer a:hover {
+  color: rgb(236, 236, 236);
+}
+
+.bold-footer p {
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: white;
+  pointer-events: none;
+}
+
   
   .footer-oneshirt-logo img {
     height: 50px;

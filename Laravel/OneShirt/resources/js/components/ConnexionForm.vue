@@ -9,9 +9,9 @@
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" v-model="password" required placeholder="Mot de passe">
         
-        <div>J'ai oublié mon mot de passe</div>
+        <router-link to="/recuperation" style="margin-bottom: 10px; text-decoration: none;">J'ai oublié mon mot de passe</router-link>
         <button type="submit">Connexion</button>
-        <router-link to="/inscription" style="margin-top: 10px;">Nouveau dans l'équipage ?</router-link>
+        <router-link to="/inscription" style="margin-top: 10px; text-decoration: none;">Nouveau dans l'équipage ?</router-link>
       </form>
     </div>
   </template>
