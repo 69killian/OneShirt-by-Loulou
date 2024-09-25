@@ -47,7 +47,7 @@
           <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
           <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
           <button id="checkoutButton">
-            <button style="color: black; text-decoration: none;" id="checkoutButton" @click="proceedToPayment">
+            <button style="color: white; text-decoration: none;" id="checkoutButton" @click="proceedToPayment">
                 Procéder au paiement
             </button>
 
@@ -186,17 +186,18 @@ export default {
   
   #checkoutButton {
     width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
+    padding: 5px;
+    background-color: #8B3CEF;
     color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
+    transition: 0.1s;
   }
   
   #checkoutButton:hover {
-    background-color: #45a049;
+    background-color: #562795;
   }
   
   .card-logos {
