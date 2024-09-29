@@ -27,12 +27,12 @@
     data() {
       return {
         products: [
-  { id: 1, name: 'Nom produit', price: 29.99, image: '/images/luffyvskaido.webp' },
-  { id: 2, name: 'Produit 2', price: 39.99, image: '/images/luffygear4.webp' },
-  { id: 3, name: 'Produit 3', price: 19.99, image: '/images/luffyhakionigashima.webp' },
-  { id: 4, name: 'Produit 4', price: 49.99, image: '/images/zorosantoryuhaki.webp' },
-  { id: 5, name: 'Produit 5', price: 59.99, image: '/images/lffygear5.webp' },
-  { id: 6, name: 'Produit 6', price: 24.99, image: '/images/zoroarcwano.webp' },
+  { id: 1, name: 'Luffy vs Kaido Onigashima', price: 129.99, image: '/images/luffyvskaido.webp' },
+  { id: 2, name: 'Luffy Gear 4', price: 79.99, image: '/images/luffygear4.webp' },
+  { id: 3, name: 'Luffy Haki Onigashima', price: 224.99, image: '/images/luffyhakionigashima.webp' },
+  { id: 4, name: 'Zoro Haki Santoryu', price: 159.99, image: '/images/zorosantoryuhaki.webp' },
+  { id: 5, name: 'Luffy Gear 5', price: 55, image: '/images/lffygear5.webp' },
+  { id: 6, name: 'Zoro Arc Wano', price: 87, image: '/images/zoroarcwano.webp' },
 ],
 
       };
