@@ -18,6 +18,7 @@ import PaymentSucceed from '../../views/PaymentSucceed.vue';
 import MotdePasseOubli from '../../views/MotdePasseOubli.vue';
 import NouveauMotdePasse from '../../views/NouveauMotdePasse.vue';
 import Figurines from '../../views/Figurines.vue';
+import Vetements from '../../views/Vetements.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
@@ -39,6 +40,7 @@ const routes = [
   { path: '/recuperation', name: 'MotdePasseOubli', component: MotdePasseOubli},
   { path: '/changementdemotdepasse', name: 'NouveauMotdePasse', component: NouveauMotdePasse},
   { path: '/figurines', name: 'Figurines', component: Figurines},
+  { path: '/vetements', name: 'Vetements', component: Vetements},
 ];
 
 const router = createRouter({

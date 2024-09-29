@@ -4,7 +4,7 @@
                 <div class="tooltip-content">
                     <h2 class="tooltip-heading">Boutique</h2>
                     <div class="tooltip-section">
-                        <h3>T-shirt</h3>
+                      <router-link to="/vetements" style="color: black; text-decoration: none; font-size: 1.1em;">Vêtements</router-link>
                         <p>Découvrez notre gamme de T-shirt</p>
                     </div>
                     <div class="tooltip-section">

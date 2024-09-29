@@ -59,15 +59,20 @@
   }
   
   .Products div {
-    border: 1px solid rgb(236, 236, 236);
-    padding: 20px;
-    border-radius: 10px;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.7s ease-out forwards;
-    box-sizing: border-box;
-    transition: transform 0.3s ease;
-  }
+  border: 1px solid rgb(236, 236, 236);
+  padding: 20px;
+  border-radius: 10px;
+  opacity: 1; /* Assure-toi que l'opacité est à 1 pour que la carte soit visible */
+  transform: translateY(0);
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Ajoute une transition pour l'ombre */
+}
+
+.product-card:hover div {
+  transform: scale(1.05); /* Agrandir la carte au survol */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
+  transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 0.5 seconde */
+}
   
   .Products div img {
     width: 100%;
@@ -76,11 +81,6 @@
     transition: max-width 0.3s ease;
   }
   
-  .product-card:hover div {
-    transform: scale(1.05); /* Agrandir la carte au survol */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
-    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
-  }
   
   @keyframes fadeInUp {
     from {
