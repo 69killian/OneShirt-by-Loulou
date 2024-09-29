@@ -76,48 +76,48 @@ export default {
       reviews: [
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
+          title: 'Super Lourd',
+          body: 'Super site et supers produits pour une super Commu !',
+          avatar: 'images/Logoloulou.jpg',
+          reviewerName: 'Loulou',
+          date: '20/09/2024'
         },
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
+          title: 'Test',
+          body: "c'est juste un test",
           avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
+          reviewerName: 'Avatar test',
+          date: '29/09/2024'
         },
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
+          title: 'Pas mal !',
+          body: "Je n'avais pas vu un site One Piece de Blog aussi bien avant !",
+          avatar: 'images/luffytete.png',
+          reviewerName: 'Luffy54',
+          date: '10/08/20204'
         },{
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
+          title: 'Top !',
+          body: '',
+          avatar: 'images/Robin.webp',
+          reviewerName: 'NikoRobinu16',
+          date: '01/08/2024'
+        },
+        {
+          image: 'images/rv588m47.bmp',
+          title: 'Des produits de qualité',
+          body: 'Des produits de qualité pour un site neuf et propre merci OneShirt',
+          avatar: 'images/zoroonepiece.jpg',
           reviewerName: 'Reviewer Name',
           date: 'Date'
         },
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
-        },
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
+          title: 'Jimbedu69',
+          body: 'Incroyable, les figurines sont Made in France !',
+          avatar: 'images/jimbe.jpg',
           reviewerName: 'Reviewer Name',
           date: 'Date'
         },
@@ -239,6 +239,8 @@ export default {
 .avatar {
   height: 45px;
   width: 45px;
+  border-radius: 100px;
+  object-fit: cover;
 }
 
 .reviewer-info {

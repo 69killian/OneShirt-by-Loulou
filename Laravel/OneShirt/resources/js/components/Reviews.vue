@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="see-more-button">
-      <button>Ton avis compte !</button>
+      <router-link to="/avis" style="color: white;"><button>Ton avis compte !</button></router-link>
     </div>
   </section>
 </template>
@@ -34,30 +34,30 @@ export default {
   data() {
     return {
       reviews: [
-        {
+      {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
+          title: 'Super Lourd',
+          body: 'Super site et supers produits pour une super Commu !',
+          avatar: 'images/Logoloulou.jpg',
+          reviewerName: 'Loulou',
+          date: '20/09/2024'
         },
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
+          title: 'Test',
+          body: "c'est juste un test",
           avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
+          reviewerName: 'Avatar test',
+          date: '29/09/2024'
         },
         {
           image: 'images/rv588m47.bmp',
-          title: 'Titre Revue',
-          body: 'Body text',
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
-        }
+          title: 'Pas mal !',
+          body: "Je n'avais pas vu un site One Piece de Blog aussi bien avant !",
+          avatar: 'images/luffytete.png',
+          reviewerName: 'Luffy54',
+          date: '10/08/20204'
+        },
       ],
       scrollPosition: 0
     };

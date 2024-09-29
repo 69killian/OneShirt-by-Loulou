@@ -1,9 +1,9 @@
 <template>
   <section class="Products">
-    <div v-for="(product, index) in products" :key="index" class="product-item">
-      <img src="../../../public/images/Image.png" alt="Product Images">
-      <p>{{ product.text }}</p>
-      <p>{{ product.price }}</p>
+    <div v-for="(product, index) in products" :key="product.id" class="product-item">
+      <img :src="product.image" alt="Product Images">
+      <p>{{ product.name }}</p>
+      <p>{{ product.price }}€</p>
     </div>
   </section>
 </template>
@@ -13,10 +13,11 @@ export default {
   data() {
     return {
       products: [
-        { text: 'Produit 1', price: '20€' },
-        { text: 'Produit 2', price: '25€' },
-        { text: 'Produit 3', price: '30€' },
-        { text: 'Produit 4', price: '35€' }
+        { id: 1, name: 'Luffy vs Kaido Onigashima', price: '129.99', image: '/images/luffyvskaido.webp' },
+        { id: 2, name: 'Luffy Gear 4', price: '79.99', image: '/images/luffygear4.webp' },
+        { id: 3, name: 'Luffy Haki Onigashima', price: '224.99', image: '/images/luffyhakionigashima.webp' },
+        { id: 4, name: 'Zoro Haki Santoryu', price: '159.99', image: '/images/zorosantoryuhaki.webp' },
+        // Vous pouvez ajouter d'autres produits ici si nécessaire
       ]
     }
   },
@@ -71,7 +72,6 @@ export default {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent); /* Ombre en bas */
 }
 
-
 /* Animation d'apparition */
 @keyframes fadeInUp {
   from {
@@ -101,8 +101,8 @@ export default {
 
 .product-item:hover {
   transform: scale(1.05); /* Agrandir la carte au survol */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
-    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ajouter une ombre */
+  transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transition de 1 seconde */
 }
 
 .product-item img {
