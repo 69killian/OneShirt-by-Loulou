@@ -8,7 +8,7 @@
                         <p>Découvrez notre gamme de T-shirt</p>
                     </div>
                     <div class="tooltip-section">
-                      <router-link to="/" style="color: black; text-decoration: none; font-size: 1.1em;">Figurines</router-link>
+                      <router-link to="/figurines" style="color: black; text-decoration: none; font-size: 1.1em;">Figurines</router-link>
                         <p>Les Meilleures figurines aux meilleurs prix !</p>
                     </div>
                     <div class="tooltip-section">
