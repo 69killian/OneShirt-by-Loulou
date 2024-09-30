@@ -1,135 +1,117 @@
 <template>
-    <section class="banner-wrapper">
-      <div class="banner" v-for="(banner, index) in banners" :key="index">
-        <div>
-          <p>{{ banner.title }}</p>
-          <p>{{ banner.message }}</p>
-        </div>
-        <button>{{ banner.button }}</button>
-      </div>
-    </section>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        banners: [
-          { title: 'Titre 1', message: 'Message d\'accueil + CTA 1', button: 'Bouton 1' },
-          { title: 'Titre 2 ', message: 'Message d\'accueil + CTA 2', button: 'Bouton 2' },
-          { title: 'Titre 2', message: 'Message d\'accueil + CTA 2', button: 'Bouton 2' }
-        ]
+  <section class="banner-wrapper">
+    <div 
+      :class="['banner', 'banner' + (index + 1)]" 
+      v-for="(banner, index) in banners" 
+      :key="index"
+      @click="redirectToFigurines(index)"
+      @mouseover="pauseAnimation; zoomIn($event)"
+      @mouseleave="resumeAnimation; zoomOut($event)"
+    >
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      banners: [
+        { title: 'Titre 1' },
+        { title: 'Titre 2' },
+        { title: 'Titre 3' }
+      ],
+      currentBannerIndex: 0,
+      animationInterval: null,
+    };
+  },
+  mounted() {
+    this.startTopBannerAnimation();
+  },
+  methods: {
+    startTopBannerAnimation() {
+      const topBanners = this.$el.querySelectorAll('.banner');
+      const delay = 3000;
+      const animationDuration = 1000;
+
+      const animate = () => {
+        topBanners.forEach((banner, i) => {
+          banner.style.transition = `transform ${animationDuration}ms ease-in-out`;
+          banner.style.transform = `translateX(${(i - this.currentBannerIndex) * 100}%)`;
+        });
+
+        this.currentBannerIndex = (this.currentBannerIndex + 1) % topBanners.length;
+      };
+
+      animate();
+      this.animationInterval = setInterval(animate, delay);
+    },
+    pauseAnimation() {
+      clearInterval(this.animationInterval); // Arrête le défilement
+    },
+    resumeAnimation() {
+      this.startTopBannerAnimation(); // Relance le défilement
+    },
+    redirectToFigurines(index) {
+      // Vérifie si l'index est 2 pour rediriger vers /vetements
+      if (index === 2) {
+        this.$router.push('/vetements');
+      } else {
+        this.$router.push('/figurines');
       }
     },
-    mounted() {
-      this.startTopBannerAnimation();
+    zoomIn(event) {
+      event.target.style.transform = 'scale(1.2)'; // Zoom in
+      event.target.style.transition = 'transform 0.5s ease'; // Transition
     },
-    methods: {
-      startTopBannerAnimation() {
-        const topBanners = this.$el.querySelectorAll('.banner');
-        const delay = 3000;
-        const animationDuration = 1000;
-        
-        let currentBannerIndex = 0;
-  
-        function animate() {
-          topBanners.forEach(banner => {
-            banner.style.transition = `transform ${animationDuration}ms ease-in-out`;
-          });
-  
-          topBanners.forEach((banner, i) => {
-            banner.style.transform = `translateX(${(i - currentBannerIndex) * 100}%)`;
-          });
-  
-          const nextBannerIndex = (currentBannerIndex + 1) % topBanners.length;
-  
-          setTimeout(() => {
-            topBanners.forEach((banner, i) => {
-              banner.style.transform = `translateX(${(i - nextBannerIndex) * 100}%)`;
-            });
-  
-            currentBannerIndex = nextBannerIndex;
-  
-            setTimeout(animate, delay);
-          }, animationDuration);
-        }
-  
-        animate();
-      }
-    }
-  }
-  </script>
-  
-  <style scoped>
-  
+    zoomOut(event) {
+      event.target.style.transform = 'scale(1)'; // Zoom out
+      event.target.style.transition = 'transform 0.5s ease'; // Transition
+    },
+  },
+};
+</script>
 
-/* Banner top Style */
-
+<style scoped>
+/* Style général */
 section {
-    margin-top: 69px; 
+  margin-top: 69px;
 }
 
-.banner1 {
-    background-color: grey;
-    position: fixed;
-    left: 0;
-    height: 300px;
-    display: flex;
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-}
-
-.banner1 div {
-    text-align: center;
-    margin-bottom: 20px; 
-}
-
-.banner1 button {
-    margin-top: 10px; 
-}
-
-/* Style for Banner transitions */
 .banner-wrapper {
-    position: relative;
-    overflow: hidden; 
-    width: 100vw;
-    height: 300px; 
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: 300px;
 }
 
 .banner {
-    position: absolute;
-    width: 100vw;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: grey;
-    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-}
-
-.banner button {
-  background-color: rgb(48, 48, 48);
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 7px;
-  font-size: 16px;
-  font-weight: 500;
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccc;
   cursor: pointer;
 }
 
+/* Ajoute les images de fond pour chaque bannière */
+.banner1 {
+  background-image: url('/images/banniere1-2.png');
+  background-size: cover;
+  background-position: center;
+}
 
+.banner2 {
+  background-image: url('/images/banniere2-2.png');
+  background-size: cover;
+  background-position: center;
+}
 
-.banner1 { background-color: grey; }
-.banner2 { background-color: blue; }
-.banner3 { background-color: green; }
-
-
-
-
-
-
-  </style>
-  
+.banner3 {
+  background-image: url('/images/banniere3.png');
+  background-size: cover;
+  background-position: center;
+}
+</style>
