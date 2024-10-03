@@ -90,15 +90,15 @@ export default {
 /* Styles de bannière */
 
 section {
-  margin-top: 0px; 
+  margin-top: 0px;
   margin-left: 0px;
 }
 
 .banner-wrapper {
   position: relative;
-  overflow: hidden; 
+  overflow: hidden;
   width: 100vw;
-  height: 300px; 
+  height: 300px;
 }
 
 .banner {
@@ -111,10 +111,15 @@ section {
   align-items: center;
   background: rgb(255, 255, 255);
   opacity: 1;
+  visibility: visible; /* Visible uniquement pour la bannière active */
+  pointer-events: auto; /* Permettre les interactions uniquement sur la bannière active */
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
 
 .banner.fade {
-  opacity: 0; 
+  opacity: 0;
+  visibility: hidden; /* Masquer totalement les éléments non visibles */
+  pointer-events: none; /* Désactiver les interactions sur les bannières non visibles */
 }
 
 .banner-content {
@@ -136,24 +141,28 @@ section {
   margin-bottom: 20px; /* Espace sous le titre */
   color: black; /* Couleur noire pour le titre */
   text-shadow: none;
+  cursor: default; /* Curseur normal pour le texte non-cliquable */
 }
-
 
 .banner-description {
   font-size: 1.2rem; /* Taille du texte */
   line-height: 1.5; /* Hauteur de ligne pour plus de lisibilité */
   margin-bottom: 15px; /* Espace entre les paragraphes */
+  cursor: default; /* Curseur normal pour le texte non-cliquable */
 }
 
+/* Liens cliquables avec curseur pointer */
 .banner-link {
-  color: blue; /* Couleur bleue pour les liens */
-  text-decoration: none; /* Supprimer le soulignement */
+  color: blue;
+  text-decoration: none;
+  cursor: pointer; /* Curseur pointer pour les liens */
 }
 
 .banner-link:hover {
-  text-decoration: underline; /* Souligner au survol si souhaité */
+  text-decoration: underline;
 }
 
+/* Curseur pointer pour les boutons */
 .banner button {
   background-color: rgb(48, 48, 48);
   color: white;
@@ -162,9 +171,10 @@ section {
   border-radius: 7px;
   font-size: 16px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: pointer; /* Le curseur pointer est uniquement sur les boutons */
 }
 
+/* Flèches de navigation */
 .arrow {
   position: absolute;
   top: 50%;
@@ -185,4 +195,6 @@ section {
 .arrow.right {
   right: 10px;
 }
+
+
 </style>

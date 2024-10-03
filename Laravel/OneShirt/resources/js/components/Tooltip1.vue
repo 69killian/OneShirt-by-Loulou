@@ -4,15 +4,15 @@
                 <div class="tooltip-content">
                     <h2 class="tooltip-heading">Boutique</h2>
                     <div class="tooltip-section">
-                      <router-link to="/vetements" style="color: black; text-decoration: none; font-size: 1.1em;">Vêtements</router-link>
+                      <router-link to="/vetements" style="color: white; text-decoration: none; font-size: 1.1em;">Vêtements</router-link>
                         <p>Découvrez notre gamme de T-shirt</p>
                     </div>
                     <div class="tooltip-section">
-                      <router-link to="/figurines" style="color: black; text-decoration: none; font-size: 1.1em;">Figurines</router-link>
+                      <router-link to="/figurines" style="color: white; text-decoration: none; font-size: 1.1em;">Figurines</router-link>
                         <p>Les Meilleures figurines aux meilleurs prix !</p>
                     </div>
                     <div class="tooltip-section">
-                        <router-link to="/catalogue" style="color: black; text-decoration: none; font-size: 1.1em;">Catalogue</router-link>
+                        <router-link to="/catalogue" style="color: white; text-decoration: none; font-size: 1.1em;">Catalogue</router-link>
                         <p>Visualisez tous vos produit préférés One Piece !</p>
                     </div>
 
@@ -45,7 +45,7 @@ import { RouterLink } from 'vue-router';
   .tooltip-content {
     visibility: hidden;
     width: 250px;
-    background-color: #ffffff;
+    background-color: #36175e;
     color: rgb(166, 166, 166);
     font-weight: 300;
     text-align: left;
@@ -68,7 +68,7 @@ import { RouterLink } from 'vue-router';
   .tooltip-heading {
     margin: 0;
     font-size: 1.2em;
-    color: black;
+    color: white;
     font-weight: 400;
     border-bottom: 1px solid #ddd;
     padding-bottom: 5px;
