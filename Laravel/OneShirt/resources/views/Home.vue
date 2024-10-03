@@ -6,6 +6,7 @@
       <BannerBottom />
       <Blogs />
       <Reviews />
+      <InfoLivraison></InfoLivraison>
       <LoulouChannel />
       <Newsletter />
       <Footer />
@@ -24,6 +25,7 @@
   import Newsletter from '@/components/Newsletter.vue';
   import Footer from '@/components/Footer.vue';
   import VisitCounter from '@/components/VisitCounter.vue';
+  import InfoLivraison from '@/components/InfoLivraison.vue';
   
   export default {
     components: {
@@ -37,6 +39,7 @@
       Newsletter,
       Footer,
       VisitCounter,
+      InfoLivraison,
     }
   }
   </script>

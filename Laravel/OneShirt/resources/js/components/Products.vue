@@ -1,9 +1,21 @@
 <template>
   <section class="Products">
+    <div class="title-products">
+Embarquez pour une aventure épique avec la boutique OneShirt !
+  </div>
+  <div class="subheading-products">
+    Accompagnez l’équipage du chapeau de paille à retrouvez le mythique trésor que tous les pirates recherchent : le One Piece ! 
+  </div>
     <div v-for="(product, index) in products" :key="product.id" class="product-item">
       <img :src="product.image" alt="Product Images">
       <p>{{ product.name }}</p>
       <p>{{ product.price }}€</p>
+    </div>
+    <div style="margin-top: 20px; color: white;">
+      ____________________________________________________________
+    </div>
+    <div class="subheading-products" style="margin-top: 30px;">
+      La boutique OneShirt propose un excellent choix de figurine One Piece, de T Shirts et objets de collection. <br>Que vous soyez un fan du manga ou à la recherche d’un cadeau unique, ces figurines ne manqueront pas de vous étonner ! Découvrez les maintenant !
     </div>
   </section>
 </template>
@@ -40,6 +52,21 @@ export default {
 </script>
 
 <style scoped>
+
+.title-products {
+  font-size: 40px;
+  color: white;
+  text-align: center;
+}
+
+.subheading-products {
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+
 /* Background et style général */
 .Products {
   position: relative; /* Nécessaire pour positionner les éléments à l'intérieur */
