@@ -5,6 +5,7 @@
     <div class="titre-section-blog">Articles de Blog</div>
     <div class="subheading-section-blog">Vous allez aimer</div>
   </div>
+    <router-link to="/article" style="text-decoration: none; color: black;">
       <div class="blog-cards-container">
         <div
           v-for="(blog, index) in blogs"
@@ -18,9 +19,12 @@
           <p class="blog-description">{{ blog.description }}</p>
         </div>
       </div>
+    </router-link>
     </div>
     <div class="see-more-button">
+      <router-link to="/blog">
       <button>Plus de Blogs</button>
+    </router-link>
     </div>
   </section>
 </template>
@@ -30,22 +34,22 @@ export default {
   data() {
     return {
       blogs: [
-        {
-          image: 'images/Image.png',
-          title: 'Title 1',
-          description: 'Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.'
-        },
-        {
-          image: 'images/Image.png',
-          title: 'Title 2',
-          description: 'Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.'
-        },
-        {
-          image: 'images/Image.png',
-          title: 'Title 3',
-          description: 'Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.'
-        },
-      ],
+  {
+    image: 'images/luffytete.png',
+    title: 'Les secrets du One Piece révélé ?',
+    description: 'Découvre les théories les plus folles sur le trésor légendaire que Roger a laissé derrière lui. Les indices dans le manga pourraient-ils enfin révéler la vérité ?'
+  },
+  {
+    image: 'images/zoroonepiece.jpg',
+    title: 'Luffy et son Gear 5 : Un nouveau pouvoir incroyable',
+    description: 'Retour sur l’éveil de Luffy et son incroyable transformation. Que signifie vraiment le Gear 5 et quel impact aura-t-il sur l’histoire ?'
+  },
+  {
+    image: 'images/luffy.webp',
+    title: 'Les pirates les plus redoutables des mers',
+    description: 'Des Yonkou aux Supernovae, plonge dans l’univers des pirates les plus puissants et découvre ce qui fait d’eux des légendes vivantes.'
+  }
+    ],
       scrollPosition: 0
     };
   },
@@ -179,6 +183,7 @@ export default {
 .img-blog {
   height: 170px;
   width: 170px;
+  object-fit: cover;
 }
 
 .blog-description {

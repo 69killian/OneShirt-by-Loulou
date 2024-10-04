@@ -5,41 +5,51 @@
       </div>
   
       <section class="Blogs">
+        <!-- Carte 1 : Luffy -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/luffytete.png" alt="Luffy Image">
+          <p class="blog-title-card">Luffy et l'aventure de Wano</p>
+          <p class="blog-description">Plongez dans les moments clés de l'arc de Wano et explorez la croissance de Luffy en tant que capitaine.</p>
         </router-link>
-        <!-- Répéter pour chaque carte de blog -->
+  
+        <!-- Carte 2 : Zoro -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/zoroonepiece.jpg" alt="Zoro Image">
+          <p class="blog-title-card">Zoro et l'honneur des samouraïs</p>
+          <p class="blog-description">Découvrez le lien spécial entre Zoro et les samouraïs de Wano, ainsi que sa quête pour devenir le meilleur épéiste.</p>
         </router-link>
+  
+        <!-- Carte 3 : Nami -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/luffy.webp" alt="Nami Image">
+          <p class="blog-title-card">Nami et la maîtrise des éléments</p>
+          <p class="blog-description">Un regard sur les techniques de navigation et les pouvoirs météorologiques de Nami qui font d'elle un atout inestimable.</p>
         </router-link>
+  
+        <!-- Carte 4 : Sanji -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/robin.webp" alt="Sanji Image">
+          <p class="blog-title-card">Sanji et l'art du combat</p>
+          <p class="blog-description">Explorez le mélange unique de cuisine et de combat qui fait de Sanji un membre incontournable de l'équipage.</p>
         </router-link>
+  
+        <!-- Carte 5 : Chopper -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/equipage.webp" alt="Chopper Image">
+          <p class="blog-title-card">Chopper, le docteur des miracles</p>
+          <p class="blog-description">Découvrez comment Chopper a sauvé l'équipage à maintes reprises grâce à ses compétences médicales inégalées.</p>
         </router-link>
+  
+        <!-- Carte 6 : Robin -->
         <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/Image.png" alt="Blog Image">
-          <p class="blog-title-card">Title</p>
-          <p class="blog-description">Body text for whatever you’d like to <br> say. Add main takeaway points, <br> quotes, anecdotes, or even a very <br> very short story.</p>
+          <img class="img-blog" src="../../../public/images/eausunnyonepiecefond.jpg" alt="Robin Image">
+          <p class="blog-title-card">Robin et l'histoire perdue</p>
+          <p class="blog-description">Robin, archéologue de l'équipage, à la recherche de la vérité derrière le Siècle Oublié et le trésor ultime.</p>
         </router-link>
-        <!-- ... -->
       </section>
     </div>
   </template>
+  
   
   <script>
   export default {
@@ -87,6 +97,14 @@
       padding: 100px;
     }
   }
+
+  .blog-subtitle-card {
+  font-weight: 400;
+  font-size: 18px;
+  color: #f0f0f0; /* Ou toute autre couleur qui correspond à ton thème */
+  margin-top: 5px;
+}
+
   
   /* Styles par défaut des cartes de blog */
   .blog-card {
@@ -139,13 +157,14 @@
   .img-blog {
     height: 170px;
     width: 170px;
+    object-fit: cover;
   }
   
   /* Styles pour les titres et descriptions */
   .blog-title-card {
     font-weight: 500;
     font-size: 25px;
-    color: black;
+    color: white;
   }
   
   .blog-description {

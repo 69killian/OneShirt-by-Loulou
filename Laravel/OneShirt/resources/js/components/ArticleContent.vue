@@ -1,46 +1,51 @@
 <template>
     <div>
-      <!-- Title Blog -->
-      <div class="title-blog">
-        <h1>Article</h1>
-      </div>
   
       <!-- Main Picture Blog -->
       <div class="main-img-blog">
-        <img src="../../../public/images/Image.png" alt="main-image">
+        <img src="../../../public/images/zoroonepiece.jpg" alt="main-image">
       </div>
   
       <!-- Section with Image, Header, Subheading, and Text -->
       <div class="outer-container">
+        <div class="article-title">
+        <h1>L'Ascension de Monkey D. Luffy : Analyse de son Parcours depuis East Blue jusqu'à Wano</h1>
+      </div>
         <div class="content-section">
-          <div class="image-container">
-            <img src="../../../public/images/Image.png" alt="Description of the image">
-          </div>
-          <div class="text-content">
-            <h1 class="header">Your Header Title</h1>
-            <h2 class="subheading">Your Subheading</h2>
-            <p class="text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-          </div>
+            
+            <div class="article-content">
+        <p>
+          Monkey D. Luffy, capitaine des Chapeaux de Paille et aspirant au titre de Roi des Pirates, est sans doute l'un des personnages les plus emblématiques de l'animation japonaise. Depuis le début de <em>One Piece</em> dans la mer d'East Blue, Luffy a évolué non seulement en termes de puissance physique, mais aussi en tant que leader. Lorsqu'il quitte son village natal, il n'est qu'un jeune homme naïf mais déterminé, prêt à risquer sa vie pour atteindre ses objectifs.
+        </p>
+
+        <p>
+          Luffy est caractérisé par son fruit du démon, le Gomu Gomu no Mi, qui lui confère la capacité d'étendre son corps comme du caoutchouc. Au départ, ce pouvoir semble limité par rapport à ceux des autres utilisateurs de fruits du démon. Cependant, avec le temps, Luffy développe des techniques de combat créatives, comme le Gear Second, Third, et plus tard, le Gear Fourth, qui lui permettent de rivaliser avec certains des combattants les plus redoutables du monde.
+        </p>
+
+        <p>
+          L'ascension de Luffy est aussi marquée par ses rencontres avec de puissants alliés et ennemis. Son amitié avec des figures comme Zoro, Sanji, Nami, et le reste de son équipage est cruciale pour son développement. Ensemble, ils surmontent d'innombrables défis, que ce soit contre l'armée de Baroque Works d'Alabasta, les redoutables amiraux de la Marine, ou les membres des Quatre Empereurs comme Big Mom et Kaido.
+        </p>
+
+        <p>
+          Wano, en particulier, marque un tournant décisif dans le parcours de Luffy. Son combat contre Kaido, l'un des plus redoutés des Empereurs des mers, représente un défi titanesque. C'est à Wano que Luffy apprend véritablement à maîtriser son Haki et à repousser ses limites physiques et mentales. Wano est également l'endroit où il est désigné comme l'un des principaux acteurs dans la guerre finale entre les pirates et le gouvernement mondial. Au-delà des combats, Luffy incarne des valeurs d’amitié, de loyauté, et d’indépendance, ce qui le rend particulièrement inspirant.
+        </p>
+
+        <p>
+          En analysant le parcours de Luffy, il est évident que son développement personnel est intrinsèquement lié à celui de son équipage. Chaque membre des Chapeaux de Paille apporte une compétence unique et une perspective différente, enrichissant ainsi l'équipe et permettant à Luffy de devenir un leader plus complet et empathique. Leur cohésion face à l'adversité et leur capacité à surmonter des obstacles apparemment insurmontables sont des témoignages de la force de leur amitié et de leur détermination commune.
+        </p>
+
+        <p>
+          De plus, les épreuves que Luffy traverse dans Wano et ailleurs renforcent son caractère. Son insatiable désir de liberté et son refus de se plier aux injustices font de lui un symbole de résistance contre l'oppression. Ces qualités attirent non seulement des alliés mais inspirent également des générations de fans à croire en la puissance de la volonté et de l'amitié.
+        </p>
+
+        <p>
+          En conclusion, l'ascension de Monkey D. Luffy dans <em>One Piece</em> est une saga de croissance personnelle, de leadership et de persévérance. De ses débuts modestes à East Blue jusqu'à ses combats titanesques à Wano, Luffy incarne l'esprit indomptable des pirates et la quête incessante de liberté. Son parcours est non seulement captivant mais également profondément inspirant, faisant de lui un personnage emblématique et aimant dans l'univers de l'animation et du manga.
+        </p>
+      </div>
         </div>
       </div>
   
-      <!-- Section with Image, Header, Subheading, and Text -->
-      <div class="outer-container">
-        <div class="content-section">
-          <div class="text-content">
-            <h1 class="header">Your Header Title</h1>
-            <h2 class="subheading">Your Subheading</h2>
-            <p class="text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-          </div>
-          <div class="image-container">
-            <img src="../../../public/images/Image.png" alt="Description of the image">
-          </div>
-        </div>
-      </div>
+      
   
       <!-- Blog Articles -->
       <section class="Blogs">
@@ -109,8 +114,6 @@
 <style scoped>
 /* Title Blog */
 .title-blog {
-  display: flex;
-  align-items: center;
   justify-content: center;
   height: auto; /* Ajuste la hauteur en fonction du contenu */
   font-size: 40px;
@@ -118,6 +121,11 @@
   background-color: #d2d2d2;
   padding: 120px 0px;
   text-align: center; /* Centre le texte pour les petits écrans */
+}
+
+.article-title h1 {
+  font-size: 2em;
+  color: #333;
 }
 
 /* Pour les écrans de taille moyenne */
@@ -164,6 +172,7 @@
   display: flex;
   align-items: center; /* Aligne l'image et le texte en haut */
   justify-content: center;
+  flex-direction: column;
   padding: 110px 500px 150px 500px;
   gap: 30px; /* Espace entre l'image et le texte */
 }
