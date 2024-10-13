@@ -1,68 +1,80 @@
 <template>
     <section class="main-catalog">
-      <!-- Section Todo (Filter & Selections) -->
       <section class="todo-section">
+        <!-- Filtres généraux -->
         <div class="todo-item" v-for="item in todoItems" :key="item.id">
           <input type="checkbox" :id="'todo' + item.id" />
           <label :for="'todo' + item.id">{{ item.label }}</label>
           <p>{{ item.description }}</p>
         </div>
   
+        <!-- Filtre de prix -->
         <label for="price-slider">Prix :</label>
         <input 
           type="range" 
           id="price-slider" 
           name="price" 
           min="1" 
-          max="100" 
+          max="1000" 
           v-model="price" 
           @input="updateQuantityValue"
         />
         <span id="quantity-value">{{ formattedPrice }}</span>
   
+        <!-- Filtres de couleur -->
         <div class="todo-item" v-for="colorItem in colorItems" :key="colorItem.id">
           <p>{{ colorItem.type }}</p>
-          <input type="checkbox" :id="'color' + colorItem.id" />
+          <input 
+            type="checkbox" 
+            :id="'color' + colorItem.id" 
+            v-model="selectedColors"
+            :value="colorItem.label"
+          />
           <label :for="'color' + colorItem.id">{{ colorItem.label }}</label>
         </div>
   
+        <!-- Filtres de taille -->
         <div class="todo-item" v-for="sizeItem in sizeItems" :key="sizeItem.id">
           <p>{{ sizeItem.type }}</p>
-          <input type="checkbox" :id="'size' + sizeItem.id" />
+          <input 
+            type="checkbox" 
+            :id="'size' + sizeItem.id" 
+            v-model="selectedSizes"
+            :value="sizeItem.label"
+          />
           <label :for="'size' + sizeItem.id">{{ sizeItem.label }}</label>
         </div>
       </section>
   
-      <!-- Section Products -->
+      <!-- Section des produits -->
       <section>
         <article class="filters">
-          <input class="recherche" type="text" placeholder="Rechercher" />
-          <button>Nouveautés</button>
-          <button>Prix croissants</button>
-          <button>Prix décroissants</button>
-          <button>Par Avis</button>
+          <input class="recherche" type="text" placeholder="Rechercher" v-model="searchQuery" />
+          <button @click="sortBy('new')">Nouveautés</button>
+          <button @click="sortBy('priceAsc')">Prix croissants</button>
+          <button @click="sortBy('priceDesc')">Prix décroissants</button>
+          <button @click="sortBy('reviews')">Par Avis</button>
         </article>
-        <article class="Products">
-  <router-link
-    v-for="product in paginatedProducts"
-    :key="product.id"
-    :to="'/produit/' + product.id" 
-    class="product-card"
-    style="text-decoration: none; color: black;"
-  >
-    <div>
-      <img :src="product.image" alt="" />
-      <p>{{ product.name }}</p>
-      <p>{{ product.price }}€</p>
-      <p>Description: {{ product.description }}</p> <!-- Afficher la description -->
-      <p>Avis: {{ product.reviews }} ★</p> <!-- Afficher les avis -->
-      <p>Taille: {{ product.size }}</p> <!-- Afficher la taille -->
-    </div>
-  </router-link>
-</article>
-
+        <article class="Products fade-in-up">
+          <router-link
+            v-for="product in paginatedProducts"
+            :key="product.id"
+            :to="'/produit/' + product.id" 
+            class="product-card"
+            style="text-decoration: none; color: black;"
+          >
+            <div>
+              <img :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
+              <p>{{ product.name }}</p>
+              <p>{{ product.price }}€</p>
+              <p>Description: {{ product.description }}</p>
+              <p>Avis: {{ product.reviews ? product.reviews.toFixed(1) : 'N/A' }} ★</p>
+              <p>Taille: {{ product.size.join(', ') }}</p>
+            </div>
+          </router-link>
+        </article>
   
-        <!-- Pagination Controls -->
+        <!-- Contrôles de pagination -->
         <div class="pagination">
           <button @click="previousPage" :disabled="currentPage === 1">Précédent</button>
           <span>Page {{ currentPage }} sur {{ totalPages }}</span>
@@ -73,247 +85,88 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  
   export default {
     data() {
       return {
-        todoItems: [
-          { id: 1, label: 'Label', description: 'Description' },
-          { id: 2, label: 'Label', description: 'Description' },
-          { id: 3, label: 'Label', description: 'Description' },
-        ],
         colorItems: [
-          { id: 1, type: 'Color', label: 'Label' },
-          { id: 2, type: 'Color', label: 'Label' },
-          { id: 3, type: 'Color', label: 'Label' },
+          { id: 1, type: 'Color', label: 'Blanc' },
+          { id: 2, type: 'Color', label: 'Noir' },
+          { id: 3, type: 'Color', label: 'Bleu' },
+          { id: 5, type: 'Color', label: 'Beige' },
+          { id: 6, type: 'Color', label: 'Gris' },
+          { id: 7, type: 'Color', label: 'Rose' },
         ],
         sizeItems: [
-          { id: 1, type: 'Size', label: 'Label' },
-          { id: 2, type: 'Size', label: 'Label' },
-          { id: 3, type: 'Size', label: 'Label' },
+          { id: 1, type: 'Size', label: 'S' },
+          { id: 2, type: 'Size', label: 'M' },
+          { id: 3, type: 'Size', label: 'L' },
         ],
-        price: 1,
-        products: [
-  {
-    id: 1,
-    name: 'T-Shirt Blanc Luffy mignon',
-    price: 129.99,
-    image: '/images/1.webp',
-    description: 'Un T-shirt blanc avec un design de Luffy.',
-    reviews: 4.5,
-    productType: 'T-shirt',
-    color: 'Blanc',
-    size: 'M'
-  },
-  {
-    id: 2,
-    name: 'T-shirt Gear 5 Beige',
-    price: 79.99,
-    image: '/images/2.jpg',
-    description: 'T-shirt beige représentant Luffy Gear 5.',
-    reviews: 4.7,
-    productType: 'T-shirt',
-    color: 'Beige',
-    size: 'L'
-  },
-  {
-    id: 3,
-    name: 'T-shirt Gear 5 Noir',
-    price: 224.99,
-    image: '/images/3.jpg',
-    description: 'T-shirt noir avec un design unique de Gear 5.',
-    reviews: 4.8,
-    productType: 'T-shirt',
-    color: 'Noir',
-    size: 'S'
-  },
-  {
-    id: 4,
-    name: 'T-shirt Chapeau de Paille Noir',
-    price: 159.99,
-    image: '/images/4.jpg',
-    description: 'T-shirt noir avec le chapeau de paille de Luffy.',
-    reviews: 4.6,
-    productType: 'T-shirt',
-    color: 'Noir',
-    size: 'M'
-  },
-  {
-    id: 5,
-    name: 'Hoodie Beige Luffy mignon',
-    price: 55,
-    image: '/images/5.jpg',
-    description: 'Un hoodie beige doux avec Luffy.',
-    reviews: 4.5,
-    productType: 'Hoodie',
-    color: 'Beige',
-    size: 'L'
-  },
-  {
-    id: 6,
-    name: 'Hoodie Noir Luffy mignon',
-    price: 87,
-    image: '/images/6.jpg',
-    description: 'Hoodie noir avec design de Luffy.',
-    reviews: 4.7,
-    productType: 'Hoodie',
-    color: 'Noir',
-    size: 'S'
-  },
-  {
-    id: 7,
-    name: 'Hoodie Gris Luffy mignon',
-    price: 129.99,
-    image: '/images/7.jpg',
-    description: 'Hoodie gris avec un adorable design de Luffy.',
-    reviews: 4.6,
-    productType: 'Hoodie',
-    color: 'Gris',
-    size: 'M'
-  },
-  {
-    id: 8,
-    name: 'Hoodie Noir One Piece japon',
-    price: 79.99,
-    image: '/images/8.jpg',
-    description: 'Hoodie noir avec le logo One Piece.',
-    reviews: 4.8,
-    productType: 'Hoodie',
-    color: 'Noir',
-    size: 'L'
-  },
-  {
-    id: 9,
-    name: 'Hoodie Rose One Piece japon',
-    price: 224.99,
-    image: '/images/9.jpg',
-    description: 'Hoodie rose avec design One Piece.',
-    reviews: 4.9,
-    productType: 'Hoodie',
-    color: 'Rose',
-    size: 'S'
-  },
-  {
-    id: 10,
-    name: 'T-shirt Zoro complet',
-    price: 159.99,
-    image: '/images/10.webp',
-    description: 'T-shirt complet de Zoro avec son design emblématique.',
-    reviews: 4.5,
-    productType: 'T-shirt',
-    color: 'Vert',
-    size: 'M'
-  },
-  {
-    id: 11,
-    name: 'T-shirt Sabo complet',
-    price: 55,
-    image: '/images/11.jpg',
-    description: 'T-shirt de Sabo avec son design unique.',
-    reviews: 4.7,
-    productType: 'T-shirt',
-    color: 'Jaune',
-    size: 'L'
-  },
-  {
-    id: 12,
-    name: 'T-shirt Nami complet',
-    price: 87,
-    image: '/images/12.jpg',
-    description: 'T-shirt de Nami avec son design iconique.',
-    reviews: 4.6,
-    productType: 'T-shirt',
-    color: 'Orange',
-    size: 'S'
-  },
-  {
-    id: 13,
-    name: 'Luffy vs Kaido Onigashima',
-    price: 129.99,
-    image: '/images/luffyvskaido.webp',
-    description: 'T-shirt représentant la bataille entre Luffy et Kaido.',
-    reviews: 4.8,
-    productType: 'T-shirt',
-    color: 'Multicolore',
-    size: 'M'
-  },
-  {
-    id: 14,
-    name: 'Luffy Gear 4',
-    price: 79.99,
-    image: '/images/luffygear4.webp',
-    description: 'T-shirt illustrant Luffy en Gear 4.',
-    reviews: 4.7,
-    productType: 'T-shirt',
-    color: 'Noir',
-    size: 'L'
-  },
-  {
-    id: 15,
-    name: 'Luffy Haki Onigashima',
-    price: 224.99,
-    image: '/images/luffyhakionigashima.webp',
-    description: 'T-shirt de Luffy en Haki sur Onigashima.',
-    reviews: 4.9,
-    productType: 'T-shirt',
-    color: 'Bleu',
-    size: 'S'
-  },
-  {
-    id: 16,
-    name: 'Zoro Haki Santoryu',
-    price: 159.99,
-    image: '/images/zorosantoryuhaki.webp',
-    description: 'T-shirt de Zoro avec son Haki Santoryu.',
-    reviews: 4.8,
-    productType: 'T-shirt',
-    color: 'Vert',
-    size: 'M'
-  },
-  {
-    id: 17,
-    name: 'Luffy Gear 5',
-    price: 55,
-    image: '/images/lffygear5.webp',
-    description: 'T-shirt de Luffy en Gear 5.',
-    reviews: 4.5,
-    productType: 'T-shirt',
-    color: 'Blanc',
-    size: 'L'
-  },
-  {
-    id: 18,
-    name: 'Zoro Arc Wano',
-    price: 87,
-    image: '/images/zoroarcwano.webp',
-    description: 'T-shirt de Zoro pendant l’Arc Wano.',
-    reviews: 4.6,
-    productType: 'T-shirt',
-    color: 'Vert',
-    size: 'S'
-  }
-],
-
+        selectedColors: [],
+        selectedSizes: [],
+        price: 1000,
+        products: [],
         currentPage: 1,
         itemsPerPage: 6,
+        searchQuery: '',
+        sortKey: '',
       };
     },
     computed: {
       formattedPrice() {
-        return `$${this.price}`;
+        return `${this.price} €`;
       },
       totalPages() {
-        return Math.ceil(this.products.length / this.itemsPerPage);
+        return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+      },
+      filteredProducts() {
+        let filtered = this.products;
+  
+        // Filtre par recherche
+        if (this.searchQuery) {
+          const query = this.searchQuery.toLowerCase();
+          filtered = filtered.filter(product =>
+            product.name.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query)
+          );
+        }
+  
+        // Filtre par prix
+        filtered = filtered.filter(product => product.price <= this.price);
+  
+        // Filtre par couleur
+        if (this.selectedColors.length > 0) {
+          filtered = filtered.filter(product => this.selectedColors.includes(product.color));
+        }
+  
+        // Filtre par taille
+        if (this.selectedSizes.length > 0) {
+          filtered = filtered.filter(product => {
+            return product.size.some(size => this.selectedSizes.includes(size));
+          });
+        }
+  
+        // Application du Tri
+        if (this.sortKey === 'priceAsc') {
+          filtered.sort((a, b) => a.price - b.price);
+        } else if (this.sortKey === 'priceDesc') {
+          filtered.sort((a, b) => b.price - a.price);
+        } else if (this.sortKey === 'reviews') {
+          filtered.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+        } else if (this.sortKey === 'new') {
+          filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
+  
+        return filtered;
       },
       paginatedProducts() {
         const start = (this.currentPage - 1) * this.itemsPerPage;
-        return this.products.slice(start, start + this.itemsPerPage);
+        return this.filteredProducts.slice(start, start + this.itemsPerPage);
       }
     },
     methods: {
-      updateQuantityValue() {
-        const quantityValue = document.getElementById('quantity-value');
-        quantityValue.textContent = `$${this.price}`;
-      },
+      updateQuantityValue() {},
       nextPage() {
         if (this.currentPage < this.totalPages) {
           this.currentPage++;
@@ -323,7 +176,31 @@
         if (this.currentPage > 1) {
           this.currentPage--;
         }
+      },
+      fetchProducts() {
+        axios.get('/api/products')
+          .then(response => {
+            this.products = response.data.map(product => {
+              product.image = product.images && product.images.length > 0 ? product.images[0].image_base64 : '';
+              product.reviews = product.average_reviews;
+              product.size = Array.isArray(product.size) && product.size.length > 0 ? product.size : ['N/A'];
+              return product;
+            });
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des produits:', error);
+          });
+      },
+      getProductImage(product) {
+        return product.image || '/images/default.jpg';
+      },
+      sortBy(key) {
+        this.sortKey = key;
+        this.currentPage = 1;
       }
+    },
+    mounted() {
+      this.fetchProducts();
     }
   };
   </script>
@@ -364,24 +241,36 @@
     transform: translateY(20px);
     animation: fadeInUp 0.7s ease-out forwards;
     box-sizing: border-box;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
   .Products div img {
     width: 100%;
     max-width: 100%;
     height: auto;
-    transition: max-width 0.3s ease;
+    transition: transform 0.3s ease;
   }
   
   .Products div:hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
+  
+  .Products div:hover img {
+    transform: scale(1.1);
+  }
+  
+  .product-card {
+    color: black;
+    text-decoration: none;
+  }
+  
   
   .pagination {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 20px;
   }
   
   .pagination button {
@@ -398,5 +287,27 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
+  
+  .recherche {
+    width: 50%;
+    padding: 10px;
+  }
+
+    @keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    .fade-in-up {
+    animation: fadeInUp 0.7s ease-out forwards;
+    }
+
+
   </style>
   

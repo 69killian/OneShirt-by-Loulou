@@ -11,14 +11,15 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            // Récupérer les produits avec leurs images associées
-            $products = Product::with('images')->get();
+            // Récupérer les produits avec leurs images, avis et tailles associés
+            $products = Product::with(['images', 'reviews', 'sizes'])->get();
 
-            // Encoder les images en base64
+            // Encoder les images en base64 et préparer les autres champs
             $products->map(function ($product) {
+                // Encodage des images
                 if ($product->images) {
                     $product->images->map(function ($image) {
-                        // Détecter le type MIME si possible
+                        // Détecter le type MIME
                         $mimeType = $this->getMimeType($image->image);
                         $image->image_base64 = $mimeType 
                             ? 'data:' . $mimeType . ';base64,' . base64_encode($image->image)
@@ -27,6 +28,22 @@ class ProductController extends Controller
                         return $image;
                     });
                 }
+
+                // Calculer la moyenne des avis
+                if ($product->reviews) {
+                    $averageRating = $product->reviews->avg('rating');
+                    $product->average_reviews = $averageRating ? round($averageRating, 1) : null;
+                } else {
+                    $product->average_reviews = null;
+                }
+
+                // Extraire les tailles sous forme de tableau
+                if ($product->sizes) {
+                    $product->size = $product->sizes->pluck('name')->toArray();
+                } else {
+                    $product->size = [];
+                }
+
                 return $product;
             });
 

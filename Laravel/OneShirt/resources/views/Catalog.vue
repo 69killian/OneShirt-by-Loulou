@@ -1,8 +1,7 @@
 <template>
     <div>
       <Header/>
-      <TestlaravelMigrate />
-      <Pagination/>
+      <MainCatalog />
       <Newsletter/>
       <Footer/>
     </div>
