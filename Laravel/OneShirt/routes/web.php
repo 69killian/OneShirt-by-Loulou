@@ -13,6 +13,8 @@ Route::get('/api/products',
 // Route pour récupéraion des Figurines
 Route::get('/api/figurines', [ProductController::class, 'getFigurines']);
 
+// Route pour récupéraion des Vêtements
+Route::get('/api/vetements', [ProductController::class, 'getVetements']);
 
 
 

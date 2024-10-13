@@ -71,6 +71,9 @@ class ProductController extends Controller
         return $finfo->buffer($binaryData);
     }
 
+
+
+    // Fonction de récupération des Figurines
     public function getFigurines()
     {
         try {
@@ -113,6 +116,57 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             // Gère les erreurs et renvoie un message d'erreur
             return response()->json(['error' => 'Erreur de récupération des figurines : ' . $e->getMessage()], 500);
+        }
+    }
+    
+
+
+
+    // Fonction de récupération des Vêtements
+    public function getVetements()
+    {
+        try {
+            // Récupération des produits de type "t-shirt" et "autre" avec les images associées
+            $products = Product::with(['images', 'reviews', 'sizes'])
+                ->whereIn('type', ['tshirt', 'autre']) // Utilisation de whereIn pour spécifier les types
+                ->get();
+    
+            // Mappe les données pour renvoyer une réponse formatée
+            $response = $products->map(function ($product) {
+                // Encodage des images
+                $images = $product->images->map(function ($image) {
+                    // Détection du type MIME
+                    $mimeType = $this->getMimeType($image->image);
+                    // Encodage en base64
+                    $image->image_base64 = $mimeType 
+                        ? 'data:' . $mimeType . ';base64,' . base64_encode($image->image)
+                        : base64_encode($image->image);
+                    unset($image->image); // Optionnel : supprime le champ binaire original
+                    return $image;
+                });
+    
+                // Calcule la moyenne des avis
+                $averageRating = $product->reviews ? $product->reviews->avg('rating') : null;
+                $product->average_reviews = $averageRating ? round($averageRating, 1) : null;
+    
+                // Extrait les tailles sous forme d'un tableau
+                $size = $product->sizes ? $product->sizes->pluck('name')->toArray() : [];
+    
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'images' => $images, // Utilisation de l'array d'images formaté
+                    'average_reviews' => $product->average_reviews,
+                    'size' => $size,
+                ];
+            });
+    
+            return response()->json($response);
+        } catch (\Exception $e) {
+            // Gère les erreurs et renvoie un message d'erreur
+            return response()->json(['error' => 'Erreur de récupération des vêtements : ' . $e->getMessage()], 500);
         }
     }
     

@@ -1,13 +1,13 @@
 <template>
   <section class="Products">
     <div class="title-products">
-Embarquez pour une aventure épique avec la boutique OneShirt !
-  </div>
-  <div class="subheading-products">
-    Accompagnez l’équipage du chapeau de paille à retrouvez le mythique trésor que tous les pirates recherchent : le One Piece ! 
-  </div>
-    <div v-for="(product, index) in products" :key="product.id" class="product-item">
-      <img :src="product.image" alt="Product Images">
+      Embarquez pour une aventure épique avec la boutique OneShirt !
+    </div>
+    <div class="subheading-products">
+      Accompagnez l’équipage du chapeau de paille à retrouvez le mythique trésor que tous les pirates recherchent : le One Piece ! 
+    </div>
+    <div v-for="(product, index) in limitedProducts" :key="product.id" class="product-item">
+      <img :src="product.images[0]?.image_base64" alt="Product Images">
       <p>{{ product.name }}</p>
       <p>{{ product.price }}€</p>
     </div>
@@ -15,7 +15,7 @@ Embarquez pour une aventure épique avec la boutique OneShirt !
       ____________________________________________________________
     </div>
     <div class="subheading-products" style="margin-top: 30px;">
-      La boutique OneShirt propose un excellent choix de figurine One Piece, de T Shirts et objets de collection. <br>Que vous soyez un fan du manga ou à la recherche d’un cadeau unique, ces figurines ne manqueront pas de vous étonner ! Découvrez les maintenant !
+      La boutique OneShirt propose un excellent choix de figurines One Piece, de T-Shirts et objets de collection. <br>Que vous soyez un fan du manga ou à la recherche d’un cadeau unique, ces figurines ne manqueront pas de vous étonner ! Découvrez-les maintenant !
     </div>
   </section>
 </template>
@@ -24,22 +24,31 @@ Embarquez pour une aventure épique avec la boutique OneShirt !
 export default {
   data() {
     return {
-      products: [
-        { id: 1, name: 'Luffy vs Kaido Onigashima', price: '129.99', image: '/images/luffyvskaido.webp' },
-        { id: 2, name: 'Luffy Gear 4', price: '79.99', image: '/images/luffygear4.webp' },
-        { id: 3, name: 'Luffy Haki Onigashima', price: '224.99', image: '/images/luffyhakionigashima.webp' },
-        { id: 4, name: 'Zoro Haki Santoryu', price: '159.99', image: '/images/zorosantoryuhaki.webp' },
-        // Vous pouvez ajouter d'autres produits ici si nécessaire
-      ]
+      products: []
+    }
+  },
+  computed: {
+    limitedProducts() {
+      // Limiter à 4 produits
+      return this.products.slice(0, 4);
     }
   },
   mounted() {
-    this.animateProducts();
+    this.fetchProducts();
   },
   methods: {
+    async fetchProducts() {
+      try {
+        const response = await fetch('/api/figurines');
+        const data = await response.json();
+        this.products = data;
+        this.animateProducts();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des figurines :", error);
+      }
+    },
     animateProducts() {
       const products = this.$el.querySelectorAll('.product-item');
-
       products.forEach((product, index) => {
         setTimeout(() => {
           product.style.opacity = '1';

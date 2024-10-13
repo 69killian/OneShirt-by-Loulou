@@ -61,6 +61,7 @@
     transform: translateY(0);
     box-sizing: border-box;
     transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    cursor: pointer;
   }
   
   .figurine-card:hover {
