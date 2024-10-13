@@ -10,6 +10,10 @@ Route::get('/api/products',
     [ProductController::class, 'index']
 );
 
+// Route pour récupéraion des Figurines
+Route::get('/api/figurines', [ProductController::class, 'getFigurines']);
+
+
 
 
 Route::get('/', function () {
