@@ -8,5 +8,7 @@
 </head>
 <body>
     <div id="app"></div> <!-- Le conteneur où Vue.js sera monté -->
+    
 </body>
 </html>
+

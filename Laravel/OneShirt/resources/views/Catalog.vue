@@ -1,7 +1,7 @@
 <template>
     <div>
       <Header/>
-      <MainCatalog />
+      <TestlaravelMigrate />
       <Pagination/>
       <Newsletter/>
       <Footer/>
@@ -14,12 +14,14 @@
   import Newsletter from '@/components/Newsletter.vue';
   import Footer from '@/components/Footer.vue';
   import Pagination from '@/components/Pagination.vue';
+  import TestlaravelMigrate from '@/components/testlaravelMigrate.vue';
   
   
   export default {
     name: 'Catalog',
     components: {
       MainCatalog,
+      TestlaravelMigrate,
       Pagination,
       Header,
       Newsletter,
