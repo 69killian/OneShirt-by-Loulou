@@ -6,41 +6,55 @@
   
       <section class="Blogs">
         <router-link v-for="article in articles" :key="article.id" to="/article" class="blog-card animate">
-            <img class="img-blog" :src="'data:image/png;base64,' + article.image" alt="Blog Image" />
+          <img class="img-blog" :src="'data:image/png;base64,' + article.image" alt="Blog Image" />
           <p class="blog-title-card">{{ article.title }}</p>
           <p class="blog-description">{{ article.content.substring(0, 100) + '...' }}</p>
+          <section class="user-info" v-if="users">
+          <img class="avatar" :src="'data:image/png;base64,' + users.profile_picture" alt="User Image" />
+          <p style="color: white;">{{ users.username }}</p>
+          </section>
         </router-link>
       </section>
+  
+      <!-- Section pour afficher les informations de l'utilisateur -->
+      
     </div>
   </template>
   
-  
-  
-  <script>
-import axios from 'axios';
-
-export default {
-  name: 'BlogContent',
-  data() {
-    return {
-      articles: [] // Pour stocker les articles récupérés
-    };
-  },
-  mounted() {
-    this.fetchArticles(); // Appeler la fonction pour récupérer les articles lors du montage du composant
-  },
-  methods: {
-    async fetchArticles() {
-      try {
-        const response = await axios.get('/api/blog-articles'); // Remplacez par l'URL de votre API
-        this.articles = response.data; // Stocker les articles récupérés
-      } catch (error) {
-        console.error('Erreur lors de la récupération des articles :', error);
+  <script>export default {
+    name: 'BlogContent',
+    data() {
+      return {
+        articles: [],
+        users: null, // Initialisez 'users' à null
+      };
+    },
+    mounted() {
+      this.fetchArticles(); 
+      this.fetchUsers();
+    },
+    methods: {
+      async fetchArticles() {
+        try {
+          const response = await axios.get('/api/blog-articles'); 
+          this.articles = response.data;
+        } catch (error) {
+          console.error('Erreur lors de la récupération des articles :', error);
+        }
+      },
+      async fetchUsers() {
+        try {
+          const response = await axios.get('/api/users/1');
+          this.users = response.data;
+        } catch (error) {
+          console.error('Erreur lors de la récupération des utilisateurs :', error);
+        }
       }
     }
   }
-}
-</script>
+  
+  </script>
+  
 
   
   <style scoped>
@@ -57,6 +71,18 @@ export default {
   padding: 150px;
   text-align: center;
   color: white; /* Pour garantir que le texte reste lisible */
+}
+
+.avatar {
+  height: 45px;
+  width: 45px;
+  border-radius: 100px;
+  object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    gap: 20px;
 }
 
   

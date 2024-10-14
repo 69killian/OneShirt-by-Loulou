@@ -4,9 +4,14 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogArticleController;
+use App\Http\Controllers\UserController;
 
 
-// Route pour récupération des  Articles de Blog
+// Route pour récupérer les Informations Utilisateur
+Route::get('/api/users/{id}', [UserController::class, 'getUserInfo']);
+
+
+// Route pour récupération des Articles de Blog
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
 // Route pour récupérer les Produits
