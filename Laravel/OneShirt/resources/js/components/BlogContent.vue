@@ -5,38 +5,51 @@
       </div>
   
       <section class="Blogs">
-        <router-link v-for="article in articles" :key="article.id" to="/article" class="blog-card animate">
-          <img class="img-blog" :src="'data:image/png;base64,' + article.image" alt="Blog Image" />
+        <router-link
+          v-for="article in articles"
+          :key="article.id"
+          to="/article"
+          class="blog-card animate"
+        >
+          <img
+            class="img-blog"
+            :src="'data:image/png;base64,' + article.image"
+            alt="Blog Image"
+          />
           <p class="blog-title-card">{{ article.title }}</p>
           <p class="blog-description">{{ article.content.substring(0, 100) + '...' }}</p>
-          <section class="user-info" v-if="users">
-          <img class="avatar" :src="'data:image/png;base64,' + users.profile_picture" alt="User Image" />
-          <p style="color: white;">{{ users.username }}</p>
+  
+          <!-- Affichage des informations de l'utilisateur correspondant -->
+          <section class="user-info" v-if="getUserById(article.author_id)">
+            <img
+              class="avatar"
+              :src="'data:image/png;base64,' + getUserById(article.author_id).profile_picture"
+              alt="User Image"
+            />
+            <p style="color: white;">{{ getUserById(article.author_id).username }}</p>
           </section>
         </router-link>
       </section>
-  
-      <!-- Section pour afficher les informations de l'utilisateur -->
-      
     </div>
   </template>
   
-  <script>export default {
+  <script>
+  export default {
     name: 'BlogContent',
     data() {
       return {
         articles: [],
-        users: null, // Initialisez 'users' à null
+        users: [],
       };
     },
     mounted() {
-      this.fetchArticles(); 
+      this.fetchArticles();
       this.fetchUsers();
     },
     methods: {
       async fetchArticles() {
         try {
-          const response = await axios.get('/api/blog-articles'); 
+          const response = await axios.get('/api/blog-articles');
           this.articles = response.data;
         } catch (error) {
           console.error('Erreur lors de la récupération des articles :', error);
@@ -44,16 +57,19 @@
       },
       async fetchUsers() {
         try {
-          const response = await axios.get('/api/users/1');
+          const response = await axios.get('/api/users');
           this.users = response.data;
         } catch (error) {
           console.error('Erreur lors de la récupération des utilisateurs :', error);
         }
+      },
+      getUserById(id) {
+        return this.users.find(user => user.id === id);
       }
     }
   }
-  
   </script>
+
   
 
   

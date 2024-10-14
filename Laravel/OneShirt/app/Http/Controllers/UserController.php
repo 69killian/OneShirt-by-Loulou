@@ -1,24 +1,24 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    public function getUserInfo($id)
+    public function getAllUsers(): JsonResponse
     {
-        $user = User::find($id);
+        $users = User::all();
 
-        if ($user) {
+        // Traiter chaque utilisateur pour encoder l'image de profil en base64
+        $users->map(function ($user) {
             if ($user->profile_picture) {
                 $user->profile_picture = base64_encode($user->profile_picture);
             }
+            return $user;
+        });
 
-            return response()->json($user, 200, [], JSON_UNESCAPED_UNICODE);
-        } else {
-            return response()->json(['message' => 'Utilisateur non trouvé'], 404);
-        }
+        return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
     }
 }
-

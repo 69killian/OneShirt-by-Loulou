@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 
 
 // Route pour récupérer les Informations Utilisateur
-Route::get('/api/users/{id}', [UserController::class, 'getUserInfo']);
+Route::get('/api/users', [UserController::class, 'getAllUsers']);
 
 
 // Route pour récupération des Articles de Blog
