@@ -5,57 +5,43 @@
       </div>
   
       <section class="Blogs">
-        <!-- Carte 1 : Luffy -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/luffytete.png" alt="Luffy Image">
-          <p class="blog-title-card">Luffy et l'aventure de Wano</p>
-          <p class="blog-description">Plongez dans les moments clés de l'arc de Wano et explorez la croissance de Luffy en tant que capitaine.</p>
-        </router-link>
-  
-        <!-- Carte 2 : Zoro -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/zoroonepiece.jpg" alt="Zoro Image">
-          <p class="blog-title-card">Zoro et l'honneur des samouraïs</p>
-          <p class="blog-description">Découvrez le lien spécial entre Zoro et les samouraïs de Wano, ainsi que sa quête pour devenir le meilleur épéiste.</p>
-        </router-link>
-  
-        <!-- Carte 3 : Nami -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/luffy.webp" alt="Nami Image">
-          <p class="blog-title-card">Nami et la maîtrise des éléments</p>
-          <p class="blog-description">Un regard sur les techniques de navigation et les pouvoirs météorologiques de Nami qui font d'elle un atout inestimable.</p>
-        </router-link>
-  
-        <!-- Carte 4 : Sanji -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/robin.webp" alt="Sanji Image">
-          <p class="blog-title-card">Sanji et l'art du combat</p>
-          <p class="blog-description">Explorez le mélange unique de cuisine et de combat qui fait de Sanji un membre incontournable de l'équipage.</p>
-        </router-link>
-  
-        <!-- Carte 5 : Chopper -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/equipage.webp" alt="Chopper Image">
-          <p class="blog-title-card">Chopper, le docteur des miracles</p>
-          <p class="blog-description">Découvrez comment Chopper a sauvé l'équipage à maintes reprises grâce à ses compétences médicales inégalées.</p>
-        </router-link>
-  
-        <!-- Carte 6 : Robin -->
-        <router-link to="/article" class="blog-card animate">
-          <img class="img-blog" src="../../../public/images/eausunnyonepiecefond.jpg" alt="Robin Image">
-          <p class="blog-title-card">Robin et l'histoire perdue</p>
-          <p class="blog-description">Robin, archéologue de l'équipage, à la recherche de la vérité derrière le Siècle Oublié et le trésor ultime.</p>
+        <router-link v-for="article in articles" :key="article.id" to="/article" class="blog-card animate">
+            <img class="img-blog" :src="'data:image/png;base64,' + article.image" alt="Blog Image" />
+          <p class="blog-title-card">{{ article.title }}</p>
+          <p class="blog-description">{{ article.content.substring(0, 100) + '...' }}</p>
         </router-link>
       </section>
     </div>
   </template>
   
   
+  
   <script>
-  export default {
-    name: 'BlogContent'
+import axios from 'axios';
+
+export default {
+  name: 'BlogContent',
+  data() {
+    return {
+      articles: [] // Pour stocker les articles récupérés
+    };
+  },
+  mounted() {
+    this.fetchArticles(); // Appeler la fonction pour récupérer les articles lors du montage du composant
+  },
+  methods: {
+    async fetchArticles() {
+      try {
+        const response = await axios.get('/api/blog-articles'); // Remplacez par l'URL de votre API
+        this.articles = response.data; // Stocker les articles récupérés
+      } catch (error) {
+        console.error('Erreur lors de la récupération des articles :', error);
+      }
+    }
   }
-  </script>
+}
+</script>
+
   
   <style scoped>
  .title-blogs {

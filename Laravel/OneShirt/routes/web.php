@@ -3,7 +3,11 @@
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BlogArticleController;
 
+
+// Route pour récupération des  Articles de Blog
+Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
 // Route pour récupérer les Produits
 Route::get('/api/products', 
@@ -15,6 +19,8 @@ Route::get('/api/figurines', [ProductController::class, 'getFigurines']);
 
 // Route pour récupéraion des Vêtements
 Route::get('/api/vetements', [ProductController::class, 'getVetements']);
+
+
 
 
 
