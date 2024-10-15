@@ -30,6 +30,7 @@
           </section>
         </router-link>
       </section>
+
     </div>
   </template>
   
@@ -81,12 +82,12 @@
   height: 100%;
   font-size: 30px;
   margin: 70px 0 0 0;
-  background-image: url('../../../public/images/eausunnyonepiecefond.jpg'); /* Remplace avec l'URL de ton image */
+  background-image: url('../../../public/images/eausunnyonepiecefond.jpg'); 
   background-size: cover; /* L'image couvre toute la surface */
-  background-position: center; /* Centre l'image */
+  background-position: center;
   padding: 150px;
   text-align: center;
-  color: white; /* Pour garantir que le texte reste lisible */
+  color: white;
 }
 
 .avatar {
@@ -129,7 +130,7 @@
   .blog-subtitle-card {
   font-weight: 400;
   font-size: 18px;
-  color: #f0f0f0; /* Ou toute autre couleur qui correspond à ton thème */
+  color: #f0f0f0; 
   margin-top: 5px;
 }
 
@@ -143,7 +144,7 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
-    text-decoration: none; /* Enlève la décoration du lien */
+    text-decoration: none; 
     background-color: rgb(30, 30, 30);
   }
   
