@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="color-body">
         <Header/>
       <ProfileForm />
       <Footer/>
@@ -20,8 +20,8 @@
   };
   </script>
 
-  <style>
-    body {
+<style scoped>
+    .color-body {
         background-color: rgb(30, 30, 30);
         padding-top: 70px;
     }

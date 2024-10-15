@@ -9,7 +9,10 @@
       <div v-if="!isEditing" class="profile-content" id="profileView">
         <!-- Photo de Profil -->
         <div class="profile-photo">
-          <img :src="profile.photo" alt="Photo de Profil">
+          <img
+            :src="'data:image/png;base64,' + profile.profile_picture"
+            alt="Photo de Profil"
+          />
         </div>
         <!-- Informations Utilisateur -->
         <div class="profile-details">
@@ -17,11 +20,11 @@
             <h2>Informations Personnelles</h2>
             <div class="profile-item">
               <label for="firstName">Prénom :</label>
-              <p id="firstName">{{ profile.firstName }}</p>
+              <p id="firstName">{{ profile.first_name }}</p>
             </div>
             <div class="profile-item">
               <label for="lastName">Nom :</label>
-              <p id="lastName">{{ profile.lastName }}</p>
+              <p id="lastName">{{ profile.last_name }}</p>
             </div>
             <div class="profile-item">
               <label for="username">Nom d'utilisateur :</label>
@@ -36,11 +39,11 @@
             <h2>Informations Complémentaires</h2>
             <div class="profile-item">
               <label for="postalAddress">Adresse Postale :</label>
-              <p id="postalAddress">{{ profile.postalAddress }}</p>
+              <p id="postalAddress">{{ profile.postal_address }}</p>
             </div>
             <div class="profile-item">
               <label for="birthdate">Date de Naissance :</label>
-              <p id="birthdate">{{ profile.birthdate }}</p>
+              <p id="birthdate">{{ profile.date_of_birth }}</p>
             </div>
             <div class="profile-item">
               <label for="email">Email :</label>
@@ -48,7 +51,7 @@
             </div>
             <div class="profile-item">
               <label for="phone">Numéro de Téléphone :</label>
-              <p id="phone">{{ profile.phone }}</p>
+              <p id="phone">{{ profile.phone_number }}</p>
             </div>
           </div>
         </div>
@@ -109,55 +112,63 @@
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        isEditing: false, // Détermine si on est en mode édition
-        profile: {
-          photo: 'images/Image.png',
-          firstName: 'Jean',
-          lastName: 'Dupont',
-          username: 'jdupont',
-          address: '123 Rue de Paris',
-          postalAddress: '75001 Paris',
-          birthdate: '1990-01-01',
-          email: 'jean.dupont@example.com',
-          phone: '+33 6 12 34 56 78',
-        },
-        editableProfile: {} // Utilisé pour stocker les modifications
-      };
+import axios from 'axios'; // Assurez-vous d'installer axios avec npm
+
+export default {
+  data() {
+    return {
+      isEditing: false, // Détermine si on est en mode édition
+      profile: {}, // Initialisation des données de profil
+      editableProfile: {} // Utilisé pour stocker les modifications
+    };
+  },
+  mounted() {
+    // Appel API pour récupérer les données utilisateur
+    this.fetchUserData();
+  },
+  methods: {
+    async fetchUserData() {
+      try {
+        const response = await axios.get('/api/users');
+        // Supposons que vous voulez le premier utilisateur
+        this.profile = response.data[0]; // Assurez-vous de gérer les données selon vos besoins
+        this.editableProfile = { ...this.profile }; // Cloner les données pour l'édition
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données utilisateur', error);
+      }
     },
-    methods: {
-      editProfile() {
-        // Clone les données du profil actuel pour les modifier
-        this.editableProfile = { ...this.profile };
-        this.isEditing = true;
-      },
-      cancelEdit() {
-        // Annule les modifications et retourne à la vue du profil
-        this.isEditing = false;
-      },
-      saveChanges() {
-        // Enregistre les modifications et revient à la vue du profil
-        this.profile = { ...this.editableProfile };
-        this.isEditing = false;
-      },
-      onFileChange(event) {
-        // Gestion de l'upload de la nouvelle photo de profil
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = e => {
-            this.profile.photo = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
+    editProfile() {
+      this.isEditing = true;
+    },
+    cancelEdit() {
+      this.isEditing = false;
+    },
+    saveChanges() {
+      // Logique pour sauvegarder les modifications
+      this.profile = { ...this.editableProfile };
+      this.isEditing = false;
+    },
+    onFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.profile.photo = e.target.result;
+        };
+        reader.readAsDataURL(file);
       }
     }
-  };
-  </script>
+  }
+};
+</script>
+
   
   <style scoped>
+
+body {
+        background-color: rgb(30, 30, 30);
+        padding-top: 70px;
+    }
   /* Styles du profil */
   .profile-container {
     width: 80%;
@@ -165,7 +176,7 @@
     margin: 40px auto;
     background-color: #1a1a1a; /* Fond sombre */
     color: #e0e0e0; /* Couleur du texte */
-    padding: 20px;
+    padding: 100px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
@@ -174,6 +185,7 @@
     text-align: center;
     margin-bottom: 20px;
     color: #ffffff; /* Couleur du titre */
+    margin-top: 0px;
   }
   
   .edit-button {
