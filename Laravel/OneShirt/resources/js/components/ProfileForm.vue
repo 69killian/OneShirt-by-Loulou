@@ -63,7 +63,7 @@
             <label for="profilePhoto">Photo de Profil :</label>
             <input type="file" id="profilePhoto" @change="onFileChange">
           </div>
-          
+  
           <!-- Informations Personnelles -->
           <div class="form-group">
             <label for="editFirstName">Prénom :</label>
@@ -81,7 +81,7 @@
             <label for="editAddress">Adresse :</label>
             <input type="text" v-model="editableProfile.address" id="editAddress">
           </div>
-          
+  
           <!-- Informations Complémentaires -->
           <div class="form-group">
             <label for="editPostalAddress">Adresse Postale :</label>
@@ -163,15 +163,17 @@
     width: 80%;
     max-width: 900px;
     margin: 40px auto;
-    background-color: #fff;
+    background-color: #1a1a1a; /* Fond sombre */
+    color: #e0e0e0; /* Couleur du texte */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
   
   h1 {
     text-align: center;
     margin-bottom: 20px;
+    color: #ffffff; /* Couleur du titre */
   }
   
   .edit-button {
@@ -229,20 +231,25 @@
     font-weight: bold;
     display: block;
     margin-bottom: 5px;
+    color: #ffffff; /* Couleur des labels */
   }
   
   .profile-item p {
     margin: 0;
     font-size: 1em;
-    color: #555;
+    color: #b0bec5; /* Couleur des détails */
   }
   
   /* Styles du formulaire d'édition */
   .edit-form {
-    background-color: #fff;
+    background-color: #1e1e1e; /* Fond du formulaire d'édition */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .edit-form form {
+    background-color: #1e1e1e;
   }
   
   .form-group {
@@ -253,39 +260,41 @@
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+    color: #ffffff; /* Couleur des labels */
   }
   
   .form-group input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #444; /* Bordure plus sombre */
     border-radius: 5px;
+    background-color: #333; /* Fond des champs de formulaire */
+    color: #e0e0e0; /* Couleur du texte */
   }
   
-  button {
+  #saveChangesButton, #cancelEditButton {
     padding: 10px 15px;
-    font-size: 1em;
-    color: #fff;
+    margin-right: 10px;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
+  #cancelEditButton {
+    background-color: #ff0000;
+  }
+
+  #cancelEditButton:hover {
+    background-color: #b30000;
+  }
+
   #saveChangesButton {
-    background-color: #28a745;
-    margin-right: 10px;
+    background-color: #007bff;
   }
   
   #saveChangesButton:hover {
-    background-color: #218838;
-  }
-  
-  #cancelEditButton {
-    background-color: #dc3545;
-  }
-  
-  #cancelEditButton:hover {
-    background-color: #c82333;
+    background-color: #0056b3;
   }
   </style>
   

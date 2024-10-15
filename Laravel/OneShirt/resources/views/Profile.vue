@@ -19,4 +19,11 @@
     }
   };
   </script>
+
+  <style>
+    body {
+        background-color: rgb(30, 30, 30);
+        padding-top: 70px;
+    }
+</style>
   
