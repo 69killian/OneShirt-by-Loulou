@@ -132,7 +132,7 @@
   };
   </script>
   
-  <style>
+  <style scoped>
   /* Animation fade up */
   @keyframes fadeUp {
     from {
