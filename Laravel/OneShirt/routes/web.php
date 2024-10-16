@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
+
+// Route pour récupérer les Informations Utilisateur
+Route::get('/reviews', [ReviewController::class, 'index']);
 
 
 // Route pour récupérer les Informations Utilisateur

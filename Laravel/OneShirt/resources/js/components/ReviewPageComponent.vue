@@ -5,25 +5,28 @@
         <div class="review-cards-container">
           <div
             v-for="(review, index) in reviews"
-            :key="index"
+            :key="review.id"
             class="review-card"
             :class="{ animate: isAnimated(index) }"
-            :style="{ animationDelay: `${(index + 1) * 0.1}s` }"
           >
-            <img class="review-img" :src="review.image" alt="stars" />
-            <p class="review-title-card">{{ review.title }}</p>
-            <p class="review-body">{{ review.body }}</p>
-            <div class="avatar-review">
-              <img class="avatar" :src="review.avatar" alt="" />
-              <div class="reviewer-info">
-                <p class="reviewer-name">{{ review.reviewerName }}</p>
-                <p class="review-date">{{ review.date }}</p>
-              </div>
+            <p class="review-title-card">Note : {{ review.rating }}/5</p>
+            <p class="review-body">{{ review.comment }}</p>
+            <div class="review-info">
+              <p class="review-date">Date : {{ review.created_at.substring(0, 10) }}</p>
             </div>
+            <!-- Utilisateurs par Identifiants -->
+            <section class="user-info" v-if="getUserById(review.user_id)">
+              <img
+                class="avatar"
+                :src="'data:image/png;base64,' + getUserById(review.user_id).profile_picture"
+                alt="User Image"
+              />
+              <p style="color: black;">{{ getUserById(review.user_id).username }}</p>
+            </section>
           </div>
         </div>
       </div>
-      
+
       <!-- Review Submission Form -->
       <div class="main-review">
         <h1>Soumettez Votre Avis</h1>
@@ -68,424 +71,187 @@
     </section>
   </template>
   
-  
-<script>
-export default {
-  data() {
-    return {
-      reviews: [
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Super Lourd',
-          body: 'Super site et supers produits pour une super Commu !',
-          avatar: 'images/Logoloulou.jpg',
-          reviewerName: 'Loulou',
-          date: '20/09/2024'
-        },
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Test',
-          body: "c'est juste un test",
-          avatar: 'images/Avatar.png',
-          reviewerName: 'Avatar test',
-          date: '29/09/2024'
-        },
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Pas mal !',
-          body: "Je n'avais pas vu un site One Piece de Blog aussi bien avant !",
-          avatar: 'images/luffytete.png',
-          reviewerName: 'Luffy54',
-          date: '10/08/20204'
-        },{
-          image: 'images/rv588m47.bmp',
-          title: 'Top !',
-          body: '',
-          avatar: 'images/Robin.webp',
-          reviewerName: 'NikoRobinu16',
-          date: '01/08/2024'
-        },
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Des produits de qualité',
-          body: 'Des produits de qualité pour un site neuf et propre merci OneShirt',
-          avatar: 'images/zoroonepiece.jpg',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
-        },
-        {
-          image: 'images/rv588m47.bmp',
-          title: 'Jimbedu69',
-          body: 'Incroyable, les figurines sont Made in France !',
-          avatar: 'images/jimbe.jpg',
-          reviewerName: 'Reviewer Name',
-          date: 'Date'
-        },
-      ],
-      scrollPosition: 0
-    };
-  },
-  methods: {
-    isAnimated(index) {
-      const threshold = window.innerHeight * 0.75; // Ajuste le seuil selon tes besoins
-      return this.scrollPosition > (index * 300 - threshold); // Ajuste le calcul du seuil
+  <script>
+  export default {
+    data() {
+      return {
+        reviews: [],
+        users: [],
+        scrollPosition: 0,
+      };
     },
-    checkVisibility() {
-      this.scrollPosition = window.scrollY; // Mettez à jour la position de défilement
-    }
-  },
-  mounted() {
-    document.addEventListener('DOMContentLoaded', () => {
-      this.checkVisibility(); // Vérifie l'état initial lorsque le DOM est chargé
-    });
-  },
-  beforeDestroy() {
-    document.removeEventListener('DOMContentLoaded', this.checkVisibility);
-  }
-};
-</script>
-
+    methods: {
+      fetchReviews() {
+        fetch("/reviews")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Données des avis récupérées:", data);
+            this.reviews = data;
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération des avis:", error);
+          });
+      },
+      fetchUsers() {
+        fetch("/api/users")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Données des utilisateurs récupérées:", data); // Vérifiez que les utilisateurs sont chargés
+            this.users = data;
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+          });
+      },
+      getUserById(userId) {
+        return this.users.find(user => user.id === userId); // Recherche de l'utilisateur
+      },
+      isAnimated(index) {
+        const threshold = window.innerHeight * 0.75;
+        return this.scrollPosition > (index * 300 - threshold);
+      },
+      checkVisibility() {
+        this.scrollPosition = window.scrollY;
+      },
+    },
+    mounted() {
+      this.fetchReviews();
+      this.fetchUsers(); // Assurez-vous que cette méthode est appelée
+      window.addEventListener('scroll', this.checkVisibility);
+      this.checkVisibility();
+    },
+    beforeDestroy() {
+      window.removeEventListener('scroll', this.checkVisibility);
+    },
+  };
+  </script>
   
-  <style scoped>
- 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  <style>
+  /* Animation fade up */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* Classe pour l'animation */
+  .animate {
+    animation: fadeUp 0.6s ease-out forwards;
   }
-}
 
-/* Styles des cartes de critique */
-.review-card {
-  border: 1px solid rgb(236, 236, 236);
-  padding: 30px;
-  padding-right: 150px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  opacity: 0; /* Opacité initiale */
-  transform: translateY(20px); /* Position initiale */
-  transition: opacity 0.5s ease, transform 0.5s ease; /* Transitions supplémentaires si nécessaire */
-}
-
-/* Styles pour les cartes de critique avec animation */
-.review-card.animate {
-  animation: fadeInUp 0.5s ease-out forwards; /* Propriétés de l'animation */
-}
-
-/* Styles de la section Reviews */
-.Reviews {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  margin-top: 200px;
-  margin-bottom: 150px;
-}
-
-.review-with-title {
-  text-align: center;
-}
-
-.review-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
-}
-
-.review-img {
-  height: 35px;
-  width: 130px;
-  margin-left: -18px;
-}
-
-.title-section-review {
-  font-weight: 500;
-  font-size: 25px;
-  margin-bottom: 100px;
-  margin-top: -100px;
-  height: 0;
-  overflow: visible;
-}
-
-.review-title-card {
-  font-weight: 500;
-  font-size: 25px;
-  margin-bottom: 2px; /* Réduit l'espacement entre le titre et le corps de la revue */
-}
-
-.review-body {
-  color: rgb(103, 103, 103);
-  font-size: 15px;
-  font-weight: 300;
-  margin: 0; /* Enlève les marges pour aligner le texte avec le titre */
-  padding: 0; /* Enlève les espacements internes */
-}
-
-.avatar-review {
-  display: flex;
-  align-items: center; /* Alignement vertical entre avatar et les infos */
-  gap: 10px; /* Espacement entre l'avatar et les textes */
-  margin-top: 20px; /* Espacement entre le corps de la revue et l'info du reviewer */
-}
-
-.avatar {
+  .avatar {
   height: 45px;
   width: 45px;
   border-radius: 100px;
   object-fit: cover;
 }
-
-.reviewer-info {
-  display: flex;
-  flex-direction: column; /* Alignement vertical des textes à droite de l'avatar */
-  margin: 0; /* Enlever les marges pour un alignement précis */
-}
-
-.reviewer-name,
-.review-date {
-  margin: 0; /* Enlever les marges pour aligner le texte avec l'avatar */
-  padding: 0; /* Enlever les espacements internes */
-}
-
-.reviewer-name {
-  font-weight: 500;
-  color: rgb(103, 103, 103);
-}
-
-.review-date {
-  font-weight: 300;
-  color: rgb(103, 103, 103);
-}
-
-.see-more-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.see-more-button button {
-  background-color: rgb(48, 48, 48);
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 7px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-/* Styles pour les grands écrans */
-@media (max-width: 1280px) {
-  .review-cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
+  
+  /* Styles des cartes */
   .review-card {
-    flex: 1 1 200px; /* La carte occupe 200px par défaut sur les écrans moyens */
-  }
-
-  .avatar {
-    max-width: 100px; /* Réduit la taille maximale de l'image sur les écrans moyens */
-    max-height: 100px;
-  }
-  .review-body {
-    font-size: 18px;
-    width: 200px;
-  }
-}
-
-/* Styles pour les petits écrans */
-@media (max-width: 768px) {
-  .review-cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .review-card {
-    flex: 1 1 200px; /* La carte occupe 200px par défaut sur les écrans moyens */
-  }
-
-  .avatar {
-    max-width: 100px; /* Réduit la taille maximale de l'image sur les écrans moyens */
-    max-height: 100px;
-  }
-  .review-body {
-    font-size: 18px;
-    width: 200px;
-  }
-}
-
-@media (max-width: 480px) {
-  .review-cards-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .avatar {
-    max-width: 100px; /* Réduit encore la taille maximale de l'image sur les petits écrans */
-  }
-  .review-body {
-    font-size: 15px;
-  }
-}
-
-
-
-
-
-
-
-
-
-h1 {
-    font-size: 5em;
-    margin-bottom: 0.5em;
-    margin-top: 150px;
-}
-
-p.description {
-    font-size: 1.5em;
-    margin-bottom: 2em;
-}
-
-form {
-    background-color: white;
+    border: 1px solid rgb(236, 236, 236);
+    padding: 30px;
+    padding-right: 150px;
     border-radius: 10px;
-    border: solid 1px rgb(197, 197, 197);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  /* Styles généraux */
+  .Reviews {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 50px 150px;
-    margin-top: 100px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre pour un effet de relief */
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5em;
-    text-align: left;
-}
-.main-review
-input[type="text"],
-.main-review
-input[type="email"],
-.main-review
-select,
-.main-review
-textarea {
-    margin-bottom: 1em;
-    border: none;
-    border-radius: 5px;
-    border: 1px solid grey;
-    padding: 10px;
-    width: 100%; /* Changement de la largeur pour s'adapter au conteneur parent */
-    font-size: 18px;
-    font-weight: 300;
-    color: rgb(74, 74, 74);
-}
-
-select {
-    height: 45px; /* Ajuste la hauteur du champ select pour correspondre aux autres champs */
-}
-
-textarea {
-    resize: vertical; /* Permet à l'utilisateur de redimensionner la zone de texte verticalement */
-}
-
-button[type="submit"] {
-    background-color: rgb(48, 48, 48);
-    color: white;
-    padding: 15px 20px; /* Taille du bouton légèrement augmentée */
-    border: none;
-    border-radius: 7px;
-    font-size: 18px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 20px; /* Espace au-dessus du bouton */
-    align-self: flex-start; /* Alignement du bouton à gauche */
-}
-
-button[type="submit"]:hover {
-    background-color: rgb(31, 31, 31);
-}
-
-.main-review {
+    gap: 30px;
+    margin-top: 200px;
+    margin-bottom: 150px;
+  }
+  
+  /* Autres styles */
+  .review-with-title {
+    text-align: center;
+  }
+  
+  .review-cards-container {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
     justify-content: center;
+  }
+  
+  .title-section-review {
+    font-weight: 500;
+    font-size: 25px;
+    margin-bottom: 100px;
+    margin-top: -100px;
+  }
+  
+  .review-title-card {
+    font-weight: 500;
+    font-size: 25px;
+  }
+  
+  .review-body {
+    color: rgb(103, 103, 103);
+    font-size: 15px;
+    font-weight: 300;
+    width: 350px;
+  }
+  
+  .review-info {
+    display: flex;
     flex-direction: column;
-    padding: 0 15px; /* Ajout d'un léger padding latéral pour un meilleur alignement sur les petits écrans */
-}
+  }
 
-/* Media Queries pour la Responsivité */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 3em;
-        margin-top: 100px;
-    }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .review-date {
+    font-weight: 300;
+    color: rgb(103, 103, 103);
+  }
 
-    p.description {
-        font-size: 1.2em;
-        margin-bottom: 1.5em;
+  .main-review {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 1280px) {
+    .review-card {
+      flex: 1 1 200px;
     }
-
-    form {
-        padding: 30px 20px;
-        margin-top: 50px;
+    .review-body {
+      font-size: 18px;
+      width: 200px;
     }
-
-    input[type="text"],
-    input[type="email"],
-    select,
-    textarea {
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .review-card {
+      flex: 1 1 200px;
     }
-
-    button[type="submit"] {
-        font-size: 16px;
-        padding: 10px 15px;
+    .review-body {
+      font-size: 18px;
+      width: 200px;
     }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 2em;
-        margin-top: 150px;
+  }
+  
+  @media (max-width: 480px) {
+    .review-body {
+      font-size: 15px;
     }
-
-    p.description {
-        font-size: 1em;
-        margin-bottom: 1em;
-    }
-
-    form {
-        padding: 20px 15px;
-        margin-top: 30px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    select,
-    textarea {
-        font-size: 14px;
-        padding: 8px;
-        width: 100%;
-    }
-
-    button[type="submit"] {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-}
+  }
   </style>
   
