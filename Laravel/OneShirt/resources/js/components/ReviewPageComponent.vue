@@ -10,6 +10,9 @@
             :class="{ animate: isAnimated(index) }"
           >
             <p class="review-title-card">Note : {{ review.rating }}/5</p>
+            <div class="star-rating">
+              <span v-for="star in getStarRating(review.rating)" :key="star" class="star">⭐</span>
+            </div>
             <p class="review-body">{{ review.comment }}</p>
             <div class="review-info">
               <p class="review-date">Date : {{ review.created_at.substring(0, 10) }}</p>
@@ -26,7 +29,7 @@
           </div>
         </div>
       </div>
-
+  
       <!-- Review Submission Form -->
       <div class="main-review">
         <h1>Soumettez Votre Avis</h1>
@@ -106,6 +109,9 @@
       getUserById(userId) {
         return this.users.find(user => user.id === userId); // Recherche de l'utilisateur
       },
+      getStarRating(rating) {
+        return Array.from({ length: rating }, (_, i) => i + 1); // Crée un tableau d'étoiles en fonction de la note
+      },
       isAnimated(index) {
         const threshold = window.innerHeight * 0.75;
         return this.scrollPosition > (index * 300 - threshold);
@@ -143,13 +149,13 @@
   .animate {
     animation: fadeUp 0.6s ease-out forwards;
   }
-
+  
   .avatar {
-  height: 45px;
-  width: 45px;
-  border-radius: 100px;
-  object-fit: cover;
-}
+    height: 45px;
+    width: 45px;
+    border-radius: 100px;
+    object-fit: cover;
+  }
   
   /* Styles des cartes */
   .review-card {
@@ -208,7 +214,7 @@
     display: flex;
     flex-direction: column;
   }
-
+  
   .user-info {
     display: flex;
     align-items: center;
@@ -219,12 +225,18 @@
     font-weight: 300;
     color: rgb(103, 103, 103);
   }
-
+  
   .main-review {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+  }
+  
+  /* Styles pour les étoiles */
+  .star-rating {
+    font-size: 20px;
+    margin: 10px 0;
   }
   
   /* Responsive styles */
