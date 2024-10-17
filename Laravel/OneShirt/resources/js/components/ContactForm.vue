@@ -6,18 +6,21 @@
         brefs délais !
       </p>
   
-      <form>
+      <div v-if="error" class="error">{{ error }}</div>
+      <div v-if="success" class="success">{{ success }}</div>
+  
+      <form @submit.prevent="submitForm">
         <label for="name">Nom</label>
-        <input type="text" id="name" name="name" required placeholder="Nom" />
+        <input type="text" id="name" v-model="name" required placeholder="Nom" />
   
         <label for="surname">Prénom</label>
-        <input type="text" id="surname" name="surname" required placeholder="Prénom" />
+        <input type="text" id="surname" v-model="surname" required placeholder="Prénom" />
   
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required placeholder="Email" />
+        <input type="email" id="email" v-model="email" required placeholder="Email" />
   
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="4" required placeholder="Ton Message"></textarea>
+        <textarea id="message" v-model="message" rows="4" required placeholder="Ton Message"></textarea>
   
         <button type="submit">Soumettre ta Demande</button>
       </form>
@@ -25,10 +28,56 @@
   </template>
   
   <script>
-  export default {
-    name: "ContactForm",
-  };
-  </script>
+import axios from 'axios';
+
+export default {
+  name: "ContactForm",
+  data() {
+    return {
+      name: '',
+      surname: '',
+      email: '',
+      message: '',
+      error: null,
+      success: null,
+    };
+  },
+  methods: {
+    async submitForm() {
+  this.error = null;
+  this.success = null;
+
+  console.log({
+    name: this.name,
+    surname: this.surname,
+    email: this.email,
+    message: this.message,
+  });
+
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const response = await axios.post('/api/contact', {
+      name: this.name,
+      surname: this.surname,
+      email: this.email,
+      message: this.message,
+    }, {
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+    });
+
+    this.success = response.data.success;
+    this.resetForm();
+  } catch (error) {
+    this.error = error.response?.data.error || 'Une erreur est survenue.';
+  }
+}}
+
+};
+</script>
+
+
   
   <style scoped>
   .main-contact {
