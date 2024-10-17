@@ -11,7 +11,6 @@ app.mount('#app'); // Montage de Vue.js sur l'élément HTML avec l'ID 'app'
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 const csrfToken = document.querySelector('meta[name="csrf-token"]');
-
 if (csrfToken) {
   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
 }

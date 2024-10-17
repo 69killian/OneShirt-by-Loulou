@@ -72,7 +72,8 @@ export default {
   } catch (error) {
     this.error = error.response?.data.error || 'Une erreur est survenue.';
   }
-}}
+}
+}
 
 };
 </script>
