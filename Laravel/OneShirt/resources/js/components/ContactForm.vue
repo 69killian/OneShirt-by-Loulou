@@ -6,18 +6,18 @@
         brefs délais !
       </p>
   
-      <form>
+      <form @submit.prevent="submitForm">
         <label for="name">Nom</label>
-        <input type="text" id="name" name="name" required placeholder="Nom" />
+        <input type="text" id="name" v-model="name" required placeholder="Nom" />
   
         <label for="surname">Prénom</label>
-        <input type="text" id="surname" name="surname" required placeholder="Prénom" />
+        <input type="text" id="surname" v-model="surname" required placeholder="Prénom" />
   
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required placeholder="Email" />
+        <input type="email" id="email" v-model="email" required placeholder="Email" />
   
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="4" required placeholder="Ton Message"></textarea>
+        <textarea id="message" v-model="message" rows="4" required placeholder="Ton Message"></textarea>
   
         <button type="submit">Soumettre ta Demande</button>
       </form>
@@ -27,8 +27,48 @@
   <script>
   export default {
     name: "ContactForm",
+    data() {
+      return {
+        name: "",
+        surname: "",
+        email: "",
+        message: ""
+      };
+    },
+    methods: {
+        async submitForm() {
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    const response = await fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken // Ajoutez le token CSRF ici
+      },
+      body: JSON.stringify({
+        name: this.name,
+        surname: this.surname,
+        email: this.email,
+        message: this.message
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erreur lors de l\'envoi du message');
+    }
+
+    const result = await response.json();
+    alert(result.message);
+  } catch (error) {
+    alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
+  }
+}
+}
+
   };
   </script>
+  
   
   <style scoped>
   .main-contact {

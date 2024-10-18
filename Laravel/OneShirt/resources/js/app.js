@@ -8,5 +8,3 @@ const app = createApp(App);
 app.use(router); // Utilisation du routeur
 app.mount('#app'); // Montage de Vue.js sur l'élément HTML avec l'ID 'app'
 
-
-

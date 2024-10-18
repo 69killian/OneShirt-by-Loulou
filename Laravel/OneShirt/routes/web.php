@@ -6,6 +6,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\MailController;
+
+
+Route::post('/api/send-email', [MailController::class, 'sendEmail']);
 
 
 // Route pour récupérer les Informations Utilisateur
