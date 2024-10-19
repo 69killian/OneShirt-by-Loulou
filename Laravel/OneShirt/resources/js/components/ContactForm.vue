@@ -36,34 +36,41 @@
       };
     },
     methods: {
-        async submitForm() {
-  try {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  async submitForm() {
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    const response = await fetch("/api/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": csrfToken // Ajoutez le token CSRF ici
-      },
-      body: JSON.stringify({
-        name: this.name,
-        surname: this.surname,
-        email: this.email,
-        message: this.message
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error('Erreur lors de l\'envoi du message');
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken
+        },
+        body: JSON.stringify({
+          name: this.name,
+          surname: this.surname,
+          email: this.email,
+          message: this.message
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi du message");
+      }
+
+      const result = await response.json();
+      alert(result.message);
+
+      // Réinitialiser les champs du formulaire après l'envoi réussi
+      this.name = "";
+      this.surname = "";
+      this.email = "";
+      this.message = "";
+      
+    } catch (error) {
+      alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
     }
-
-    const result = await response.json();
-    alert(result.message);
-  } catch (error) {
-    alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
   }
-}
 }
 
   };
@@ -76,7 +83,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-image: url('../../../public/images/luffytete.png'); /* Remplace par le chemin de ton image */
+  background-image: url('../../../public/images/luffytete.png');
   background-size: cover; /* L'image couvre toute la surface */
   background-position: center; /* Centre l'image */
   background-repeat: no-repeat; /* Évite de répéter l'image */
@@ -118,8 +125,8 @@ textarea {
     border: none;
     border-radius: 5px;
     border: 1px solid grey;
-    padding: 10px 200px 10px 10px;
-    width: 150px;
+    padding: 10px 10px 10px 10px;
+    width: 290px;
     font-size: 18px;
     font-weight: 300;
     color: rgb(174, 174, 174);

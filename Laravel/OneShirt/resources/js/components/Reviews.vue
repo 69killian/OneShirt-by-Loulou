@@ -48,7 +48,6 @@ export default {
       fetch("/reviews")
         .then((response) => response.json())
         .then((data) => {
-          console.log("Données des avis récupérées:", data);
           this.reviews = data;
         })
         .catch((error) => {
@@ -59,7 +58,6 @@ export default {
       fetch("/api/users")
         .then((response) => response.json())
         .then((data) => {
-          console.log("Données des utilisateurs récupérées:", data); // Vérifiez que les utilisateurs sont chargés
           this.users = data;
         })
         .catch((error) => {
@@ -82,7 +80,7 @@ export default {
   },
   mounted() {
     this.fetchReviews();
-    this.fetchUsers(); // Assurez-vous que cette méthode est appelée
+    this.fetchUsers(); 
     window.addEventListener('scroll', this.checkVisibility);
     this.checkVisibility();
   },

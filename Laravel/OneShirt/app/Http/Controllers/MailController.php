@@ -12,10 +12,10 @@ class MailController extends Controller
     {
         // Validation des données
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
+            'name' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
+            'surname' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|email|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|max:1000',
         ]);
 
         $mail = new PHPMailer(true);
