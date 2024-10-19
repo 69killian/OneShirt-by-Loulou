@@ -7,8 +7,18 @@ use App\Http\Controllers\BlogArticleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+
+// Route pour connexion utilisateur
+Route::post('/login', [LoginController::class, 'check']);
 
 
+// Route pour créer un utilisateur
+Route::post('/register', [RegisterController::class, 'store']);
+
+
+// Route Pour envoi de Mail via PHPMailer et Laravel
 Route::post('/api/send-email', [MailController::class, 'sendEmail']);
 
 

@@ -29,38 +29,50 @@
         <input type="text" id="postalcode" v-model="formData.postalcode" required placeholder="Adresse postale">
         
         <label for="password">Mot de passe</label>
-        <input type="password" id="password" v-model="formData.password" required placeholder="Mot de passe">
-        
-        <button type="submit">Inscription</button>
+      <input type="password" id="password" v-model="formData.password" required placeholder="Mot de passe">
+
+      <label for="password_confirmation">Confirmer le mot de passe</label>
+      <input type="password" id="password_confirmation" v-model="formData.password_confirmation" required placeholder="Confirmer le mot de passe">
+
+      <button type="submit">Inscription</button>
       </form>
     </div>
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        formData: {
-          username: '',
-          firstname: '',
-          lastname: '',
-          email: '',
-          phone: '',
-          birthdate: '',
-          address: '',
-          postalcode: '',
-          password: ''
-        }
-      };
-    },
-    methods: {
-      submitForm() {
-        console.log(this.formData);
-        // Ajouter la logique d'inscription ici (API, validation, etc.)
+export default {
+  data() {
+    return {
+      formData: {
+        username: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        phone: '',
+        birthdate: '',
+        address: '',
+        postalcode: '',
+        password: '',
+        password_confirmation: '' // champ de confirmation du mot de passe
+      }
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        // API pour envoyer les données du formulaire
+        const response = await axios.post('/register', this.formData);
+        console.log(response.data);
+        // Gère la réponse et redirige
+        this.$router.push('/');
+      } catch (error) {
+        console.error(error);
+        // Gère les erreurs (affichage des messages, etc.)
       }
     }
-  };
-  </script>
+  }
+};
+</script>
   
   <style scoped>
   h1 {
@@ -71,6 +83,7 @@
   p.description {
     font-size: 1.5em;
     margin-bottom: 2em;
+    color: white;
   }
   form {
     background-color: white;

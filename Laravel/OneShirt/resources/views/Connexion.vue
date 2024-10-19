@@ -3,7 +3,6 @@
     <div class="connexion-page">
       <ConnexionForm />
     </div>
-    <!-- Footer placé en dehors de .connexion-page -->
     <Footer />
   </template>
   
@@ -26,7 +25,7 @@
 
   .connexion-page {
     background-color: grey;
-    background-image: url(''); /* Remplace par l'URL de l'image de fond One Piece */
+    background-image: url(''); 
     background-size: contain;
     background-repeat: no-repeat;
     min-height: 100vh; /* Prend toute la hauteur de la page */
