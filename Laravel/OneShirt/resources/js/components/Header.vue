@@ -14,7 +14,7 @@
       <button v-if="!isAuthenticated" @click="goToLogin">
         <router-link to="/connexion" style="text-decoration: none; color: #a35dff;">Connexion</router-link>
       </button>
-      <button v-else @click="handleLogout">
+      <button style="color: #a35dff;" v-else @click="handleLogout">
         Déconnexion
       </button>
       <button>
