@@ -10,8 +10,13 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 
+
+// Route pour déconnexion utilisateur
+Route::post('/api/logout', [LoginController::class, 'logout']);
+
+
 // Route pour connexion utilisateur
-Route::post('/login', [LoginController::class, 'check']);
+Route::post('/api/login', [LoginController::class, 'login']);
 
 
 // Route pour créer un utilisateur

@@ -1,80 +1,65 @@
 <template>
     <div class="main-contact">
-      <h1>Contactez-Moi</h1>
-      <p class="description">
-        N'hésitez pas à me laisser un message. Je vous répondrai dans les plus
-        brefs délais !
-      </p>
-  
-      <form @submit.prevent="submitForm">
-        <label for="name">Nom</label>
-        <input type="text" id="name" v-model="name" required placeholder="Nom" />
-  
-        <label for="surname">Prénom</label>
-        <input type="text" id="surname" v-model="surname" required placeholder="Prénom" />
-  
-        <label for="email">Email</label>
-        <input type="email" id="email" v-model="email" required placeholder="Email" />
-  
-        <label for="message">Message</label>
-        <textarea id="message" v-model="message" rows="4" required placeholder="Ton Message"></textarea>
-  
-        <button type="submit">Soumettre ta Demande</button>
-      </form>
+        <h1>Connexion</h1>
+        
+        <form @submit.prevent="handleSubmit">
+            <label for="name">Nom d'utilisateur ou Mail</label>
+            <input type="text" id="name" v-model="name" required placeholder="Nom">
+        
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" v-model="password" required placeholder="Mot de passe">
+            
+            <router-link to="/recuperation" style="margin-bottom: 10px; text-decoration: none;">J'ai oublié mon mot de passe</router-link>
+            <button type="submit">Connexion</button>
+            <router-link to="/inscription" style="margin-top: 10px; text-decoration: none;">Nouveau dans l'équipage ?</router-link>
+        </form>
+        
+        <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "ContactForm",
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    name: 'ConnexionForm',
     data() {
-      return {
-        name: "",
-        surname: "",
-        email: "",
-        message: ""
-      };
+        return {
+            name: '',
+            password: '',
+            errorMessage: null
+        };
     },
     methods: {
-  async submitForm() {
-    try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        async handleSubmit() {
+            try {
+                const response = await axios.post('/api/login', {
+                    name: this.name,
+                    password: this.password
+                });
 
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": csrfToken
-        },
-        body: JSON.stringify({
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          message: this.message
-        })
-      });
+                // Si la connexion réussit, stocke l'utilisateur dans le localStorage
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                
+                console.log('Connexion réussie', response.data);
+                this.$router.push('/'); // Redirection vers la page d'accueil
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'envoi du message");
-      }
-
-      const result = await response.json();
-      alert(result.message);
-
-      // Réinitialiser les champs du formulaire après l'envoi réussi
-      this.name = "";
-      this.surname = "";
-      this.email = "";
-      this.message = "";
-      
-    } catch (error) {
-      alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    this.errorMessage = 'Les informations de connexion sont incorrectes.';
+                } else {
+                    this.errorMessage = 'Une erreur s\'est produite.';
+                }
+            }
+        }
     }
-  }
-}
+};
+</script>
 
-  };
-  </script>
+<style>
+/* Style pour le formulaire comme tu l'as déjà défini */
+</style>
+
   
   
   <style scoped>

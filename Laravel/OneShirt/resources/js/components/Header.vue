@@ -9,15 +9,17 @@
     <div class="header-right-hand">
       <Tooltip1/>
       <Tooltip2/>
-      <router-link to="/blog" style=" text-decoration: none; color: black;">Blog</router-link>
-      <router-link to="/contact" style=" text-decoration: none; color: black;">Contact</router-link>
-      <button>
-        <router-link to="/connexion" style=" text-decoration: none; color: #a35dff;"> Connexion </router-link>
+      <router-link to="/blog" style="text-decoration: none; color: black;">Blog</router-link>
+      <router-link to="/contact" style="text-decoration: none; color: black;">Contact</router-link>
+      <button v-if="!isAuthenticated" @click="goToLogin">
+        <router-link to="/connexion" style="text-decoration: none; color: #a35dff;">Connexion</router-link>
+      </button>
+      <button v-else @click="handleLogout">
+        Déconnexion
       </button>
       <button>
         <router-link to="/panier" style="text-decoration: none; color: #a35dff;">Panier 0</router-link>
       </button>
-      
     </div>
   </header>
 </template>
@@ -25,13 +27,44 @@
 <script>
 import Tooltip1 from './Tooltip1.vue'
 import Tooltip2 from './Tooltip2.vue'
+import axios from 'axios';
 
 export default {
   components: {
     Tooltip1, Tooltip2
+  },
+  data() {
+    return {
+      isAuthenticated: false
+    };
+  },
+  mounted() {
+    // Vérifie si l'utilisateur est authentifié au chargement du composant
+    this.checkAuth();
+  },
+  methods: {
+    checkAuth() {
+      // Vérifie l'état d'authentification (il faudra peut-être ajuster cela selon ta logique)
+      this.isAuthenticated = !!localStorage.getItem('user'); // Supposant que tu stockes l'utilisateur dans le localStorage après la connexion
+    },
+    async handleLogout() {
+      try {
+        await axios.post('/api/logout');
+        localStorage.removeItem('user'); // Supprimer l'utilisateur du localStorage
+        this.isAuthenticated = false; // Met à jour l'état d'authentification
+        this.$router.push('/'); // Redirection vers la page d'accueil
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion', error);
+      }
+    },
+    goToLogin() {
+      this.$router.push('/connexion'); // Redirection vers la page de connexion
+    }
   }
 }
 </script>
+
+
 
 <style scoped>
 header {
