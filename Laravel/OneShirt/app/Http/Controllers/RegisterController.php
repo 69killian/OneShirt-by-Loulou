@@ -41,7 +41,7 @@ class RegisterController extends Controller
         // Authentification automatique de l'utilisateur après inscription
         Auth::login($user);
 
-        // Redirection vers la page d'accueil ou autre
-        return redirect()->route('/')->with('success', 'Inscription réussie!');
+        // Message de Réussite
+        return response()->json(['message' => 'Inscription réussie!']);
     }
 }
