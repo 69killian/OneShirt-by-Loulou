@@ -1,166 +1,177 @@
 <template>
-    <div class="profile-container">
-      <h1>Mon Profil</h1>
-  
-      <!-- Bouton pour éditer le profil -->
-      <button v-if="!isEditing" @click="editProfile" class="edit-button">Éditer le Profil</button>
-  
-      <!-- Vue du Profil -->
-      <div v-if="!isEditing" class="profile-content" id="profileView">
-        <!-- Photo de Profil -->
-        <div class="profile-photo">
-          <img
-            :src="'data:image/png;base64,' + profile.profile_picture"
-            alt="Photo de Profil"
-          />
-        </div>
-        <!-- Informations Utilisateur -->
-        <div class="profile-details">
-          <div class="profile-column">
-            <h2>Informations Personnelles</h2>
-            <div class="profile-item">
-              <label for="firstName">Prénom :</label>
-              <p id="firstName">{{ profile.first_name }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="lastName">Nom :</label>
-              <p id="lastName">{{ profile.last_name }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="username">Nom d'utilisateur :</label>
-              <p id="username">{{ profile.username }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="address">Adresse :</label>
-              <p id="address">{{ profile.address }}</p>
-            </div>
-          </div>
-          <div class="profile-column">
-            <h2>Informations Complémentaires</h2>
-            <div class="profile-item">
-              <label for="postalAddress">Adresse Postale :</label>
-              <p id="postalAddress">{{ profile.postal_address }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="birthdate">Date de Naissance :</label>
-              <p id="birthdate">{{ profile.date_of_birth }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="email">Email :</label>
-              <p id="email">{{ profile.email }}</p>
-            </div>
-            <div class="profile-item">
-              <label for="phone">Numéro de Téléphone :</label>
-              <p id="phone">{{ profile.phone_number }}</p>
-            </div>
-          </div>
-        </div>
+  <div class="profile-container">
+    <h1>Mon Profil</h1>
+
+    <!-- Bouton pour éditer le profil -->
+    <button v-if="!isEditing" @click="editProfile" class="edit-button">Éditer le Profil</button>
+
+    <!-- Vue du Profil -->
+    <div v-if="!isEditing" class="profile-content" id="profileView">
+      <!-- Photo de Profil -->
+      <div class="profile-photo">
+        <img v-if="profile.profile_picture" :src="profile.profile_picture" alt="Photo de Profil" />
       </div>
-  
-      <!-- Formulaire d'Édition du Profil -->
-      <div v-if="isEditing" class="edit-form" id="editProfileForm">
-        <h2>Modifier le Profil</h2>
-        <form @submit.prevent="saveChanges">
-          <!-- Photo de Profil -->
-          <div class="form-group">
-            <label for="profilePhoto">Photo de Profil :</label>
-            <input type="file" id="profilePhoto" @change="onFileChange">
+      <!-- Informations Utilisateur -->
+      <div class="profile-details">
+        <div class="profile-column">
+          <h2>Informations Personnelles</h2>
+          <div class="profile-item">
+            <label for="firstName">Prénom :</label>
+            <p id="firstName">{{ profile.first_name }}</p>
           </div>
-  
-          <!-- Informations Personnelles -->
-          <div class="form-group">
-            <label for="editFirstName">Prénom :</label>
-            <input type="text" v-model="editableProfile.firstName" id="editFirstName">
+          <div class="profile-item">
+            <label for="lastName">Nom :</label>
+            <p id="lastName">{{ profile.last_name }}</p>
           </div>
-          <div class="form-group">
-            <label for="editLastName">Nom :</label>
-            <input type="text" v-model="editableProfile.lastName" id="editLastName">
+          <div class="profile-item">
+            <label for="username">Nom d'utilisateur :</label>
+            <p id="username">{{ profile.username }}</p>
           </div>
-          <div class="form-group">
-            <label for="editUsername">Nom d'utilisateur :</label>
-            <input type="text" v-model="editableProfile.username" id="editUsername">
+          <div class="profile-item">
+            <label for="address">Adresse :</label>
+            <p id="address">{{ profile.address }}</p>
           </div>
-          <div class="form-group">
-            <label for="editAddress">Adresse :</label>
-            <input type="text" v-model="editableProfile.address" id="editAddress">
+        </div>
+        <div class="profile-column">
+          <h2>Informations Complémentaires</h2>
+          <div class="profile-item">
+            <label for="postalAddress">Adresse Postale :</label>
+            <p id="postalAddress">{{ profile.postal_address }}</p>
           </div>
-  
-          <!-- Informations Complémentaires -->
-          <div class="form-group">
-            <label for="editPostalAddress">Adresse Postale :</label>
-            <input type="text" v-model="editableProfile.postalAddress" id="editPostalAddress">
+          <div class="profile-item">
+            <label for="birthdate">Date de Naissance :</label>
+            <p id="birthdate">{{ profile.date_of_birth }}</p>
           </div>
-          <div class="form-group">
-            <label for="editBirthdate">Date de Naissance :</label>
-            <input type="date" v-model="editableProfile.birthdate" id="editBirthdate">
+          <div class="profile-item">
+            <label for="email">Email :</label>
+            <p id="email">{{ profile.email }}</p>
           </div>
-          <div class="form-group">
-            <label for="editEmail">Email :</label>
-            <input type="email" v-model="editableProfile.email" id="editEmail">
+          <div class="profile-item">
+            <label for="phone">Numéro de Téléphone :</label>
+            <p id="phone">{{ profile.phone_number }}</p>
           </div>
-          <div class="form-group">
-            <label for="editPhone">Numéro de Téléphone :</label>
-            <input type="tel" v-model="editableProfile.phone" id="editPhone">
-          </div>
-  
-          <!-- Boutons pour sauvegarder ou annuler -->
-          <button type="submit" id="saveChangesButton">Sauvegarder les Modifications</button>
-          <button type="button" id="cancelEditButton" @click="cancelEdit">Annuler</button>
-        </form>
+        </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-import axios from 'axios'; // Assurez-vous d'installer axios avec npm
+
+    <!-- Formulaire d'édition -->
+    <div v-if="isEditing" class="edit-form">
+      <h2>Modifier le Profil</h2>
+      <form @submit.prevent="saveChanges">
+        <div class="form-group">
+          <label for="firstName">Prénom :</label>
+          <input v-model="editableProfile.first_name" type="text" id="firstName" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Nom :</label>
+          <input v-model="editableProfile.last_name" type="text" id="lastName" required />
+        </div>
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur :</label>
+          <input v-model="editableProfile.username" type="text" id="username" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email :</label>
+          <input v-model="editableProfile.email" type="email" id="email" required />
+        </div>
+        <div class="form-group">
+          <label for="address">Adresse :</label>
+          <input v-model="editableProfile.address" type="text" id="address" />
+        </div>
+        <div class="form-group">
+          <label for="postalAddress">Adresse Postale :</label>
+          <input v-model="editableProfile.postal_address" type="text" id="postalAddress" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Numéro de Téléphone :</label>
+          <input v-model="editableProfile.phone_number" type="text" id="phone" />
+        </div>
+        <div class="form-group">
+          <label for="birthdate">Date de Naissance :</label>
+          <input v-model="editableProfile.date_of_birth" type="date" id="birthdate" />
+        </div>
+        <div class="form-group">
+          <label for="profile_picture">Photo de Profil :</label>
+          <input type="file" @change="onFileChange" id="profile_picture" />
+        </div>
+        <button type="submit" id="saveChangesButton">Sauvegarder</button>
+        <button type="button" id="cancelEditButton" @click="cancelEdit">Annuler</button>
+      </form>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      isEditing: false, // Détermine si on est en mode édition
-      profile: {}, // Initialisation des données de profil
-      editableProfile: {} // Utilisé pour stocker les modifications
+      isEditing: false,
+      profile: {}, // Informations du profil utilisateur
+      editableProfile: {}
     };
   },
   mounted() {
-    // Appel API pour récupérer les données utilisateur
-    this.fetchUserData();
+    // Appel pour récupérer les données du profil utilisateur connecté
+    this.fetchProfileData();
   },
   methods: {
-    async fetchUserData() {
-      try {
-        const response = await axios.get('/api/users');
-        // Supposons que vous voulez le premier utilisateur
-        this.profile = response.data[0]; // Assurez-vous de gérer les données selon vos besoins
-        this.editableProfile = { ...this.profile }; // Cloner les données pour l'édition
-      } catch (error) {
-        console.error('Erreur lors de la récupération des données utilisateur', error);
-      }
-    },
-    editProfile() {
-      this.isEditing = true;
-    },
-    cancelEdit() {
-      this.isEditing = false;
-    },
-    saveChanges() {
-      // Logique pour sauvegarder les modifications
-      this.profile = { ...this.editableProfile };
-      this.isEditing = false;
-    },
-    onFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          this.profile.photo = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+  async fetchProfileData() {
+    try {
+      const response = await axios.get('/api/profile');
+      this.profile = response.data;
+      this.editableProfile = { ...this.profile }; // Cloner les données pour édition
+    } catch (error) {
+      console.error('Erreur lors de la récupération du profil', error);
     }
+  },
+  editProfile() {
+    this.isEditing = true;
+  },
+  cancelEdit() {
+    this.isEditing = false;
+    this.editableProfile = { ...this.profile }; // Restauration des données originales
+  },
+  async saveChanges() {
+    try {
+      const formData = new FormData();
+      formData.append('first_name', this.editableProfile.first_name);
+      formData.append('last_name', this.editableProfile.last_name);
+      formData.append('username', this.editableProfile.username);
+      formData.append('email', this.editableProfile.email);
+      formData.append('address', this.editableProfile.address);
+      formData.append('postal_address', this.editableProfile.postal_address);
+      formData.append('phone_number', this.editableProfile.phone_number);
+      formData.append('date_of_birth', this.editableProfile.date_of_birth);
+
+      // Si une nouvelle image est sélectionnée
+      if (this.editableProfile.profile_picture) {
+        formData.append('profile_picture', this.editableProfile.profile_picture);
+      }
+
+      const response = await axios.post('/api/update-profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      this.profile = response.data.user;
+      this.isEditing = false;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du profil', error);
+    }
+  },
+  onFileChange(event) {
+    const file = event.target.files[0];
+    this.editableProfile.profile_picture = file;
+}
+
   }
 };
 </script>
+
 
   
   <style scoped>

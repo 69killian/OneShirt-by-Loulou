@@ -11,6 +11,15 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 
 
+
+// Update du profil utilisateur
+Route::post('/api/update-profile', [UserController::class, 'updateProfile']);
+
+
+// Route pour Récupération du profil connecté
+Route::get('/api/profile', [LoginController::class, 'getProfile']);
+
+
 // Route pour déconnexion utilisateur
 Route::post('/api/logout', [LoginController::class, 'logout']);
 

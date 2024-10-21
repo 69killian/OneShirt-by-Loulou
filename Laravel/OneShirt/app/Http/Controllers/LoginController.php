@@ -33,6 +33,23 @@ class LoginController extends Controller
     return response()->json(['message' => 'Les informations de connexion sont incorrectes'], 401);
 }
 
+public function getProfile()
+{
+    $user = Auth::user();
+    if ($user) {
+        // Vérifie et encode l'image de profil en base64 si elle existe
+        if ($user->profile_picture) {
+            $user->profile_picture = base64_encode($user->profile_picture);
+        }
+        
+        return response()->json($user, 200);
+    } else {
+        return response()->json(['message' => 'Utilisateur non connecté'], 401);
+    }
+}
+
+
+
 
     public function logout(Request $request)
     {
