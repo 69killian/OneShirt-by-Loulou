@@ -33,7 +33,10 @@ class LoginController extends Controller
     return response()->json(['message' => 'Les informations de connexion sont incorrectes'], 401);
 }
 
-public function getProfile()
+
+
+    // Pour formulaire du profil
+    public function getProfile()
 {
     $user = Auth::user();
     if ($user) {
@@ -47,7 +50,6 @@ public function getProfile()
         return response()->json(['message' => 'Utilisateur non connecté'], 401);
     }
 }
-
 
 
 

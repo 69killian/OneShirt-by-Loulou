@@ -118,59 +118,64 @@ export default {
     this.fetchProfileData();
   },
   methods: {
-  async fetchProfileData() {
-    try {
-      const response = await axios.get('/api/profile');
-      this.profile = response.data;
-      this.editableProfile = { ...this.profile }; // Cloner les données pour édition
-    } catch (error) {
-      console.error('Erreur lors de la récupération du profil', error);
-    }
-  },
-  editProfile() {
-    this.isEditing = true;
-  },
-  cancelEdit() {
-    this.isEditing = false;
-    this.editableProfile = { ...this.profile }; // Restauration des données originales
-  },
-  async saveChanges() {
-    try {
-      const formData = new FormData();
-      formData.append('first_name', this.editableProfile.first_name);
-      formData.append('last_name', this.editableProfile.last_name);
-      formData.append('username', this.editableProfile.username);
-      formData.append('email', this.editableProfile.email);
-      formData.append('address', this.editableProfile.address);
-      formData.append('postal_address', this.editableProfile.postal_address);
-      formData.append('phone_number', this.editableProfile.phone_number);
-      formData.append('date_of_birth', this.editableProfile.date_of_birth);
-
-      // Si une nouvelle image est sélectionnée
-      if (this.editableProfile.profile_picture) {
-        formData.append('profile_picture', this.editableProfile.profile_picture);
+    async fetchProfileData() {
+      try {
+        const response = await axios.get('/api/profile');
+        this.profile = response.data;
+        this.editableProfile = { ...this.profile }; // Cloner les données pour édition
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil', error);
       }
-
-      const response = await axios.post('/api/update-profile', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      this.profile = response.data.user;
+    },
+    editProfile() {
+      this.isEditing = true;
+    },
+    cancelEdit() {
       this.isEditing = false;
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour du profil', error);
+      this.editableProfile = { ...this.profile }; // Restauration des données originales
+    },
+    async saveChanges() {
+  try {
+    const formData = new FormData();
+    // Ajoutez tous les champs requis
+    formData.append('first_name', this.editableProfile.first_name);
+    formData.append('last_name', this.editableProfile.last_name);
+    formData.append('username', this.editableProfile.username);
+    formData.append('email', this.editableProfile.email);
+    formData.append('address', this.editableProfile.address);
+    formData.append('postal_address', this.editableProfile.postal_address);
+    formData.append('phone_number', this.editableProfile.phone_number);
+    formData.append('date_of_birth', this.editableProfile.date_of_birth);
+    
+    if (this.editableProfile.profile_picture) {
+      formData.append('profile_picture', this.editableProfile.profile_picture);
     }
-  },
-  onFileChange(event) {
-    const file = event.target.files[0];
-    this.editableProfile.profile_picture = file;
-}
 
+    const response = await axios.post('/api/update-profile', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+
+    // Recharger les données du profil après mise à jour
+    await this.fetchProfileData();
+    this.isEditing = false;
+
+    window.location.reload();
+
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du profil', error);
+  }
+},
+    onFileChange(event) {
+      const file = event.target.files[0];
+      this.editableProfile.profile_picture = file;
+    }
   }
 };
 </script>
+
 
 
   

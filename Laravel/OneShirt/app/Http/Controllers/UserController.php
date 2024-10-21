@@ -7,75 +7,98 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
 {
-    public function getAllUsers(): JsonResponse
-    {
-        $users = User::all();
-
-        // Traiter chaque utilisateur pour encoder l'image de profil en base64
-        $users->map(function ($user) {
-            if ($user->profile_picture) {
-                $user->profile_picture = base64_encode($user->profile_picture);
-            }
-            return $user;
-        });
-
-        return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    
-    
-    
-    public function updateProfile(Request $request): JsonResponse
+    private function convertToUtf8($data)
 {
-    $user = Auth::user(); // Récupérer l'utilisateur connecté
-
-    if (!$user || !($user instanceof User)) {
-        return response()->json(['message' => 'Utilisateur non connecté'], 401);
+    if (is_array($data)) {
+        return array_map([$this, 'convertToUtf8'], $data);
     }
-
-
-    // Valider les données du formulaire
-    $validatedData = $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users,username,' . $user->id,
-        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        'address' => 'nullable|string|max:255',
-        'postal_address' => 'nullable|string|max:255',
-        'phone_number' => 'nullable|string|max:20',
-        'date_of_birth' => 'nullable|date',
-        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:50000',
-    ]);
-
-   // Gestion de l'image de profil
-   if ($request->hasFile('profile_picture')) {
-    // Lire le contenu du fichier
-    $imageContent = file_get_contents($request->file('profile_picture')->getRealPath());
-
-    // Vérifie que le fichier est bien une image
-    if (strpos($request->file('profile_picture')->getMimeType(), 'image/') === 0) {
-        // Encoder l'image en base64
-        $base64Image = base64_encode($imageContent);
-
-        // Enregistrez l'image encodée dans la base de données
-        $validatedData['profile_picture'] = $base64Image; // Stocker le base64 dans les données validées
-    } else {
-        return response()->json(['message' => 'Le fichier téléchargé n\'est pas une image valide'], 422);
+    if (is_string($data)) {
+        return mb_convert_encoding($data, 'UTF-8', 'UTF-8');
     }
+    return $data;
+}
+public function getAllUsers(): JsonResponse
+{
+    $users = User::all();
+
+    // Convertir les données en UTF-8
+    $users = $this->convertToUtf8($users);
+
+    $users->map(function ($user) {
+        if ($user->profile_picture) {
+            $user->profile_picture = base64_encode($user->profile_picture);
+        }
+        return $user;
+    });
+
+    return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
 }
 
 
+    
+    
+    
+    public function updateProfile(Request $request)
+    {
 
-    // Mettre à jour les informations de l'utilisateur
-    $user->update($validatedData);
-
-    // Vous pouvez également retourner les informations de l'utilisateur après mise à jour
-    return response()->json(['message' => 'Profil mis à jour avec succès', 'user' => $user], 200);
-}
-
+        // Affiche les données reçues pour le débogage
+        Log::info($request->all());
+        
+        $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'username' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'nullable|string',
+            'postal_address' => 'nullable|string',
+            'phone_number' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'profile_picture' => 'nullable|image|max:2048', // Limite de taille de l'image
+        ]);
+    
+        $user = Auth::user(); // Récupérer l'utilisateur connecté
+        
+        if (!($user instanceof \App\Models\User)) {
+            return response()->json(['error' => 'User is not an instance of User model'], 500);
+        }
+        
+    
+        // Mettre à jour les données de texte
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        $user->postal_address = $request->postal_address;
+        $user->phone_number = $request->phone_number;
+        $user->date_of_birth = $request->date_of_birth;
+    
+        // Gérer le téléchargement de l'image
+        try {
+            if ($request->hasFile('profile_picture')) {
+                $image = $request->file('profile_picture');
+                $imageData = file_get_contents($image->getRealPath());
+                $user->profile_picture = $imageData; // Stocker l'image dans la base de données
+            }
+        } catch (\Exception $e) {
+            Log::error("Image processing failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image processing failed'], 500);
+        }
+        
+    
+        try {
+            $user->save(); // Enregistrer les modifications
+        } catch (\Exception $e) {
+            Log::error("Database save error: " . $e->getMessage());
+            return response()->json(['error' => 'Failed to update profile'], 500);
+        }
+        
+    }
+    
 
 }

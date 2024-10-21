@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'first_name', 'last_name', 'username', 'email', 'password_hash', 
@@ -38,14 +36,12 @@ class User extends Authenticatable
         return $this->hasOne(Cart::class);
     }
 
-        public static function boot()
+    public static function boot()
     {
         parent::boot();
 
         static::creating(function ($user) {
-            $user->password = bcrypt($user->password);
+            $user->password_hash = bcrypt($user->password_hash); // Utilisez `password_hash`
         });
     }
-
 }
-
