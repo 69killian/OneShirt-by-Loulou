@@ -26,6 +26,9 @@ class UserController extends Controller
         return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    
+    
+    
     public function updateProfile(Request $request): JsonResponse
 {
     $user = Auth::user(); // Récupérer l'utilisateur connecté
@@ -45,17 +48,27 @@ class UserController extends Controller
         'postal_address' => 'nullable|string|max:255',
         'phone_number' => 'nullable|string|max:20',
         'date_of_birth' => 'nullable|date',
-        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:50000',
     ]);
 
-    // Gestion de l'image de profil
-    if ($request->hasFile('profile_picture')) {
-        // Lire le contenu du fichier
-        $image = file_get_contents($request->file('profile_picture')->getRealPath());
+   // Gestion de l'image de profil
+   if ($request->hasFile('profile_picture')) {
+    // Lire le contenu du fichier
+    $imageContent = file_get_contents($request->file('profile_picture')->getRealPath());
 
-        // Enregistrez l'image dans la base de données
-        $user->profile_picture = $image; // Assuming 'profile_picture' is the LONG BLOB column
+    // Vérifie que le fichier est bien une image
+    if (strpos($request->file('profile_picture')->getMimeType(), 'image/') === 0) {
+        // Encoder l'image en base64
+        $base64Image = base64_encode($imageContent);
+
+        // Enregistrez l'image encodée dans la base de données
+        $validatedData['profile_picture'] = $base64Image; // Stocker le base64 dans les données validées
+    } else {
+        return response()->json(['message' => 'Le fichier téléchargé n\'est pas une image valide'], 422);
     }
+}
+
+
 
     // Mettre à jour les informations de l'utilisateur
     $user->update($validatedData);

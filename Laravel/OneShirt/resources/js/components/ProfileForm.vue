@@ -9,7 +9,7 @@
     <div v-if="!isEditing" class="profile-content" id="profileView">
       <!-- Photo de Profil -->
       <div class="profile-photo">
-        <img v-if="profile.profile_picture" :src="profile.profile_picture" alt="Photo de Profil" />
+        <img :src="'data:image/png;base64,' + profile.profile_picture" alt="Photo de profil">
       </div>
       <!-- Informations Utilisateur -->
       <div class="profile-details">
