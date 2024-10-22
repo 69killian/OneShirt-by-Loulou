@@ -8,7 +8,7 @@
       <router-link
         v-for="article in articles.slice(0, 3)"
         :key="article.id"
-        to="/article"
+        :to="`/article/${article.slug}`"
         class="blog-card animate"
       >
         <img

@@ -70,6 +70,7 @@
     align-items: stretch; /* Alignement étiré pour égaliser les hauteurs */
     justify-content: space-between;
     margin-top: 0px;
+    background-color: white;
     margin-bottom: 0px;
     opacity: 0; /* Opacité initiale */
     transform: translateY(20px); /* Position initiale */

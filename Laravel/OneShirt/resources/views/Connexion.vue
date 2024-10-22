@@ -2,6 +2,7 @@
     <Header />
     <div class="connexion-page">
       <ConnexionForm />
+      <Newsletter/>
     </div>
     <Footer />
   </template>
@@ -10,11 +11,13 @@
   import Header from '@/components/Header.vue';
   import ConnexionForm from '@/components/ConnexionForm.vue';
   import Footer from '@/components/Footer.vue';
+  import Newsletter from '@/components/Newsletter.vue';
   
   export default {
     name: 'Connexion',
     components: {
       ConnexionForm,
+      Newsletter,
       Header,
       Footer,
     },

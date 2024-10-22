@@ -47,6 +47,9 @@ Route::get('/api/users', [UserController::class, 'getAllUsers']);
 // Route pour récupération des Articles de Blog
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
+// Route pour récupération des page d'articles
+Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
+
 // Route pour récupérer les Produits
 Route::get('/api/products', 
     [ProductController::class, 'index']
