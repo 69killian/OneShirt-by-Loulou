@@ -3,10 +3,12 @@
     <h2>Nos Vêtements</h2>
     <div class="vetements-grid">
       <div class="vetement-card" v-for="vetement in vetements" :key="vetement.id">
-        <img :src="vetement.images[0].image_base64" alt="Vêtement" v-if="vetement.images.length" />
-        <h3>{{ vetement.name }}</h3>
-        <p>{{ vetement.description }}</p>
-        <p>{{ vetement.price }} €</p>
+        <router-link :to="`/produit/${vetement.id}`" class="vetement-link" style="text-decoration: none; color: black;">
+          <img :src="vetement.images[0].image_base64" alt="Vêtement" v-if="vetement.images.length" />
+          <h3>{{ vetement.name }}</h3>
+          <p>{{ vetement.description }}</p>
+          <p>{{ vetement.price }} €</p>
+        </router-link>
       </div>
     </div>
   </div>
