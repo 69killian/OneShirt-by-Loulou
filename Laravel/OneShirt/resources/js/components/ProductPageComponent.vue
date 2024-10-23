@@ -1,84 +1,127 @@
 <template>
-    <section class="main-product-page-content">
-      <article>
-        <div class="product-images">
-          <img src="../../../public/images/Image.png" alt="image" v-for="n in 4" :key="n" />
-        </div>
-      </article>
-  
-      <div class="main-product-image">
-        <img src="../../../public/images/Image.png" alt="image" />
+  <section class="main-product-page-content">
+    <!-- Image principale -->
+    <div class="main-product-image">
+      <img src="../../../public/images/Image.png" alt="image" />
+    </div>
+
+    <!-- Description et options du produit -->
+    <article>
+      <div class="product-desc">
+        <p class="product-name-desc">{{ productName }}</p>
+        <p class="price-product-desc">{{ productPrice }}€</p>
+        <p class="type-of-product">{{ productType }}</p>
       </div>
-  
-      <article>
-        <div class="product-desc">
-          <p class="product-name-desc">{{ productName }}</p>
-          <p class="price-product-desc">{{ productPrice }}€</p>
-          <p class="type-of-product">{{ productType }}</p>
-        </div>
-  
-        <div class="product-options">
-          <div class="selectors-flex">
-            <div>
-              <label for="size-selector">Tailles</label>
-              <select id="size-selector">
-                <option v-for="size in sizes" :key="size">{{ size }}</option>
-              </select>
-            </div>
-            <div>
-              <label for="label-selector">Label</label>
-              <select id="label-selector">
-                <option v-for="label in labels" :key="label">{{ label }}</option>
-              </select>
-            </div>
+
+      <div class="product-options">
+        <div class="selectors-flex">
+          <div>
+            <label for="size-selector">Tailles</label>
+            <select id="size-selector">
+              <option v-for="size in sizes" :key="size">{{ size }}</option>
+            </select>
           </div>
-          <button class="add-to-cart-btn" @click="addToCart">Ajouter au panier</button>
+          <div>
+            <label for="label-selector">Label</label>
+            <select id="label-selector">
+              <option v-for="label in labels" :key="label">{{ label }}</option>
+            </select>
+          </div>
         </div>
-  
-        <div class="product-details">
-          <select id="material">
-            <option value="Matière et entretien">Matière et entretien</option>
-            <option v-for="material in materials" :key="material">{{ material }}</option>
-          </select>
-  
-          <select id="product-details">
-            <option value="Détail du produit">Détail du produit</option>
-            <option v-for="detail in productDetails" :key="detail">{{ detail }}</option>
-          </select>
-  
-          <select id="size-fit">
-            <option value="Taille et coupe">Taille et coupe</option>
-            <option v-for="fit in sizeFits" :key="fit">{{ fit }}</option>
-          </select>
+        <button class="add-to-cart-btn" @click="addToCart">Ajouter au panier</button>
+      </div>
+
+      <!-- Sections similaires à la FAQ -->
+      <div class="product-details">
+        <div class="faq-item" v-for="(detail, index) in productDetails" :key="index">
+          <button class="faq-question" @click="toggleDetail(index)">{{ detail.title }}</button>
+          <div
+            class="faq-answer"
+            :style="{ maxHeight: activeIndex === index ? answerHeights[index] : null, padding: activeIndex === index ? '15px 0' : '0' }"
+            ref="answers"
+          >
+            <p>{{ detail.content }}</p>
+          </div>
         </div>
-      </article>
-    </section>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        productName: "Produit nom",
-        productPrice: 50,
-        productType: "type de produit",
-        sizes: ["S", "M", "L", "XL"],
-        labels: ["Label 1", "Label 2", "Label 3"],
-        materials: ["Polyester", "Laine"],
-        productDetails: ["Détail 2", "Détail 3"],
-        sizeFits: ["Standard", "Ample"],
-      };
+      </div>
+    </article>
+  </section>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      productName: "Produit nom",
+      productPrice: 50,
+      productType: "type de produit",
+      sizes: ["S", "M", "L", "XL"],
+      labels: ["Label 1", "Label 2", "Label 3"],
+      activeIndex: null,
+      answerHeights: [],
+      productDetails: [
+        { title: "Matière et entretien", content: "Polyester, Laine, etc." },
+        { title: "Détail du produit", content: "Ce produit est fabriqué à partir de matériaux de haute qualité." },
+        { title: "Taille et coupe", content: "Ce produit est disponible en tailles standard et ample." },
+      ],
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
+    });
+  },
+  methods: {
+    addToCart() {
+      alert("Produit ajouté au panier");
     },
-    methods: {
-      addToCart() {
-        // Logique pour ajouter au panier
-        alert("Produit ajouté au panier");
-      },
+    toggleDetail(index) {
+      if (this.activeIndex === index) {
+        this.activeIndex = null;
+      } else {
+        this.activeIndex = index;
+      }
     },
-  };
-  </script>
+  },
+};
+</script>
+
   
   <style scoped>
+  
+/* Styles similaires à la FAQ */
+.faq-item {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.faq-question {
+  background-color: #f7f7f7;
+  color: #333;
+  font-size: 1.2em;
+  padding: 15px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgb(235, 235, 235);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.faq-question:hover {
+  background-color: #ededed;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+  padding: 0;
+  font-size: 1.1em;
+  color: #555;
+  margin-left: 15px;
+}
+
   .main-product-page-content {
     display: flex;
     align-items: center;
