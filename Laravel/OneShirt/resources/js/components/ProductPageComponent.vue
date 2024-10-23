@@ -1,30 +1,32 @@
 <template>
   <section class="main-product-page-content">
     <!-- Image principale -->
-    <div class="main-product-image">
-      <img src="../../../public/images/Image.png" alt="image" />
+    <div class="main-product-image" v-if="product.images && product.images.length > 0">
+      <img :src="product.images[0].image_base64" :alt="`Image d'un produit`" />
     </div>
 
     <!-- Description et options du produit -->
     <article>
       <div class="product-desc">
-        <p class="product-name-desc">{{ productName }}</p>
-        <p class="price-product-desc">{{ productPrice }}€</p>
-        <p class="type-of-product">{{ productType }}</p>
+        <p class="product-name-desc">{{ product.name }}</p>
+        <p class="price-product-desc">{{ product.price }}€</p>
+        <p class="type-of-product">{{ product.description }}</p>
       </div>
 
       <div class="product-options">
         <div class="selectors-flex">
           <div>
             <label for="size-selector">Tailles</label>
-            <select id="size-selector">
-              <option v-for="size in sizes" :key="size">{{ size }}</option>
+            <select id="size-selector" v-model="selectedSize" v-if="availableSizes.length > 0">
+              <option value="" disabled selected>Choisir une taille</option> <!-- Option par défaut -->
+              <option v-for="size in availableSizes" :key="size.id" :value="size.id">{{ getSizeLabel(size.size_id) }}</option>
             </select>
+            <p v-else>Ce produit n'a pas de taille spécifique disponible.</p> <!-- Message alternatif -->
           </div>
           <div>
-            <label for="label-selector">Label</label>
-            <select id="label-selector">
-              <option v-for="label in labels" :key="label">{{ label }}</option>
+            <label for="label-selector">Couleur</label>
+            <select id="label-selector" v-model="product.color">
+              <option>{{ product.color }}</option> <!-- Affiche uniquement la couleur du produit -->
             </select>
           </div>
         </div>
@@ -49,42 +51,91 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      productName: "Produit nom",
-      productPrice: 50,
-      productType: "type de produit",
-      sizes: ["S", "M", "L", "XL"],
-      labels: ["Label 1", "Label 2", "Label 3"],
+      product: {},
+      sizes: [], // Tableau pour stocker les tailles
+      selectedSize: null, // Pour garder la taille sélectionnée
+      availableSizes: [], // Tailles disponibles pour ce produit
       activeIndex: null,
       answerHeights: [],
       productDetails: [
-        { title: "Matière et entretien", content: "Polyester, Laine, etc." },
-        { title: "Détail du produit", content: "Ce produit est fabriqué à partir de matériaux de haute qualité." },
-        { title: "Taille et coupe", content: "Ce produit est disponible en tailles standard et ample." },
+        { title: "Matière et entretien", content: "" },
+        { title: "Détail du produit", content: "" },
+        { title: "Taille et coupe", content: "" },
       ],
     };
   },
   mounted() {
+    const productId = this.$route.params.id;
+    this.fetchProduct(productId);
+    this.fetchSizes(productId); 
     this.$nextTick(() => {
-      this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
+        this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
     });
-  },
+},
   methods: {
+    fetchProduct(productId) {
+    axios.get(`/api/produit/${productId}`)
+        .then(response => {
+            this.product = response.data;
+
+            // Mettez à jour les détails du produit après récupération
+            this.productDetails[0].content = this.product.type;
+            this.productDetails[1].content = this.product.description;
+            this.productDetails[2].content = this.product.sizes.length > 0 ? 
+                this.product.sizes.map(size => size.name).join(', ') : 
+                'Aucune taille disponible';
+
+            // Vérifie si les tailles disponibles correspondent au produit
+            this.availableSizes = this.sizes.filter(size => 
+                this.product.sizes.some(productSize => productSize.size_id === size.size_id && productSize.stock_quantity > 0)
+            );
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération du produit:', error);
+        });
+    },
+    fetchSizes(productId) {
+    axios.get(`/api/tailles/${productId}`)
+        .then(response => {
+            this.sizes = response.data;
+
+            // Met à jour availableSizes ici pour inclure les tailles disponibles après la récupération
+            this.availableSizes = this.sizes.filter(size => size.stock_quantity > 0);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des tailles:', error);
+        });
+    },
     addToCart() {
-      alert("Produit ajouté au panier");
+        alert("Produit ajouté au panier");
     },
     toggleDetail(index) {
-      if (this.activeIndex === index) {
-        this.activeIndex = null;
-      } else {
-        this.activeIndex = index;
-      }
+        if (this.activeIndex === index) {
+            this.activeIndex = null;
+        } else {
+            this.activeIndex = index;
+        }
     },
-  },
+    getSizeLabel(sizeId) {
+        const sizeMap = {
+            1: 'M', // Taille M
+            2: 'L', // Taille L
+            3: 'S'  // Taille S
+        };
+        return sizeMap[sizeId] || 'Taille inconnue'; // Retourne 'Taille inconnue' si l'ID n'est pas dans le mapping
+    },
+},
 };
 </script>
+
+
+
+
 
   
   <style scoped>

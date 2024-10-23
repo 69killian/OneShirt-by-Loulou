@@ -56,22 +56,23 @@
           <button @click="sortBy('reviews')">Par Avis</button>
         </article>
         <article class="Products fade-in-up">
-          <router-link
-            v-for="product in paginatedProducts"
-            :key="product.id"
-            :to="'/produit/' + product.id" 
-            class="product-card"
-            style="text-decoration: none; color: black;"
-          >
-            <div>
-              <img :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
-              <p>{{ product.name }}</p>
-              <p>{{ product.price }}€</p>
-              <p>Description: {{ product.description }}</p>
-              <p>Avis: {{ product.reviews ? product.reviews.toFixed(1) : 'N/A' }} ★</p>
-              <p>Taille: {{ product.size.join(', ') }}</p>
-            </div>
-          </router-link>
+        <router-link
+          v-for="product in paginatedProducts"
+          :key="product.id"
+          :to="{ name: 'product-page', params: { id: product.id } }" 
+          class="product-card"
+          style="text-decoration: none; color: black;"
+        >
+          <div>
+            <img :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
+            <p>{{ product.name }}</p>
+            <p>{{ product.price }}€</p>
+            <p>Description: {{ product.description }}</p>
+            <p>Avis: {{ product.reviews ? product.reviews.toFixed(1) : 'N/A' }} ★</p>
+            <p>Taille: {{ product.size.join(', ') }}</p>
+          </div>
+        </router-link>
+
         </article>
   
         <!-- Contrôles de pagination -->

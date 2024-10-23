@@ -9,7 +9,10 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ProductSizeController;
 
+
+Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);
 
 
 // Update du profil utilisateur
@@ -49,6 +52,9 @@ Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
 // Route pour récupération des page d'articles
 Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
+
+// Route pour récupération des pages de produits
+Route::get('/api/produit/{id}', [ProductController::class, 'show']);
 
 // Route pour récupérer les Produits
 Route::get('/api/products', 

@@ -170,5 +170,61 @@ class ProductController extends Controller
         }
     }
     
+    public function show($id)
+    {
+        try {
+            // Récupération du produit avec ses images, avis et tailles associées
+            $product = Product::with(['images', 'reviews', 'sizes',])->find($id);
+            
+            // Vérifier si le produit existe
+            if (!$product) {
+                return response()->json(['message' => 'Produit non trouvé'], 404);
+            }
+            
+            // Log des données récupérées pour déboguer
+            Log::info('Produit récupéré:', ['product' => $product]);
+            
+            // Encode les images en base64 et prépare les autres champs
+            if ($product->images) {
+                $product->images->map(function ($image) {
+                    // Vérifier si l'image est définie
+                    if ($image->image) {
+                        // Encodage de l'image en base64
+                        $image->image_base64 = 'data:image/png;base64,' . base64_encode($image->image); 
+                    } else {
+                        $image->image_base64 = null; 
+                    }
+                    unset($image->image); 
+                    return $image;
+                });
+            }
+    
+            // Calcule la moyenne des avis
+            if ($product->reviews) {
+                $averageRating = $product->reviews->avg('rating');
+                $product->average_reviews = $averageRating ? round($averageRating, 1) : null;
+            } else {
+                $product->average_reviews = null;
+            }
+    
+            // Extrait les tailles sous forme de tableau
+            $product->size = $product->sizes ? $product->sizes->pluck('name')->toArray() : [];
+    
+            // Retourner les détails du produit, y compris les images encodées
+            return response()->json($product);
+        } catch (\Exception $e) {
+            // Gestion des erreurs
+            Log::error('Erreur lors de la récupération du produit:', ['error' => $e->getMessage()]);
+            return response()->json([
+                'error' => 'Erreur lors de la récupération du produit: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    
+
+
+    
+
 
 }
