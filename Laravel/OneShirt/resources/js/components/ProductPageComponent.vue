@@ -1,4 +1,5 @@
 <template>
+  <Header/>
   <section class="main-product-page-content">
     <!-- Image principale -->
     <div class="main-product-image" v-if="product.images && product.images.length > 0">
@@ -21,7 +22,7 @@
               <option value="" disabled selected>Choisir une taille</option> <!-- Option par défaut -->
               <option v-for="size in availableSizes" :key="size.id" :value="size.id">{{ getSizeLabel(size.size_id) }}</option>
             </select>
-            <p v-else>Ce produit n'a pas de taille spécifique disponible.</p> <!-- Message alternatif -->
+            <p v-else>Ce produit n'a pas de taille spécifique.</p> <!-- Message alternatif -->
           </div>
           <div>
             <label for="label-selector">Couleur</label>
@@ -48,12 +49,28 @@
       </div>
     </article>
   </section>
+  <Reviews/>
+  <Products/>
+  <Newsletter/>
+  <Footer/>
 </template>
 
 <script>
+import Header from "@/components/Header.vue";
+  import Footer from "@/components/Footer.vue";
+  import Reviews from "@/components/Reviews.vue"
+  import Products from "@/components/Products.vue";
+  import Newsletter from "@/components/Newsletter.vue";
 import axios from 'axios';
 
 export default {
+    components: {
+      Header,
+      Footer,
+      Reviews,
+      Products,
+      Newsletter,
+    },
   data() {
     return {
       product: {},
@@ -140,17 +157,16 @@ export default {
   
   <style scoped>
   
-/* Styles similaires à la FAQ */
-.faq-item {
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  .faq-item {
+  margin-bottom: 10px; /* Augmenter l'espacement entre les items */
+  padding-bottom: 15px; /* Augmenter le padding */
 }
 
 .faq-question {
   background-color: #f7f7f7;
   color: #333;
-  font-size: 1.2em;
-  padding: 15px;
+  font-size: 1.2em; /* Agrandir la taille de la police */
+  padding: 10px; /* Augmenter le padding */
   width: 100%;
   text-align: left;
   border: 1px solid rgb(235, 235, 235);
@@ -159,19 +175,25 @@ export default {
   transition: background-color 0.1s ease;
 }
 
-.faq-question:hover {
-  background-color: #ededed;
-}
-
 .faq-answer {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-  padding: 0;
-  font-size: 1.1em;
+  padding: 0px;
+  font-size: 1.2em; 
   color: #555;
   margin-left: 15px;
+  margin-top: 10px; 
+  margin-bottom: 10px;
 }
+
+/* Padding pour le contenu des réponses */
+.faq-answer p {
+  margin: -10px 10px; /* Espacement entre le texte */
+
+}
+
+
 
   .main-product-page-content {
     display: flex;
