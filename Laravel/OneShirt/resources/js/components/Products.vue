@@ -7,7 +7,7 @@
       Accompagnez l’équipage du chapeau de paille à retrouver le mythique trésor que tous les pirates recherchent : le One Piece !
     </div>
     <div v-for="(product, index) in limitedProducts" :key="product.id" class="product-item">
-      <router-link :to="`/produit/${product.id}`" class="product-link" style="color: black; text-decoration: none;"
+      <router-link :to="`/produit/${product.id}`" class="product-link" style="color: black; text-decoration: none;">
         <img :src="product.images[0]?.image_base64" alt="Product Images">
         <p>{{ product.name }}</p>
         <p>{{ product.price }}€</p>
