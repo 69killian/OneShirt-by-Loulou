@@ -1,41 +1,47 @@
 <template>
-    <div class="main-figurines">
-      <h2>Nos Figurines</h2>
-      <div class="figurines-grid">
-        <div class="figurine-card" v-for="figurine in figurines" :key="figurine.id">
-          <img :src="figurine.images[0].image_base64" alt="Figurine" v-if="figurine.images.length" />
-          <h3>{{ figurine.name }}</h3>
-          <p>{{ figurine.description }}</p>
-          <p>{{ figurine.price }} €</p>
-        </div>
-      </div>
+  <div class="main-figurines">
+    <h2>Nos Figurines</h2>
+    <div class="figurines-grid">
+      <router-link
+        class="figurine-card"
+        v-for="figurine in figurines"
+        :key="figurine.id"
+        :to="{ name: 'ProductPage', params: { id: figurine.id } }"
+        style="color: black; text-decoration: none;"
+      >
+        <img :src="figurine.images[0].image_base64" alt="Figurine" v-if="figurine.images.length" />
+        <h3>{{ figurine.name }}</h3>
+        <p>{{ figurine.description }}</p>
+        <p>{{ figurine.price }} €</p>
+      </router-link>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        figurines: [],
-      };
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      figurines: [],
+    };
+  },
+  created() {
+    this.fetchFigurines();
+  },
+  methods: {
+    async fetchFigurines() {
+      try {
+        const response = await axios.get('/api/figurines');
+        this.figurines = response.data;
+      } catch (error) {
+        console.error('Erreur lors de la récupération des figurines:', error);
+      }
     },
-    created() {
-      this.fetchFigurines();
-    },
-    methods: {
-      async fetchFigurines() {
-        try {
-          const response = await axios.get('/api/figurines');
-          this.figurines = response.data;
-        } catch (error) {
-          console.error('Erreur lors de la récupération des figurines:', error);
-        }
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
   
   <style scoped>
   .main-figurines {
