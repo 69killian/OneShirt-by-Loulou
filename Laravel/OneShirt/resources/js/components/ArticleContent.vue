@@ -22,7 +22,7 @@
   </div>
 </div>
 
-
+  <ArticleCommentComponent/>
 
     
 
@@ -60,10 +60,12 @@ import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Newsletter from './Newsletter.vue';
 import Footer from '@/components/Footer.vue';
+import ArticleCommentComponent from './ArticleCommentComponent.vue';
 
 export default {
   components: {
     Footer,
+    ArticleCommentComponent,
     Newsletter,
     Header,
   },
@@ -80,13 +82,13 @@ export default {
   },
   methods: {
     async fetchArticle() {
-      const slug = this.$route.params.slug; // Récupérez le slug de l'article depuis la route
-      console.log('Article Slug:', slug); // Affichez le slug pour vérifier
+      const slug = this.$route.params.slug; // Récupère le slug de l'article depuis la route
+      console.log('Article Slug:', slug); // Affiche le slug pour vérifier
       try {
         const response = await axios.get(`/api/blog-articles/${slug}`);
-        console.log('Données de l\'article:', response.data); // Vérifiez les données reçues
-        this.article = response.data; // Stockez l'article récupéré dans la variable 'article'
-        console.log('Article récupéré:', this.article); // Vérifiez l'article
+        console.log('Données de l\'article:', response.data); // Vérifie les données reçues
+        this.article = response.data; // Stocke l'article récupéré dans la variable 'article'
+        console.log('Article récupéré:', this.article); // Vérifie l'article
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'article :', error);
         this.article = null; 
@@ -94,8 +96,8 @@ export default {
     },
     async fetchOtherArticles() {
       try {
-        const response = await axios.get('/api/blog-articles'); // Récupérez tous les articles de blog
-        this.otherArticles = response.data.filter(a => a.slug !== this.article.slug); // Filtrez l'article courant
+        const response = await axios.get('/api/blog-articles'); // Récupère tous les articles de blog
+        this.otherArticles = response.data.filter(a => a.slug !== this.article.slug); // Filtre l'article courant
       } catch (error) {
         console.error('Erreur lors de la récupération des autres articles :', error);
         window.location.reload()
@@ -117,7 +119,7 @@ export default {
 /* Title Blog */
 .title-blog {
 justify-content: center;
-height: auto; /* Ajuste la hauteur en fonction du contenu */
+height: auto; 
 font-size: 40px;
 margin: 0; /* Supprime la marge externe */
 background-color: #d2d2d2;
