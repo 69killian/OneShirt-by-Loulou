@@ -1,19 +1,48 @@
 <template>
     <div class="comment-section">
-      <label for="comment">Laissez un commentaire :</label>
-      <textarea 
-        id="comment" 
-        v-model="comment" 
-        placeholder="Entrez votre commentaire ici..." 
-        rows="4"
-        class="comment-input">
-      </textarea>
-      <button @click="submitComment" class="submit-button">Envoyer</button>
+      <h3>Commentaires</h3>
+      <div v-if="comments.length" class="comments-list">
+        <div v-for="comment in comments" :key="comment.id" class="comment">
+          <p><strong>User ID:</strong> {{ comment.user_id }}</p>
+          <p><strong>Commentaire:</strong> {{ comment.comment }}</p>
+          <p><strong>Date:</strong> {{ new Date(comment.created_at).toLocaleString() }}</p>
+        </div>
+      </div>
+      <div v-else>
+        <p>Aucun commentaire à afficher.</p>
+      </div>
     </div>
   </template>
   
   <script>
+  import axios from 'axios';
   
+  export default {
+    data() {
+      return {
+        comments: [],
+      };
+    },
+    props: {
+      articleSlug: {
+        type: String,
+        required: true,
+      },
+    },
+    methods: {
+      async fetchComments() {
+        try {
+          const response = await axios.get(`/api/article/${this.articleSlug}/comments`);
+          this.comments = response.data; // Assurez-vous que `response.data` contient la liste des commentaires
+        } catch (error) {
+          console.error('Error fetching comments:', error);
+        }
+      }
+    },
+    mounted() {
+      this.fetchComments(); // Appel de la méthode lors du montage du composant
+    }
+  };
   </script>
   
   <style scoped>
@@ -26,34 +55,13 @@
     margin-bottom: 100px;
   }
   
-  .comment-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+  .comments-list {
+    margin-top: 20px;
   }
   
-  .submit-button {
-    background-color: #000; 
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%; 
-    box-sizing: border-box;
-  }
-  
-  .submit-button:hover {
-    background-color: #333;
-  }
-  
-  p {
-    margin-top: 15px;
-    font-weight: bold;
+  .comment {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
   }
   </style>
   

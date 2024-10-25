@@ -83,14 +83,10 @@ export default {
   methods: {
     async fetchArticle() {
       const slug = this.$route.params.slug; // Récupère le slug de l'article depuis la route
-      console.log('Article Slug:', slug); // Affiche le slug pour vérifier
       try {
         const response = await axios.get(`/api/blog-articles/${slug}`);
-        console.log('Données de l\'article:', response.data); // Vérifie les données reçues
         this.article = response.data; // Stocke l'article récupéré dans la variable 'article'
-        console.log('Article récupéré:', this.article); // Vérifie l'article
       } catch (error) {
-        console.error('Erreur lors de la récupération de l\'article :', error);
         this.article = null; 
       }
     },
@@ -99,7 +95,6 @@ export default {
         const response = await axios.get('/api/blog-articles'); // Récupère tous les articles de blog
         this.otherArticles = response.data.filter(a => a.slug !== this.article.slug); // Filtre l'article courant
       } catch (error) {
-        console.error('Erreur lors de la récupération des autres articles :', error);
         window.location.reload()
       }
     },

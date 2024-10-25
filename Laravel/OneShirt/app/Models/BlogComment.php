@@ -10,7 +10,7 @@ class BlogComment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'article_id', 'user_id', 'comment'
+        'article_id', 'user_id', 'comment', 'article_slug'
     ];
 
     public function article()

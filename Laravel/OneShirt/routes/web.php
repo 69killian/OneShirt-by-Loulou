@@ -10,6 +10,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProductSizeController;
+use App\Http\Controllers\BlogCommentController;
 
 
 Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);
@@ -46,6 +47,8 @@ Route::get('/reviews', [ReviewController::class, 'index']);
 // Route pour récupérer les Informations Utilisateur
 Route::get('/api/users', [UserController::class, 'getAllUsers']);
 
+// Route pour récupérer les commentaires par articles
+Route::get('api/article/{slug}/comments', [BlogCommentController::class, 'getCommentsByArticleSlug']);
 
 // Route pour récupération des Articles de Blog
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
