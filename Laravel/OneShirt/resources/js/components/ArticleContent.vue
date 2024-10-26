@@ -20,9 +20,11 @@
       </div>
     </div>
   </div>
+  <ArticleCommentComponent :articleSlug="article.slug" />
 </div>
 
-  <ArticleCommentComponent/>
+
+
 
     
 

@@ -30,14 +30,19 @@
       },
     },
     methods: {
-      async fetchComments() {
-        try {
-          const response = await axios.get(`/api/article/${this.articleSlug}/comments`);
-          this.comments = response.data; // Assurez-vous que `response.data` contient la liste des commentaires
-        } catch (error) {
-          console.error('Error fetching comments:', error);
-        }
-      }
+        async fetchComments() {
+  if (!this.articleSlug) {
+    console.error("Le slug de l'article est manquant.");
+    return;
+  }
+  try {
+    const response = await axios.get(`/api/article/${this.articleSlug}/comments`);
+    this.comments = response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des commentaires:', error);
+  }
+}
+
     },
     mounted() {
       this.fetchComments(); // Appel de la méthode lors du montage du composant
