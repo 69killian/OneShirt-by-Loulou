@@ -9,43 +9,39 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
-
 class UserController extends Controller
 {
     private function convertToUtf8($data)
-{
-    if (is_array($data)) {
-        return array_map([$this, 'convertToUtf8'], $data);
-    }
-    if (is_string($data)) {
-        return mb_convert_encoding($data, 'UTF-8', 'UTF-8');
-    }
-    return $data;
-}
-public function getAllUsers(): JsonResponse
-{
-    $users = User::all();
-
-    // Convertir les données en UTF-8
-    $users = $this->convertToUtf8($users);
-
-    $users->map(function ($user) {
-        if ($user->profile_picture) {
-            $user->profile_picture = base64_encode($user->profile_picture);
+    {
+        if (is_array($data)) {
+            return array_map([$this, 'convertToUtf8'], $data);
         }
-        return $user;
-    });
+        if (is_string($data)) {
+            return mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+        }
+        return $data;
+    }
 
-    return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
-}
+    public function getAllUsers(): JsonResponse
+    {
+        $users = User::all();
 
+        // Convertir les données en UTF-8
+        $users = $this->convertToUtf8($users);
 
-    
-    
-    
+        // Encoder les images de profil en base64
+        $users->transform(function ($user) {
+            if ($user->profile_picture) {
+                $user->profile_picture = base64_encode($user->profile_picture);
+            }
+            return $user;
+        });
+
+        return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
     public function updateProfile(Request $request)
     {
-
         // Affiche les données reçues pour le débogage
         Log::info($request->all());
         
@@ -63,11 +59,10 @@ public function getAllUsers(): JsonResponse
     
         $user = Auth::user(); // Récupérer l'utilisateur connecté
         
-        if (!($user instanceof \App\Models\User)) {
+        if (!($user instanceof User)) {
             return response()->json(['error' => 'User is not an instance of User model'], 500);
         }
         
-    
         // Mettre à jour les données de texte
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -90,15 +85,14 @@ public function getAllUsers(): JsonResponse
             return response()->json(['error' => 'Image processing failed'], 500);
         }
         
-    
+        // Enregistrer les modifications
         try {
             $user->save(); // Enregistrer les modifications
         } catch (\Exception $e) {
             Log::error("Database save error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to update profile'], 500);
         }
-        
-    }
-    
 
+        return response()->json(['message' => 'Profile updated successfully'], 200);
+    }
 }

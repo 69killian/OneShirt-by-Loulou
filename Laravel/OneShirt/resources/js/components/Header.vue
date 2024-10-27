@@ -44,9 +44,11 @@ export default {
   },
   methods: {
     checkAuth() {
-      // Vérifie l'état d'authentification (il faudra peut-être ajuster cela selon ta logique)
-      this.isAuthenticated = !!localStorage.getItem('user'); // Supposant que tu stockes l'utilisateur dans le localStorage après la connexion
-    },
+  // Vérifie l'état d'authentification
+  const user = localStorage.getItem('user');
+  this.isAuthenticated = !!user; 
+  console.log('État d\'authentification:', this.isAuthenticated, 'Utilisateur:', user);
+},
     async handleLogout() {
       try {
         await axios.post('/api/logout');
