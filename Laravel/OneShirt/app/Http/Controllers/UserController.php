@@ -40,6 +40,26 @@ class UserController extends Controller
         return response()->json($users, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+
+    public function getUserById($id): JsonResponse
+{
+    // Rechercher l'utilisateur par ID
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+    }
+
+    // Encoder l'image de profil en base64 si elle existe
+    if ($user->profile_picture) {
+        $user->profile_picture = base64_encode($user->profile_picture);
+    }
+
+    // Retourner les données utilisateur au format JSON
+    return response()->json($user);
+}
+
+
     public function updateProfile(Request $request)
     {
         // Affiche les données reçues pour le débogage

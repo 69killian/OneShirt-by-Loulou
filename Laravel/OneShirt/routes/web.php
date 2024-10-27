@@ -47,6 +47,9 @@ Route::get('/reviews', [ReviewController::class, 'index']);
 // Route pour récupérer les Informations Utilisateur
 Route::get('/api/users', [UserController::class, 'getAllUsers']);
 
+// Route pour récupérer les infos d'un utilisateur par son identifiant
+Route::get('/api/users/{id}', [UserController::class, 'getUserById']);
+
 // Route pour récupérer les commentaires par articles
 Route::get('api/article/{slug}/comments', [BlogCommentController::class, 'getCommentsByArticleSlug']);
 
