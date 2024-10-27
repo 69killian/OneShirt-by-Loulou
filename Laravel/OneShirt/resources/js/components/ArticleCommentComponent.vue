@@ -1,6 +1,8 @@
 <template>
     <div class="comment-section">
-      <h3>Commentaires</h3>
+      <p>---------------------------------------------------------------------------------------</p>
+      <h3>Commentaires :</h3>
+  
       <div v-if="comments.length" class="comments-list">
         <div v-for="comment in comments" :key="comment.id" class="comment">
           <div class="comment-user">
@@ -16,9 +18,21 @@
           <p><strong>Date:</strong> {{ new Date(comment.created_at).toLocaleString() }}</p>
         </div>
       </div>
+      
       <div v-else>
         <p>Aucun commentaire à afficher.</p>
       </div>
+      
+      <!-- Formulaire de commentaire -->
+      <label for="comment">Laissez un commentaire :</label>
+      <textarea 
+        id="comment" 
+        v-model="comment" 
+        placeholder="Entrez votre commentaire ici..." 
+        rows="4"
+        class="comment-input">
+      </textarea>
+      <button @click="submitComment" class="submit-button">Envoyer</button>
     </div>
   </template>
   
@@ -29,7 +43,7 @@
     data() {
       return {
         comments: [],
-        userCache: {}, // Cache des utilisateurs pour éviter les requêtes multiples
+        comment: '', 
       };
     },
     props: {
@@ -48,13 +62,12 @@
           const response = await axios.get(`/api/article/${this.articleSlug}/comments`);
           this.comments = response.data;
   
-          // Pour chaque commentaire, récupère l'utilisateur associé
+          // Pour chaque commentaire, vérifiez si l'utilisateur est présent
           for (const comment of this.comments) {
-            if (!this.userCache[comment.user_id]) {
-              await this.fetchUserById(comment.user_id, comment);
+            if (comment.user_id) {
+              comment.user = await this.fetchUserById(comment.user_id);
             } else {
-              // Si l'utilisateur est déjà en cache, on l'utilise
-              comment.user = this.userCache[comment.user_id];
+              comment.user = { username: 'Utilisateur inconnu', profile_picture: null };
             }
           }
         } catch (error) {
@@ -62,19 +75,28 @@
         }
       },
   
-      // Méthode pour récupérer les informations utilisateur par ID
-      async fetchUserById(userId, comment) {
+      async fetchUserById(userId) {
         try {
           const response = await axios.get(`/api/users/${userId}`);
-          const userData = response.data;
-  
-          this.userCache[userId] = userData;
-
-          comment.user = userData;
+          return response.data;
         } catch (error) {
           console.error(`Erreur lors de la récupération de l'utilisateur ${userId}:`, error);
+          return null;
         }
       },
+  
+      async submitComment() {
+        try {
+            const response = await axios.post(`/api/article/${this.articleSlug}/comments`, {
+            comment: this.comment,
+            });
+            this.comments.push(response.data);
+            this.comment = '';
+            window.location.reload();
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi du commentaire:', error);
+        }
+        },
     },
     mounted() {
       this.fetchComments();
@@ -112,6 +134,39 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+  }
+  
+  .comment-input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .submit-button {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .submit-button:hover {
+    background-color: #333;
+  }
+  
+  p {
+    margin-top: 15px;
+  }
+
+  label {
+    margin-top: 10px;
   }
   </style>
   

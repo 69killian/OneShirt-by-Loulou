@@ -53,6 +53,9 @@ Route::get('/api/users/{id}', [UserController::class, 'getUserById']);
 // Route pour récupérer les commentaires par articles
 Route::get('api/article/{slug}/comments', [BlogCommentController::class, 'getCommentsByArticleSlug']);
 
+// Route pour insérer des commentaires par articles et utilisateurs
+Route::post('api/article/{slug}/comments', [BlogCommentController::class, 'store']);
+
 // Route pour récupération des Articles de Blog
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
