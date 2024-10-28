@@ -18,14 +18,14 @@ class ReviewController extends Controller
 
     public function check()
 {
+    // Vérifie la connection
     $user = Auth::user();
-
-    // Normaliser les attributs
+    // données de l'utilisateur à récupérer
     $userData = [
         'id' => $user->id,
         'last_name' => mb_convert_encoding($user->last_name, 'UTF-8', 'auto'),
         'email' => mb_convert_encoding($user->email, 'UTF-8', 'auto'),
-        // Ajoutez d'autres attributs que vous souhaitez renvoyer
+
     ];
 
     return response()->json([
@@ -43,7 +43,7 @@ class ReviewController extends Controller
             'product_id' => 'required|integer|exists:products,id',
             'user_id' => 'required|integer|exists:users,id',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:500',
+            'comment' => 'required|string|max:1000',
         ]);
 
         $review = new Review();

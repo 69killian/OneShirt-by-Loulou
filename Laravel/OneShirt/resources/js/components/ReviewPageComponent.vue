@@ -116,46 +116,51 @@ export default {
     fetch("/api/auth/check")
       .then((response) => response.json())
       .then((data) => {
-        this.isAuthenticated = data.authenticated; // Définit isAuthenticated en fonction de la réponse
-        this.currentUser = data.user; // Définit currentUser avec les informations de l'utilisateur
+        this.isAuthenticated = data.authenticated; 
+        this.currentUser = data.user;
       })
       .catch((error) => {
         console.error("Erreur lors de la vérification de l'authentification:", error);
       });
   },
-    submitReview() {
-      if (!this.isAuthenticated) {
-        alert("Vous devez être connecté pour soumettre un avis.");
-        return;
-      }
-      const reviewData = {
-        product_id: this.selectedProduct,
-        user_id: this.currentUser.id,
-        rating: this.selectedRating,
-        comment: this.reviewComment,
-      };
+  submitReview() {
+  if (!this.isAuthenticated) {
+    alert("Vous devez être connecté pour soumettre un avis.");
+    return;
+  }
+  
+  const reviewData = {
+    product_id: this.selectedProduct,
+    user_id: this.currentUser.id,
+    rating: this.selectedRating,
+    comment: this.reviewComment,
+  };
 
-      fetch("/api/reviews/insert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reviewData),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Erreur lors de l'envoi de l'avis.");
-          }
-          return response.json();
-        })
-        .then(() => {
-          alert("Votre avis a été soumis avec succès !");
-          this.fetchReviews();
-        })
-        .catch((error) => {
-          console.error("Erreur lors de l'envoi de l'avis:", error);
-        });
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  fetch("/api/reviews/insert", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": csrfToken // Ajoutez cette ligne pour inclure le token CSRF
     },
+    body: JSON.stringify(reviewData),
+  })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'envoi de l'avis.");
+    }
+    return response.json();
+  })
+  .then(() => {
+    this.fetchReviews();
+  })
+  .catch((error) => {
+    console.error("Erreur lors de l'envoi de l'avis:", error);
+    alert("Erreur lors de l'envoi de votre avis");
+  });
+},
+
     redirectToLogin() {
       window.location.href = "/connexion"; // Redirige vers la page de connexion
     },
