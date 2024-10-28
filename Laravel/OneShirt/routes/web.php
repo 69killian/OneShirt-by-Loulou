@@ -11,6 +11,13 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProductSizeController;
 use App\Http\Controllers\BlogCommentController;
+use Illuminate\Support\Facades\Auth;
+
+
+
+
+Route::get('/api/auth/check', [ReviewController::class, 'check']);
+
 
 
 Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);
@@ -40,12 +47,17 @@ Route::post('/register', [RegisterController::class, 'store']);
 Route::post('/api/send-email', [MailController::class, 'sendEmail']);
 
 
-// Route pour récupérer les Informations Utilisateur
+// Route pour récupérer les avis 
 Route::get('/reviews', [ReviewController::class, 'index']);
+
+
+// Route pour créer un avis et l'insérer
+Route::post('/api/reviews/insert', [ReviewController::class, 'store']);
 
 
 // Route pour récupérer les Informations Utilisateur
 Route::get('/api/users', [UserController::class, 'getAllUsers']);
+
 
 // Route pour récupérer les infos d'un utilisateur par son identifiant
 Route::get('/api/users/{id}', [UserController::class, 'getUserById']);

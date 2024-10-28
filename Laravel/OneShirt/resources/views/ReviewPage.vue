@@ -2,6 +2,7 @@
     <div>
         <Header/>
       <ReviewPageComponent />
+      <Newsletter/>
       <Footer/>
     </div>
   </template>
@@ -10,10 +11,12 @@
   import ReviewPageComponent from '@/components/ReviewPageComponent.vue';
   import Footer from '@/components/Footer.vue';
   import Header from '@/components/Header.vue';
+  import Newsletter from '@/components/Newsletter.vue'; 
   
   export default {
     components: {
       ReviewPageComponent,
+      Newsletter,
       Footer,
       Header,
     },

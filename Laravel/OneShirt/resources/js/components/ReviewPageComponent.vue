@@ -35,111 +35,157 @@
         <h1>Soumettez Votre Avis</h1>
         <p class="description">Nous apprécions vos retours. Partagez votre expérience avec nous !</p>
   
-        <form>
-  
-          <label for="product">Produit</label>
-        <select id="product" name="product" required>
+        <form @submit.prevent="submitReview">
+        <label for="product">Produit</label>
+        <select id="product" v-model="selectedProduct" required>
           <option value="">Sélectionnez un Produit</option>
-          <option
-            v-for="product in products"
-            :key="product.id"
-            :value="product.id"
-          >
+          <option v-for="product in products" :key="product.id" :value="product.id">
             {{ product.id }} - {{ product.name }}
           </option>
         </select>
-  
-          <label for="rating">Note</label>
-          <select id="rating" name="rating" required>
-            <option value="">Sélectionnez une note</option>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-            <option value="1">1</option>
-          </select>
-  
-          <label for="message">Votre Avis</label>
-          <textarea id="message" name="message" rows="4" required placeholder="Partagez votre expérience..."></textarea>
-  
-          <button type="submit">Soumettre votre Avis</button>
-        </form>
+
+        <label for="rating">Note</label>
+        <select id="rating" v-model="selectedRating" required>
+          <option value="">Sélectionnez une note</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+
+        <label for="message">Votre Avis</label>
+        <textarea id="message" v-model="reviewComment" rows="4" required placeholder="Partagez votre expérience..."></textarea>
+          <!-- Affichage du bouton en fonction de l'authentification -->
+        <button v-if="isAuthenticated" type="submit">Soumettre votre Avis</button>
+        <button v-else type="button" @click="redirectToLogin">Connectez-vous pour laisser un avis</button>
+      </form>
+
       </div>
     </section>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        reviews: [],
-        users: [],
-        products: [],
-        scrollPosition: 0,
-      };
+ 
+<script>
+export default {
+  data() {
+    return {
+      reviews: [],
+      users: [],
+      products: [],
+      scrollPosition: 0,
+      isAuthenticated: false, // Initialise l'état d'authentification à faux
+      currentUser: null,
+      selectedProduct: null,
+      selectedRating: null,
+      reviewComment: "",
+    };
+  },
+  methods: {
+    fetchReviews() {
+      fetch("/reviews")
+        .then((response) => response.json())
+        .then((data) => {
+          this.reviews = data;
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des avis:", error);
+        });
     },
-    methods: {
-      fetchReviews() {
-        fetch("/reviews")
-          .then((response) => response.json())
-          .then((data) => {
-            this.reviews = data;
-          })
-          .catch((error) => {
-            console.error("Erreur lors de la récupération des avis:", error);
-          });
-      },
-      fetchUsers() {
-        fetch("/api/users")
-          .then((response) => response.json())
-          .then((data) => {
-            this.users = data;
-          })
-          .catch((error) => {
-            console.error("Erreur lors de la récupération des utilisateurs:", error);
-          });
-      },
-      fetchProducts() {
-    fetch("/api/products")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur de récupération des produits");
-        }
-        return response.json();
-      })
+    fetchUsers() {
+      fetch("/api/users")
+        .then((response) => response.json())
+        .then((data) => {
+          this.users = data;
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des utilisateurs:", error);
+        });
+    },
+    fetchProducts() {
+      fetch("/api/products")
+        .then((response) => response.json())
+        .then((data) => {
+          this.products = data;
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des produits:", error);
+        });
+    },
+    checkAuthentication() {
+    fetch("/api/auth/check")
+      .then((response) => response.json())
       .then((data) => {
-        this.products = data;
+        this.isAuthenticated = data.authenticated; // Définit isAuthenticated en fonction de la réponse
+        this.currentUser = data.user; // Définit currentUser avec les informations de l'utilisateur
       })
       .catch((error) => {
-        console.error("Erreur lors de la récupération des produits:", error);
+        console.error("Erreur lors de la vérification de l'authentification:", error);
       });
   },
-      getUserById(userId) {
-        return this.users.find(user => user.id === userId); // Recherche de l'utilisateur
-      },
-      getStarRating(rating) {
-        return Array.from({ length: rating }, (_, i) => i + 1); // Crée un tableau d'étoiles en fonction de la note
-      },
-      isAnimated(index) {
-        const threshold = window.innerHeight * 0.75;
-        return this.scrollPosition > (index * 300 - threshold);
-      },
-      checkVisibility() {
-        this.scrollPosition = window.scrollY;
-      },
+    submitReview() {
+      if (!this.isAuthenticated) {
+        alert("Vous devez être connecté pour soumettre un avis.");
+        return;
+      }
+      const reviewData = {
+        product_id: this.selectedProduct,
+        user_id: this.currentUser.id,
+        rating: this.selectedRating,
+        comment: this.reviewComment,
+      };
+
+      fetch("/api/reviews/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de l'envoi de l'avis.");
+          }
+          return response.json();
+        })
+        .then(() => {
+          alert("Votre avis a été soumis avec succès !");
+          this.fetchReviews();
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de l'avis:", error);
+        });
     },
-    mounted() {
-      this.fetchReviews();
-      this.fetchUsers(); // Assurez-vous que cette méthode est appelée
-      window.addEventListener('scroll', this.checkVisibility);
-      this.checkVisibility();
-      this.fetchProducts();
+    redirectToLogin() {
+      window.location.href = "/connexion"; // Redirige vers la page de connexion
     },
-    beforeDestroy() {
-      window.removeEventListener('scroll', this.checkVisibility);
+    getUserById(userId) {
+      return this.users.find((user) => user.id === userId);
     },
-  };
-  </script>
+    getStarRating(rating) {
+      return Array.from({ length: rating }, (_, i) => i + 1);
+    },
+    isAnimated(index) {
+      const threshold = window.innerHeight * 0.75;
+      return this.scrollPosition > index * 300 - threshold;
+    },
+    checkVisibility() {
+      this.scrollPosition = window.scrollY;
+    },
+  },
+  mounted() {
+    this.fetchReviews();
+    this.fetchUsers();
+    this.fetchProducts();
+    this.checkAuthentication();
+    window.addEventListener("scroll", this.checkVisibility);
+    this.checkVisibility();
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.checkVisibility);
+  },
+};
+</script>
   
   <style scoped>
   /* Animation fade up */
