@@ -32,7 +32,7 @@
     </section>
 
     <div class="see-more-button">
-      <router-link to="/avis" style="color: white;"><button>Ton avis compte !</button></router-link>
+      <router-link to="/blog" style="color: white;"><button>Voir d'autres articles</button></router-link>
     </div>
     
   </div>

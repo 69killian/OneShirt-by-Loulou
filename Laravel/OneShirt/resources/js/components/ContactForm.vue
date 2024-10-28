@@ -116,6 +116,12 @@ textarea {
     font-weight: 300;
     color: rgb(174, 174, 174);
 }
+
+input[type="text"] {
+    width: 340px;
+}
+
+
 button[type="submit"] {
     background-color: rgb(48, 48, 48);
     color: white;

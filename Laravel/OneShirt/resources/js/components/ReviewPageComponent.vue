@@ -1,69 +1,70 @@
 <template>
-    <section class="Reviews">
-      <div class="review-with-title">
-        <div class="title-section-review">Avis des clients</div>
-        <div class="review-cards-container">
-          <div
-            v-for="(review, index) in reviews"
-            :key="review.id"
-            class="review-card"
-            :class="{ animate: isAnimated(index) }"
-          >
-            <p class="review-title-card">Note : {{ review.rating }}/5</p>
-            <div class="star-rating">
-              <span v-for="star in getStarRating(review.rating)" :key="star" class="star">★</span>
-            </div>
-            <p class="review-body">{{ review.comment }}</p>
-            <div class="review-info">
-              <p class="review-date">Date : {{ review.created_at.substring(0, 10) }}</p>
-            </div>
-            <!-- Utilisateurs par Identifiants -->
-            <section class="user-info" v-if="getUserById(review.user_id)">
-              <img
-                class="avatar"
-                :src="'data:image/png;base64,' + getUserById(review.user_id).profile_picture"
-                alt="User Image"
-              />
-              <p style="color: black;">{{ getUserById(review.user_id).username }}</p>
-            </section>
-          </div>
+  <section class="Reviews">
+  <div class="review-with-title">
+    <div class="title-section-review">Avis des clients</div>
+    <div class="review-cards-container">
+      <div
+        v-for="(review, index) in reviews"
+        :key="review.id"
+        class="review-card"
+        :class="{ animate: isAnimated(index) }"
+      >
+        <p class="review-title-card">Produit : {{ getProductById(review.product_id).name }}</p>
+        <p class="review-title-card">Note : {{ review.rating }}/5</p>
+        <div class="star-rating">
+          <span v-for="star in getStarRating(review.rating)" :key="star" class="star">★</span>
         </div>
+        <p class="review-body">{{ review.comment }}</p>
+        <div class="review-info">
+          <p class="review-date">Date : {{ review.created_at.substring(0, 10) }}</p>
+        </div>
+        <!-- Utilisateurs par Identifiants -->
+        <section class="user-info" v-if="getUserById(review.user_id)">
+          <img
+            class="avatar"
+            :src="'data:image/png;base64,' + getUserById(review.user_id).profile_picture"
+            alt="User Image"
+          />
+          <p style="color: black;">{{ getUserById(review.user_id).username }}</p>
+        </section>
       </div>
-  
-      <!-- Review Submission Form -->
-      <div class="main-review">
-        <h1>Soumettez Votre Avis</h1>
-        <p class="description">Nous apprécions vos retours. Partagez votre expérience avec nous !</p>
-  
-        <form @submit.prevent="submitReview">
-        <label for="product">Produit</label>
-        <select id="product" v-model="selectedProduct" required>
-          <option value="">Sélectionnez un Produit</option>
-          <option v-for="product in products" :key="product.id" :value="product.id">
-            {{ product.id }} - {{ product.name }}
-          </option>
-        </select>
+    </div>
+  </div>
 
-        <label for="rating">Note</label>
-        <select id="rating" v-model="selectedRating" required>
-          <option value="">Sélectionnez une note</option>
-          <option value="5">5</option>
-          <option value="4">4</option>
-          <option value="3">3</option>
-          <option value="2">2</option>
-          <option value="1">1</option>
-        </select>
+  <!-- Review Submission Form -->
+  <div class="main-review">
+    <h1>Soumettez Votre Avis</h1>
+    <p class="description">Nous apprécions vos retours. Partagez votre expérience avec nous !</p>
 
-        <label for="message">Votre Avis</label>
-        <textarea id="message" v-model="reviewComment" rows="4" required placeholder="Partagez votre expérience..."></textarea>
-          <!-- Affichage du bouton en fonction de l'authentification -->
-        <button v-if="isAuthenticated" type="submit">Soumettre votre Avis</button>
-        <button v-else type="button" @click="redirectToLogin">Connectez-vous pour laisser un avis</button>
-      </form>
+    <form @submit.prevent="submitReview">
+      <label for="product">Produit</label>
+      <select id="product" v-model="selectedProduct" required>
+        <option value="">Sélectionnez un Produit</option>
+        <option v-for="product in products" :key="product.id" :value="product.id">
+          {{ product.name }} (ID: {{ product.id }})
+        </option>
+      </select>
 
-      </div>
-    </section>
-  </template>
+      <label for="rating">Note</label>
+      <select id="rating" v-model="selectedRating" required>
+        <option value="">Sélectionnez une note</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+      </select>
+
+      <label for="message">Votre Avis</label>
+      <textarea id="message" v-model="reviewComment" rows="4" required placeholder="Partagez votre expérience..."></textarea>
+      <!-- Affichage du bouton en fonction de l'authentification -->
+      <button v-if="isAuthenticated" type="submit">Soumettre votre Avis</button>
+      <button v-else type="button" @click="redirectToLogin">Connectez-vous pour laisser un avis</button>
+    </form>
+  </div>
+</section>
+</template>
+
   
  
 <script>
@@ -82,6 +83,9 @@ export default {
     };
   },
   methods: {
+    getProductById(productId) {
+    return this.products.find((product) => product.id === productId);
+  },
     fetchReviews() {
       fetch("/reviews")
         .then((response) => response.json())
