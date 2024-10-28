@@ -11,7 +11,7 @@
           >
             <p class="review-title-card">Note : {{ review.rating }}/5</p>
             <div class="star-rating">
-              <span v-for="star in getStarRating(review.rating)" :key="star" class="star">⭐</span>
+              <span v-for="star in getStarRating(review.rating)" :key="star" class="star">★</span>
             </div>
             <p class="review-body">{{ review.comment }}</p>
             <div class="review-info">
@@ -36,33 +36,27 @@
         <p class="description">Nous apprécions vos retours. Partagez votre expérience avec nous !</p>
   
         <form>
-          <label for="name">Nom</label>
-          <input type="text" id="name" name="name" required placeholder="Votre Nom">
-  
-          <label for="surname">Prénom</label>
-          <input type="text" id="surname" name="surname" required placeholder="Votre Prénom">
-  
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required placeholder="Votre Email">
   
           <label for="product">Produit</label>
-          <select id="product" name="product" required>
-            <option value="">Sélectionnez un Produit</option>
-            <option value="5">5 - produit</option>
-            <option value="4">4 - produit</option>
-            <option value="3">3 - produit</option>
-            <option value="2">2 - produit</option>
-            <option value="1">1 - produit</option>
-          </select>
+        <select id="product" name="product" required>
+          <option value="">Sélectionnez un Produit</option>
+          <option
+            v-for="product in products"
+            :key="product.id"
+            :value="product.id"
+          >
+            {{ product.id }} - {{ product.name }}
+          </option>
+        </select>
   
           <label for="rating">Note</label>
           <select id="rating" name="rating" required>
             <option value="">Sélectionnez une note</option>
-            <option value="5">5 - Excellent</option>
-            <option value="4">4 - Très bien</option>
-            <option value="3">3 - Bien</option>
-            <option value="2">2 - Moyen</option>
-            <option value="1">1 - Mauvais</option>
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
           </select>
   
           <label for="message">Votre Avis</label>
@@ -80,6 +74,7 @@
       return {
         reviews: [],
         users: [],
+        products: [],
         scrollPosition: 0,
       };
     },
@@ -88,7 +83,6 @@
         fetch("/reviews")
           .then((response) => response.json())
           .then((data) => {
-            console.log("Données des avis récupérées:", data);
             this.reviews = data;
           })
           .catch((error) => {
@@ -99,13 +93,27 @@
         fetch("/api/users")
           .then((response) => response.json())
           .then((data) => {
-            console.log("Données des utilisateurs récupérées:", data); // Vérifiez que les utilisateurs sont chargés
             this.users = data;
           })
           .catch((error) => {
             console.error("Erreur lors de la récupération des utilisateurs:", error);
           });
       },
+      fetchProducts() {
+    fetch("/api/products")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erreur de récupération des produits");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        this.products = data;
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des produits:", error);
+      });
+  },
       getUserById(userId) {
         return this.users.find(user => user.id === userId); // Recherche de l'utilisateur
       },
@@ -125,6 +133,7 @@
       this.fetchUsers(); // Assurez-vous que cette méthode est appelée
       window.addEventListener('scroll', this.checkVisibility);
       this.checkVisibility();
+      this.fetchProducts();
     },
     beforeDestroy() {
       window.removeEventListener('scroll', this.checkVisibility);
