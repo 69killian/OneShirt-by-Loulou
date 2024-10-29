@@ -14,6 +14,8 @@ use App\Http\Controllers\BlogCommentController;
 use Illuminate\Support\Facades\Auth;
 
 
+Route::get('/api/cart-items', [ProductController::class, 'getCartItems']);
+
 
 
 Route::get('/api/auth/check', [ReviewController::class, 'check']);

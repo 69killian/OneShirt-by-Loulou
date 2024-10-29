@@ -41,7 +41,7 @@
       <select id="product" v-model="selectedProduct" required>
         <option value="">Sélectionnez un Produit</option>
         <option v-for="product in products" :key="product.id" :value="product.id">
-          {{ product.name }} (ID: {{ product.id }})
+          {{ product.id }} - {{ product.name }} 
         </option>
       </select>
 

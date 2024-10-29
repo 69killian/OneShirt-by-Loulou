@@ -1,93 +1,79 @@
 <template>
-    <div class="container">
-      <h1>Votre Panier</h1>
-      
-      <div class="cart-content">
-        <div class="products-list">
-          <!-- Product Item 1 -->
-          <div class="product-item" id="product1">
-            <img src="../../../public/images/Image.png" alt="Nom du Produit 1" class="product-image">
-            <div class="product-details">
-              <h2 class="product-name">Nom du Produit 1</h2>
-              <p class="product-type">Type : <span id="productType1">T-shirt</span></p>
-              <p class="product-color">Couleur : <span id="productColor1">Bleu</span></p>
-              <p class="product-description">Description détaillée du produit 1. Cela inclut toutes les informations importantes que les clients doivent savoir.</p>
-              <p class="product-price">Prix unitaire : <span id="productPrice1">29.99 €</span></p>
-  
-              <!-- Quantity Selector -->
-              <div class="quantity-selector">
-                <label for="quantity1">Quantité :</label>
-                <input type="number" id="quantity1" name="quantity1" min="1" value="1" @change="updatePrice">
-              </div>
-            </div>
-          </div>
-  
-          <!-- Product Item 2 -->
-          <div class="product-item" id="product2">
-            <img src="../../../public/images/Image.png" alt="Nom du Produit 2" class="product-image">
-            <div class="product-details">
-              <h2 class="product-name">Nom du Produit 2</h2>
-              <p class="product-type">Type : <span id="productType2">Casquette</span></p>
-              <p class="product-color">Couleur : <span id="productColor2">Rouge</span></p>
-              <p class="product-description">Description détaillée du produit 2. Cela inclut toutes les informations importantes que les clients doivent savoir.</p>
-              <p class="product-price">Prix unitaire : <span id="productPrice2">19.99 €</span></p>
-  
-              <!-- Quantity Selector -->
-              <div class="quantity-selector">
-                <label for="quantity2">Quantité :</label>
-                <input type="number" id="quantity2" name="quantity2" min="1" value="1" @change="updatePrice">
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Order Summary -->
-        <div class="order-summary">
-          <h2>Résumé de la Commande</h2>
-          <p>Prix total des produits : <span id="totalPrice">{{ totalPrice }} €</span></p>
-          <p>Quantité totale : <span id="totalQuantity">{{ totalQuantity }}</span></p>
-          <button id="checkoutButton">
-            <button style="color: white; text-decoration: none;" id="checkoutButton" @click="proceedToPayment">
-                Procéder au paiement
-            </button>
+  <div class="container">
+    <h1>Votre Panier</h1>
+    
+    <div class="cart-content">
+      <div class="products-list">
+        <!-- Boucle pour afficher chaque produit dans le panier -->
+        <div v-for="(product, index) in products" :key="product.id" class="product-item">
+          <img :src="product.image || '../../../public/images/Image.png'" :alt="product.name" class="product-image">
+          <div class="product-details">
+            <h2 class="product-name">{{ product.name }}</h2>
+            <p class="product-type">Type : <span>{{ product.type }}</span></p>
+            <p class="product-color">Couleur : <span>{{ product.color }}</span></p>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">Prix unitaire : <span>{{ product.price }} €</span></p>
 
-            </button>
-          <div class="card-logos">
-            <img src="../../../public/images/cprvfy9q.bmp" alt="Visa">
-            <img src="../../../public/images/Mastercard-logo.svg.png" alt="MasterCard">
-            <img src="../../../public/images/yxutmjlg.bmp" alt="American Express">
-            <img src="../../../public/images/spkvt5uz.bmp" alt="CB">
-            <img src="../../../public/images/i43cmo34.bmp" alt="Stripe">
+            <!-- Sélecteur de quantité -->
+            <div class="quantity-selector">
+              <label :for="'quantity' + index">Quantité :</label>
+              <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Résumé de la commande -->
+      <div class="order-summary">
+        <h2>Résumé de la Commande</h2>
+        <p>Prix total des produits : <span>{{ totalPrice }} €</span></p>
+        <p>Quantité totale : <span>{{ totalQuantity }}</span></p>
+        <button @click="proceedToPayment" id="checkoutButton">
+          Procéder au paiement
+        </button>
+        <div class="card-logos">
+          <img src="../../../public/images/cprvfy9q.bmp" alt="Visa">
+          <img src="../../../public/images/Mastercard-logo.svg.png" alt="MasterCard">
+          <img src="../../../public/images/yxutmjlg.bmp" alt="American Express">
+          <img src="../../../public/images/spkvt5uz.bmp" alt="CB">
+          <img src="../../../public/images/i43cmo34.bmp" alt="Stripe">
+        </div>
+      </div>
     </div>
-  </template>
-  
-  <script>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      totalPrice: '49.98',
-      totalQuantity: 2,
-      isLoggedIn: false // Change cela en fonction de ton état d'authentification
+      products: [], // Liste de produits récupérés de l'API
+      totalPrice: 0,
+      totalQuantity: 0,
+      isLoggedIn: false // Modifier selon l'état de connexion
     };
   },
   methods: {
+    fetchProducts() {
+      axios.get('/api/products')
+        .then(response => {
+          this.products = response.data.map(product => ({
+            ...product,
+            image: product.images && product.images.length > 0 ? product.images[0].image_base64 : '',
+            quantity: 1 // Par défaut 1 pour chaque produit
+          }));
+          this.updatePrice(); // Mettre à jour le prix après récupération des produits
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des produits:', error);
+        });
+    },
     updatePrice() {
-      const quantity1 = parseInt(document.getElementById('quantity1').value);
-      const price1 = parseFloat(document.getElementById('productPrice1').textContent.replace(' €', ''));
-      const totalPrice1 = (quantity1 * price1).toFixed(2);
-  
-      const quantity2 = parseInt(document.getElementById('quantity2').value);
-      const price2 = parseFloat(document.getElementById('productPrice2').textContent.replace(' €', ''));
-      const totalPrice2 = (quantity2 * price2).toFixed(2);
-  
-      const totalQuantity = quantity1 + quantity2;
-      const grandTotal = (parseFloat(totalPrice1) + parseFloat(totalPrice2)).toFixed(2);
-  
-      this.totalPrice = grandTotal;
-      this.totalQuantity = totalQuantity;
+      // Calcul des prix totaux
+      this.totalPrice = this.products.reduce((acc, product) => acc + product.price * product.quantity, 0).toFixed(2);
+      this.totalQuantity = this.products.reduce((acc, product) => acc + product.quantity, 0);
     },
     proceedToPayment() {
       if (this.isLoggedIn) {
@@ -96,8 +82,11 @@ export default {
         this.$router.push('/paiementvisiteur');
       }
     }
+  },
+  mounted() {
+    this.fetchProducts(); // Charger les produits lors du montage du composant
   }
-}
+};
 </script>
 
   
