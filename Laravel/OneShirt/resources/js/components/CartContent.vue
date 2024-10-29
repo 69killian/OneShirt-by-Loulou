@@ -1,12 +1,19 @@
 <template>
   <div class="container">
     <h1>Votre Panier</h1>
-    
+
     <div class="cart-content">
       <div class="products-list">
-        <!-- Boucle pour afficher chaque produit dans le panier -->
         <div v-for="(product, index) in products" :key="product.id" class="product-item">
-          <img :src="product.image || '../../../public/images/Image.png'" :alt="product.name" class="product-image">
+          <img 
+            v-if="product.images && product.images.length" 
+            :src="product.images[0].image_base64" 
+            alt="Image du produit" 
+            class="product-image" 
+          />
+          <div v-else>
+            <span>Image du produit non disponible</span>
+          </div>
           <div class="product-details">
             <h2 class="product-name">{{ product.name }}</h2>
             <p class="product-type">Type : <span>{{ product.type }}</span></p>
@@ -14,7 +21,6 @@
             <p class="product-description">{{ product.description }}</p>
             <p class="product-price">Prix unitaire : <span>{{ product.price }} €</span></p>
 
-            <!-- Sélecteur de quantité -->
             <div class="quantity-selector">
               <label :for="'quantity' + index">Quantité :</label>
               <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
@@ -23,7 +29,6 @@
         </div>
       </div>
 
-      <!-- Résumé de la commande -->
       <div class="order-summary">
         <h2>Résumé de la Commande</h2>
         <p>Prix total des produits : <span>{{ totalPrice }} €</span></p>
@@ -49,45 +54,70 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      products: [], // Liste de produits récupérés de l'API
+      products: [],
       totalPrice: 0,
       totalQuantity: 0,
-      isLoggedIn: false // Modifier selon l'état de connexion
+      isLoggedIn: false,
     };
   },
   methods: {
+    async checkAuthentication() {
+        try {
+            const response = await axios.get('/api/check');
+            this.isLoggedIn = response.data.authenticated;
+            if (this.isLoggedIn) {
+                this.fetchCartItems();
+            } else {
+                this.products = []; // Pas de produits à afficher pour un visiteur
+            }
+        } catch (error) {
+            console.error("Erreur lors de la vérification de l'authentification :", error);
+        }
+    },
+    fetchCartItems() {
+      axios.get('/api/cart')
+        .then(response => {
+            this.products = response.data.items.map(item => ({
+                ...item.product,
+                quantity: item.quantity,
+                // Pas de gestion de l'image par défaut
+            }));
+            console.log(this.products); // Vérifie les données des produits
+            this.updatePrice();
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des produits du panier :", error);
+        });
+    },
     fetchProducts() {
       axios.get('/api/products')
         .then(response => {
           this.products = response.data.map(product => ({
             ...product,
-            image: product.images && product.images.length > 0 ? product.images[0].image_base64 : '',
-            quantity: 1 // Par défaut 1 pour chaque produit
+            quantity: 1
           }));
-          this.updatePrice(); // Mettre à jour le prix après récupération des produits
+          this.updatePrice();
         })
         .catch(error => {
           console.error('Erreur lors de la récupération des produits:', error);
         });
     },
     updatePrice() {
-      // Calcul des prix totaux
       this.totalPrice = this.products.reduce((acc, product) => acc + product.price * product.quantity, 0).toFixed(2);
       this.totalQuantity = this.products.reduce((acc, product) => acc + product.quantity, 0);
     },
     proceedToPayment() {
-      if (this.isLoggedIn) {
-        this.$router.push('/paiementconnecte');
-      } else {
-        this.$router.push('/paiementvisiteur');
-      }
+      this.$router.push(this.isLoggedIn ? '/paiementconnecte' : '/paiementvisiteur');
     }
   },
   mounted() {
-    this.fetchProducts(); // Charger les produits lors du montage du composant
+    this.checkAuthentication();
   }
 };
 </script>
+
+
+
 
   
   <style scoped>

@@ -11,10 +11,12 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProductSizeController;
 use App\Http\Controllers\BlogCommentController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\CartController;
 
 
-Route::get('/api/cart-items', [ProductController::class, 'getCartItems']);
+Route::get('/api/cart', [CartController::class, 'getCartItems']);
+
+Route::get('/api/check', [CartController::class, 'check']);
 
 
 
