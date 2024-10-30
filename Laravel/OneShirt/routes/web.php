@@ -16,12 +16,13 @@ use App\Http\Controllers\CartController;
 
 Route::get('/api/cart', [CartController::class, 'getCartItems']);
 
+Route::get('/api/products/{id}/images', [CartController::class, 'getImagesByProductId']);
+
+
 Route::get('/api/check', [CartController::class, 'check']);
 
 
-
 Route::get('/api/auth/check', [ReviewController::class, 'check']);
-
 
 
 Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);

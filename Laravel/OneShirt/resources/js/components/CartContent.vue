@@ -5,15 +5,8 @@
     <div class="cart-content">
       <div class="products-list">
         <div v-for="(product, index) in products" :key="product.id" class="product-item">
-          <img 
-            v-if="product.images && product.images.length" 
-            :src="product.images[0].image_base64" 
-            alt="Image du produit" 
-            class="product-image" 
-          />
-          <div v-else>
-            <span>Image du produit non disponible</span>
-          </div>
+          <img :src="product.images[0]?.image_base64" alt="Product Images" class="product-image">
+
           <div class="product-details">
             <h2 class="product-name">{{ product.name }}</h2>
             <p class="product-type">Type : <span>{{ product.type }}</span></p>
@@ -62,45 +55,36 @@ export default {
   },
   methods: {
     async checkAuthentication() {
-        try {
-            const response = await axios.get('/api/check');
-            this.isLoggedIn = response.data.authenticated;
-            if (this.isLoggedIn) {
-                this.fetchCartItems();
-            } else {
-                this.products = []; // Pas de produits à afficher pour un visiteur
-            }
-        } catch (error) {
-            console.error("Erreur lors de la vérification de l'authentification :", error);
+      try {
+        const response = await axios.get('/api/check');
+        this.isLoggedIn = response.data.authenticated;
+        if (this.isLoggedIn) {
+          this.fetchCartItems();
+        } else {
+          this.products = []; // Pas de produits à afficher pour un visiteur
         }
+      } catch (error) {
+        console.error("Erreur lors de la vérification de l'authentification :", error);
+      }
     },
-    fetchCartItems() {
-      axios.get('/api/cart')
-        .then(response => {
-            this.products = response.data.items.map(item => ({
-                ...item.product,
-                quantity: item.quantity,
-                // Pas de gestion de l'image par défaut
-            }));
-            console.log(this.products); // Vérifie les données des produits
-            this.updatePrice();
-        })
-        .catch(error => {
-            console.error("Erreur lors de la récupération des produits du panier :", error);
+    async fetchCartItems() {
+      try {
+        const response = await axios.get('/api/cart');
+        const cartItems = response.data.items;
+
+        // Récupération des produits avec leurs images
+        const productIds = cartItems.map(item => item.product.id);
+        const productsResponse = await axios.get(`/api/products/`, { params: { ids: productIds } }); // Assure-toi que l'API prend en charge ce format
+
+        this.products = cartItems.map(item => {
+          const product = productsResponse.data.find(prod => prod.id === item.product.id);
+          return { ...product, quantity: item.quantity };
         });
-    },
-    fetchProducts() {
-      axios.get('/api/products')
-        .then(response => {
-          this.products = response.data.map(product => ({
-            ...product,
-            quantity: 1
-          }));
-          this.updatePrice();
-        })
-        .catch(error => {
-          console.error('Erreur lors de la récupération des produits:', error);
-        });
+
+        this.updatePrice();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des produits du panier :", error);
+      }
     },
     updatePrice() {
       this.totalPrice = this.products.reduce((acc, product) => acc + product.price * product.quantity, 0).toFixed(2);
