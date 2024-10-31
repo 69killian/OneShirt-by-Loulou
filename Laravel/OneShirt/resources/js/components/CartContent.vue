@@ -17,6 +17,7 @@
             <div class="quantity-selector">
               <label :for="'quantity' + index">Quantité :</label>
               <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
+              <font-awesome-icon :icon="['fas', 'trash-alt']" />
             </div>
           </div>
         </div>
