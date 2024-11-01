@@ -13,18 +13,17 @@ use App\Http\Controllers\ProductSizeController;
 use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\CartController;
 
+Route::delete('/api/cart/items/{productId}', [CartController::class, 'removeCartItem']);
 
 Route::get('/api/cart', [CartController::class, 'getCartItems']);
-
-Route::get('/api/products/{id}/images', [CartController::class, 'getImagesByProductId']);
 
 
 Route::get('/api/check', [CartController::class, 'check']);
 
-
+// Route pour vérifier la connection utilisateur
 Route::get('/api/auth/check', [ReviewController::class, 'check']);
 
-
+// Route pour obtenir les tailles des produits
 Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);
 
 

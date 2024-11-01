@@ -20,6 +20,7 @@
               <font-awesome-icon :icon="['fas', 'trash-alt']" />
             </div>
           </div>
+          <p class="delete-button" @click="removeCartItem(product.id)">🗑</p>
         </div>
       </div>
 
@@ -55,6 +56,15 @@ export default {
     };
   },
   methods: {
+    async removeCartItem(productId) {
+    try {
+      await axios.delete(`/api/cart/items/${productId}`);
+      this.products = this.products.filter(product => product.id !== productId);
+      this.updatePrice(); // Met à jour le prix total et la quantité
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'article du panier :", error);
+    }
+  },
     async checkAuthentication() {
       try {
         const response = await axios.get('/api/check');
@@ -212,6 +222,12 @@ export default {
   
   .card-logos img {
     height: 30px;
+  }
+
+  .delete-button {
+    font-size: 30px;
+    cursor: pointer;
+    margin-right: 30px;
   }
   </style>
   
