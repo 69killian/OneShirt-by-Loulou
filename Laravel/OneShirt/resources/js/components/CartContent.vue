@@ -19,6 +19,7 @@
               <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
             </div>
           </div>
+          <p class="delete-button">🗑</p>
         </div>
       </div>
 
@@ -211,6 +212,12 @@ export default {
   
   .card-logos img {
     height: 30px;
+  }
+
+  .delete-button {
+    font-size: 30px;
+    cursor: pointer;
+    margin-right: 30px;
   }
   </style>
   
