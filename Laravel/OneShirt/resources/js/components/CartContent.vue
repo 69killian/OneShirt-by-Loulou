@@ -228,6 +228,11 @@ export default {
     font-size: 30px;
     cursor: pointer;
     margin-right: 30px;
+    transition: 0.2s;
+  }
+
+  .delete-button:hover {
+    color: gray;
   }
   </style>
   
