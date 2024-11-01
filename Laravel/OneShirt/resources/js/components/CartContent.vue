@@ -19,7 +19,7 @@
               <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
             </div>
           </div>
-          <p class="delete-button">🗑</p>
+          <p class="delete-button" @click="removeCartItem(product.id)">🗑</p>
         </div>
       </div>
 
@@ -55,6 +55,15 @@ export default {
     };
   },
   methods: {
+    async removeCartItem(productId) {
+    try {
+      await axios.delete(`/api/cart/items/${productId}`);
+      this.products = this.products.filter(product => product.id !== productId);
+      this.updatePrice(); // Met à jour le prix total et la quantité
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'article du panier :", error);
+    }
+  },
     async checkAuthentication() {
       try {
         const response = await axios.get('/api/check');
