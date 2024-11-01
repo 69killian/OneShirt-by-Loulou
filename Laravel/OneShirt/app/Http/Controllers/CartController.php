@@ -68,6 +68,31 @@ class CartController extends Controller
     return response()->json(['error' => 'Utilisateur non authentifié'], 403);
 }
 
+
+public function updateCartItemQuantity(Request $request, $productId)
+{
+    if (Auth::check()) {
+        $userId = Auth::id();
+        $cart = Cart::where('user_id', $userId)->first();
+
+        if ($cart) {
+            $item = $cart->items()->where('product_id', $productId)->first();
+            if ($item) {
+                // Met à jour la quantité avec la valeur envoyée dans la requête
+                $item->quantity = $request->input('quantity');
+                $item->save();
+                return response()->json(['success' => 'Quantité mise à jour'], 200);
+            } else {
+                return response()->json(['error' => 'Article non trouvé dans le panier'], 404);
+            }
+        }
+        return response()->json(['error' => 'Panier introuvable'], 404);
+    }
+
+    return response()->json(['error' => 'Utilisateur non authentifié'], 403);
+}
+
+
     
     
 }

@@ -13,15 +13,25 @@ use App\Http\Controllers\ProductSizeController;
 use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\CartController;
 
+
+// Route pour mettre à jour les quantités du panier
+Route::put('/api/cart/items/{productId}', [CartController::class, 'updateCartItemQuantity']);
+
+
+// Route pour supprimer les cartitem selectionnés du panier d'un utilisateur
 Route::delete('/api/cart/items/{productId}', [CartController::class, 'removeCartItem']);
 
+
+// Route pour récupérer les CartItem dans le panier
 Route::get('/api/cart', [CartController::class, 'getCartItems']);
 
 
 Route::get('/api/check', [CartController::class, 'check']);
 
+
 // Route pour vérifier la connection utilisateur
 Route::get('/api/auth/check', [ReviewController::class, 'check']);
+
 
 // Route pour obtenir les tailles des produits
 Route::get('/api/tailles/{id}', [ProductSizeController::class, 'index']);
@@ -66,20 +76,26 @@ Route::get('/api/users', [UserController::class, 'getAllUsers']);
 // Route pour récupérer les infos d'un utilisateur par son identifiant
 Route::get('/api/users/{id}', [UserController::class, 'getUserById']);
 
+
 // Route pour récupérer les commentaires par articles
 Route::get('api/article/{slug}/comments', [BlogCommentController::class, 'getCommentsByArticleSlug']);
+
 
 // Route pour insérer des commentaires par articles et utilisateurs
 Route::post('api/article/{slug}/comments', [BlogCommentController::class, 'store']);
 
+
 // Route pour récupération des Articles de Blog
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
+
 
 // Route pour récupération des page d'articles
 Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
 
+
 // Route pour récupération des pages de produits
 Route::get('/api/produit/{id}', [ProductController::class, 'show']);
+
 
 // Route pour récupérer les Produits
 Route::get('/api/products', 

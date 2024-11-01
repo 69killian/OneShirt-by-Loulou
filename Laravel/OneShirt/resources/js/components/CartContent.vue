@@ -16,8 +16,13 @@
 
             <div class="quantity-selector">
               <label :for="'quantity' + index">Quantité :</label>
-              <input type="number" :id="'quantity' + index" v-model.number="product.quantity" min="1" @change="updatePrice">
-              <font-awesome-icon :icon="['fas', 'trash-alt']" />
+              <input 
+                type="number" 
+                :id="'quantity' + index" 
+                v-model.number="product.quantity" 
+                min="0" 
+                @change="updateQuantity(product)"
+              />
             </div>
           </div>
           <p class="delete-button" @click="removeCartItem(product.id)">🗑</p>
@@ -56,6 +61,18 @@ export default {
     };
   },
   methods: {
+    async updateQuantity(product) {
+    if (product.quantity === 0) {
+      this.confirmAndRemoveItem(product);
+      return;
+    }
+    try {
+      await axios.put(`/api/cart/items/${product.id}`, { quantity: product.quantity });
+      this.updatePrice();
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la quantité :", error);
+    }
+  },
     async removeCartItem(productId) {
     try {
       await axios.delete(`/api/cart/items/${productId}`);
@@ -63,6 +80,13 @@ export default {
       this.updatePrice(); // Met à jour le prix total et la quantité
     } catch (error) {
       console.error("Erreur lors de la suppression de l'article du panier :", error);
+    }
+  },
+  confirmAndRemoveItem(product) {
+    if (confirm("Voulez-vous supprimer cet article de votre panier ?")) {
+      this.removeCartItem(product.id);
+    } else {
+      product.quantity = 1; // Remet la quantité à 1 si l'utilisateur annule
     }
   },
     async checkAuthentication() {
@@ -98,8 +122,8 @@ export default {
       }
     },
     updatePrice() {
-      this.totalPrice = this.products.reduce((acc, product) => acc + product.price * product.quantity, 0).toFixed(2);
-      this.totalQuantity = this.products.reduce((acc, product) => acc + product.quantity, 0);
+    this.totalPrice = this.products.reduce((acc, product) => acc + product.price * product.quantity, 0).toFixed(2);
+    this.totalQuantity = this.products.reduce((acc, product) => acc + product.quantity, 0);
     },
     proceedToPayment() {
       this.$router.push(this.isLoggedIn ? '/paiementconnecte' : '/paiementvisiteur');
