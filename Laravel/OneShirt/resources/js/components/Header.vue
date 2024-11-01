@@ -7,8 +7,8 @@
       <input class="recherche" type="text" placeholder="Rechercher">
     </div>
     <div class="header-right-hand">
-      <Tooltip1/>
-      <Tooltip2/>
+      <Tooltip1 />
+      <Tooltip2 />
       <router-link to="/blog" style="text-decoration: none; color: black;">Blog</router-link>
       <router-link to="/contact" style="text-decoration: none; color: black;">Contact</router-link>
       <button v-if="!isAuthenticated" @click="goToLogin">
@@ -18,53 +18,78 @@
         Déconnexion
       </button>
       <button>
-        <router-link to="/panier" style="text-decoration: none; color: #a35dff;">Panier 0</router-link>
+        <router-link to="/panier" style="text-decoration: none; color: #a35dff;">
+          Panier {{ totalQuantity > 0 ? totalQuantity : '' }}
+        </router-link>
       </button>
     </div>
   </header>
 </template>
 
 <script>
-import Tooltip1 from './Tooltip1.vue'
-import Tooltip2 from './Tooltip2.vue'
+import Tooltip1 from './Tooltip1.vue';
+import Tooltip2 from './Tooltip2.vue';
 import axios from 'axios';
 
 export default {
   components: {
-    Tooltip1, Tooltip2
+    Tooltip1,
+    Tooltip2
   },
   data() {
     return {
-      isAuthenticated: false
+      isAuthenticated: false,
+      totalQuantity: 0,
     };
   },
   mounted() {
-    // Vérifie si l'utilisateur est authentifié au chargement du composant
     this.checkAuth();
+    this.getCartItems();
   },
   methods: {
     checkAuth() {
-  // Vérifie l'état d'authentification
-  const user = localStorage.getItem('user');
-  this.isAuthenticated = !!user; 
-  console.log('État d\'authentification:', this.isAuthenticated, 'Utilisateur:', user);
-},
+      const user = localStorage.getItem('user');
+      this.isAuthenticated = !!user;
+    },
+    async getCartItems() {
+      if (this.isAuthenticated) {
+        try {
+          const response = await axios.get('/api/cart');
+          const items = response.data.items;
+          this.totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des éléments du panier', error);
+        }
+      }
+    },
+    async updateCartItemQuantity(productId, quantity) {
+      if (this.isAuthenticated) {
+        try {
+          await axios.put(`/api/cart/items/${productId}`, { quantity });
+          await this.getCartItems(); // Met à jour le nombre total après la modification
+        } catch (error) {
+          console.error('Erreur lors de la mise à jour de la quantité', error);
+        }
+      }
+    },
     async handleLogout() {
       try {
         await axios.post('/api/logout');
-        localStorage.removeItem('user'); // Supprimer l'utilisateur du localStorage
-        this.isAuthenticated = false; // Met à jour l'état d'authentification
-        this.$router.push('/'); // Redirection vers la page d'accueil
+        localStorage.removeItem('user');
+        this.isAuthenticated = false;
+        this.totalQuantity = 0;
+        this.$router.push('/');
       } catch (error) {
         console.error('Erreur lors de la déconnexion', error);
       }
     },
     goToLogin() {
-      this.$router.push('/connexion'); // Redirection vers la page de connexion
+      this.$router.push('/connexion');
     }
   }
 }
 </script>
+
 
 
 
