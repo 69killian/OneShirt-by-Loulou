@@ -14,6 +14,10 @@ use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\CartController;
 
 
+// Route pour ajouter un nouveau produit au panier de la page des produits
+Route::post('/api/cart/add/{productId}', [CartController::class, 'addCartItem']);
+
+
 // Route pour mettre à jour les quantités du panier
 Route::put('/api/cart/items/{productId}', [CartController::class, 'updateCartItemQuantity']);
 

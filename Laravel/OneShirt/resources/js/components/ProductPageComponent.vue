@@ -71,21 +71,23 @@ export default {
       Products,
       Newsletter,
     },
-  data() {
-    return {
-      product: {},
-      sizes: [], // Tableau pour stocker les tailles
-      selectedSize: null, // Pour garder la taille sélectionnée
-      availableSizes: [], // Tailles disponibles pour ce produit
-      activeIndex: null,
-      answerHeights: [],
-      productDetails: [
-        { title: "Matière et entretien", content: "" },
-        { title: "Détail du produit", content: "" },
-        { title: "Taille et coupe", content: "" },
-      ],
-    };
-  },
+    data() {
+  return {
+    product: {},
+    sizes: [],
+    selectedSize: null,
+    availableSizes: [],
+    activeIndex: null,
+    answerHeights: [],
+    productDetails: [
+      { title: "Matière et entretien", content: "" },
+      { title: "Détail du produit", content: "" },
+      { title: "Taille et coupe", content: "" },
+    ],
+    message: null, // Message de succès ou d'erreur
+    error: null
+  };
+},
   mounted() {
     const productId = this.$route.params.id;
     this.fetchProduct(productId);
@@ -100,7 +102,7 @@ export default {
         .then(response => {
             this.product = response.data;
 
-            // Mettez à jour les détails du produit après récupération
+            // Met à jour les détails du produit après récupération
             this.productDetails[0].content = this.product.type;
             this.productDetails[1].content = this.product.description;
             this.productDetails[2].content = this.product.sizes.length > 0 ? 
@@ -116,6 +118,19 @@ export default {
             console.error('Erreur lors de la récupération du produit:', error);
         });
     },
+    addToCart() {
+    const productId = this.product.id;
+    axios.post(`/api/cart/add/${productId}`)
+      .then(response => {
+        this.message = response.data.success;
+        this.error = null;
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'ajout au panier:", error);
+        this.error = "Impossible d'ajouter le produit au panier. Veuillez réessayer.";
+        this.message = null;
+      });
+  },
     fetchSizes(productId) {
     axios.get(`/api/tailles/${productId}`)
         .then(response => {
@@ -127,9 +142,6 @@ export default {
         .catch(error => {
             console.error('Erreur lors de la récupération des tailles:', error);
         });
-    },
-    addToCart() {
-        alert("Produit ajouté au panier");
     },
     toggleDetail(index) {
         if (this.activeIndex === index) {
@@ -158,15 +170,15 @@ export default {
   <style scoped>
   
   .faq-item {
-  margin-bottom: 10px; /* Augmenter l'espacement entre les items */
-  padding-bottom: 15px; /* Augmenter le padding */
+  margin-bottom: 10px; /* Augmente l'espacement entre les items */
+  padding-bottom: 15px; /* Augmente le padding */
 }
 
 .faq-question {
   background-color: #f7f7f7;
   color: #333;
-  font-size: 1.2em; /* Agrandir la taille de la police */
-  padding: 10px; /* Augmenter le padding */
+  font-size: 1.2em; /* Agrandi la taille de la police */
+  padding: 10px; /* Augmente le padding */
   width: 100%;
   text-align: left;
   border: 1px solid rgb(235, 235, 235);
@@ -296,6 +308,19 @@ export default {
     border-radius: 7px;
     font-size: 16px;
   }
+
+  .success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
   
   /* Media Queries */
   @media (max-width: 1200px) {

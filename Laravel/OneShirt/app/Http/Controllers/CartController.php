@@ -94,5 +94,34 @@ public function updateCartItemQuantity(Request $request, $productId)
 
 
     
+public function addCartItem(Request $request, $productId)
+{
+    if (Auth::check()) {
+        $userId = Auth::id();
+
+        $cart = Cart::firstOrCreate(
+            ['user_id' => $userId],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
+
+        $cartItem = $cart->items()->where('product_id', $productId)->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += 1;
+            $cartItem->save();
+            return response()->json(['success' => 'Quantité augmentée pour cet article dans le panier.']);
+        } else {
+            $cart->items()->create([
+                'product_id' => $productId,
+                'quantity' => 1
+            ]);
+            return response()->json(['success' => 'Produit ajouté au panier avec succès.']);
+        }
+    } else {
+        return response()->json(['error' => 'Vous devez être connecté pour ajouter des articles au panier.'], 403);
+    }
+}
+
+
     
 }
