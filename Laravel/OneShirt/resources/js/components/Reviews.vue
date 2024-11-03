@@ -10,7 +10,7 @@
           :class="{ animate: isAnimated(index) }"
         >
           <div class="star-rating">
-            <span v-for="star in getStarRating(review.rating)" :key="star" class="star">⭐</span>
+            <span v-for="star in getStarRating(review.rating)" :key="star" class="star" style="color: orange;">★</span>
           </div>
           <p class="review-body">{{ review.comment }}</p>
           <div class="review-info">
@@ -208,6 +208,7 @@ export default {
   font-size: 20px;
   margin: 10px 0;
 }
+
 
 /* Responsive styles */
 @media (max-width: 1280px) {

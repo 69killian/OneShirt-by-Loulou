@@ -49,7 +49,7 @@
       </div>
     </article>
   </section>
-  <Reviews/>
+  <ReviewsProduct :productId="productId"/>
   <Products/>
   <Newsletter/>
   <Footer/>
@@ -58,7 +58,7 @@
 <script>
 import Header from "@/components/Header.vue";
   import Footer from "@/components/Footer.vue";
-  import Reviews from "@/components/Reviews.vue"
+  import ReviewsProduct from "@/components/ReviewsProduct.vue"
   import Products from "@/components/Products.vue";
   import Newsletter from "@/components/Newsletter.vue";
 import axios from 'axios';
@@ -67,7 +67,7 @@ export default {
     components: {
       Header,
       Footer,
-      Reviews,
+      ReviewsProduct,
       Products,
       Newsletter,
     },
@@ -84,8 +84,17 @@ export default {
       { title: "Détail du produit", content: "" },
       { title: "Taille et coupe", content: "" },
     ],
-    message: null, // Message de succès ou d'erreur
-    error: null
+    message: null, 
+    error: null,
+    productId: this.$route.params.id ? Number(this.$route.params.id) : null,
+    watch: {
+    '$route.params.id': {
+      handler(newId) {
+        this.productId = Number(newId);
+      },
+      immediate: true,
+    },
+  },
   };
 },
   mounted() {
@@ -158,6 +167,7 @@ export default {
         };
         return sizeMap[sizeId] || 'Taille inconnue'; // Retourne 'Taille inconnue' si l'ID n'est pas dans le mapping
     },
+    
 },
 };
 </script>

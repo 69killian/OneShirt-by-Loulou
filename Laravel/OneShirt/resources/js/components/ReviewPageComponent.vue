@@ -302,6 +302,10 @@ export default {
     font-size: 20px;
     margin: 10px 0;
   }
+
+  .star {
+    color: orange;
+  }
   
   /* Responsive styles */
   @media (max-width: 1280px) {
