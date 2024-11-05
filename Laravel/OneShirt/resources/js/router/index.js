@@ -21,9 +21,11 @@ import MotdePasseOubli from '../../views/MotdePasseOubli.vue';
 import NouveauMotdePasse from '../../views/NouveauMotdePasse.vue';
 import Figurines from '../../views/Figurines.vue';
 import Vetements from '../../views/Vetements.vue';
+import Dashboard from '../../views/Dashboard.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard},
   { path: '/article/:slug', component: ArticleContent },
   { path: '/produit/:id', name: 'product-page', component: ProductPageComponent },
   { path: '/catalogue', name: 'Catalog', component: Catalog }, 

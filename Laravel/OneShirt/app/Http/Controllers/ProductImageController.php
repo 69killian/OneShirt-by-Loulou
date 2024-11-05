@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ProductImageController extends Controller
 {
    
-    public function getImage($id)
+    public function getProductImage($id)
     {
         $image = ProductImage::findOrFail($id);
         $imageData = $image->image; // Contenu BLOB de l'image

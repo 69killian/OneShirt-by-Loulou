@@ -1,0 +1,141 @@
+<template>
+    <div class="hamburger" @click="$emit('toggle')">
+      <i class="fas fa-bars"></i>
+    </div>
+  
+    <nav :class="['sidebar', { collapsed }]">
+      <h2>OneShirt</h2>
+      <ul>
+        <li><a href="#overview"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></a></li>
+        <li><a href="#products"><i class="fas fa-box"></i> <span>Produits</span></a></li>
+        <li><a href="#users"><i class="fas fa-users"></i> <span>Utilisateurs</span></a></li>
+        <li><a href="#blog"><i class="fas fa-blog"></i> <span>Blog</span></a></li>
+        <li><a href="#reviews"><i class="fas fa-star"></i> <span>Avis</span></a></li>
+        <li><a href="#promotions"><i class="fas fa-tags"></i> <span>Promotions</span></a></li>
+        <li><a href="#orders"><i class="fas fa-receipt"></i> <span>Commandes</span></a></li>
+        <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Statistiques</span></a></li>
+      </ul>
+    </nav>
+  </template>
+  
+  <script>
+  export default {
+    props: {
+      collapsed: {
+        type: Boolean,
+        required: true
+      }
+    }
+  }
+  </script>
+  
+  
+  <style scoped>
+
+  
+  /* Styles pour le bouton hamburger */
+  .hamburger {
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    padding: 15px;
+    position: absolute;
+    top: 11px;
+    left: 15px;
+    z-index: 1000;
+  }
+  
+  /* Styles de la sidebar */
+  /* Styles de la sidebar */
+.sidebar {
+    background-color: #242424;
+    color: #fff;
+    width: 250px;
+    padding-top: 6px; /* Si vous souhaitez garder un espacement en haut */
+    border-right: 1px solid #545454;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+    height: 100vh;
+    position: fixed;
+    top: 0; /* S'assurer que la sidebar est en haut */
+}
+
+  
+  /* Styles pour la sidebar repliée */
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+  
+  /* Styles pour les éléments de la sidebar */
+  .sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Masquer le texte des éléments quand replié */
+  .sidebar.collapsed ul li a span {
+    display: none;
+  }
+  
+  /* Styles pour chaque élément de la liste */
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .sidebar ul li {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 15px 10px;
+    border-top: 1px solid #545454;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Style des liens */
+  .sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Effet de survol */
+  .sidebar ul li:hover {
+    background-color: #1a1a1a;
+  }
+  
+  /* Couleur de l'icône */
+  .sidebar ul li a i {
+    font-size: 18px;
+  }
+
+  
+/* Media Queries pour rendre la sidebar responsive */
+@media (max-width: 768px) { /* Ajustez cette valeur selon vos besoins */
+    .sidebar {
+        width: 200px; /* Réduire la largeur pour les petits écrans */
+    }
+    
+    .hamburger {
+        font-size: 20px; /* Ajustez la taille de l'icône hamburger */
+    }
+}
+
+@media (max-width: 480px) { /* Pour les très petits écrans */
+    .sidebar {
+        width: 100%; /* Pleine largeur sur les petits écrans */
+        padding-top: 15px; /* Ajustez le padding */
+    }
+    
+    .sidebar.collapsed {
+        transform: translateX(-100%); /* Sidebar toujours cachée */
+    }
+    
+    .hamburger {
+        top: 5px; /* Ajustez la position */
+    }
+}
+  </style>
+  

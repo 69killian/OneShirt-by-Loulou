@@ -1,6 +1,6 @@
+let menuicn = document.querySelector(".menuicn");
+let nav = document.querySelector(".navcontainer");
 
-    function toggleSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.classList.toggle('collapsed');
-    }
-
+menuicn.addEventListener("click", () => {
+    nav.classList.toggle("navclose");
+})
