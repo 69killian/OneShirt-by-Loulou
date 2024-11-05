@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard OneShirt</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard">
+    <div class="hamburger" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </div>
+  
+      <!-- Barre latérale -->
+      <nav class="sidebar">
+        <h2>OneShirt</h2>
+        <ul>
+          <li><a href="#overview"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></a></li>
+          <li><a href="#products"><i class="fas fa-box"></i> <span>Produits</span></a></li>
+          <li><a href="#users"><i class="fas fa-users"></i> <span>Utilisateurs</span></a></li>
+          <li><a href="#blog"><i class="fas fa-blog"></i> <span>Blog</span></a></li>
+          <li><a href="#reviews"><i class="fas fa-star"></i> <span>Avis</span></a></li>
+          <li><a href="#promotions"><i class="fas fa-tags"></i> <span>Promotions</span></a></li>
+          <li><a href="#orders"><i class="fas fa-receipt"></i> <span>Commandes</span></a></li>
+          <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Statistiques</span></a></li>
+        </ul>
+      </nav>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+      <!-- En-tête -->
+      <header>
+        <h1>Tableau de Bord</h1>
+        <div class="user-info">
+          <span>Bienvenue, (username)</span>
+          <img src="profil.jpg" alt="Photo de profil" class="profile-pic">
+        </div>
+      </header>
+
+      <!-- Section Vue d'ensemble -->
+      <section id="overview" class="overview">
+        <div class="card">
+          <h3>Ventes du jour</h3>
+          <p>€500</p>
+        </div>
+        <div class="card">
+          <h3>Produits en stock</h3>
+          <p>150</p>
+        </div>
+        <div class="card">
+          <h3>Nouveaux clients</h3>
+          <p>5</p>
+        </div>
+        <div class="card">
+          <h3>Avis récents</h3>
+          <p>3</p>
+        </div>
+      </section>
+
+      <!-- Section Produits -->
+      <section id="products" class="products">
+        <h2>Gestion des Produits</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>image</th>
+              <th>description</th>
+              <th>type</th>
+              <th>Couleur</th>
+              <th>Prix</th>
+              <th>Stock</th>
+              <th>Promotions</th>
+              <th>Date de création</th>
+              <th>Actions disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Figurine Luffy</td>
+              <td><img src="" alt="luffy image"></td>
+              <td>Figurine représentant Luffy contre Kaido...</td>
+              <td>figurine</td>
+              <td>Violet</td>
+              <td>129.99€</td>
+              <td>100</td>
+              <td>aucune</td>
+              <td>2024-06-10</td>
+              <td><button>Créer</button> <button>Modifier</button> <button>Supprimer</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section Commandes -->
+      <section id="orders" class="orders">
+        <h2>Commandes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID Commande</th>
+              <th>Client</th>
+              <th>Total</th>
+              <th>Date</th>
+              <th>État</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#1023</td>
+              <td>Jean Dupont</td>
+              <td>€45</td>
+              <td>01/11/2024</td>
+              <td><button class="status shipped">Expédiée</button></td>
+            </tr>
+            <tr>
+              <td>#1024</td>
+              <td>Julia Test</td>
+              <td>€64</td>
+              <td>01/11/2024</td>
+              <td><button class="status preparation"><i class="fas fa-spinner fa-spin"></i> En préparation</button></td>
+            </tr>
+            <tr>
+              <td>#1025</td>
+              <td>Marc Tovaro</td>
+              <td>€432</td>
+              <td>01/11/2024</td>
+              <td><button class="status paid"><i class="fas fa-check-circle"></i> Payée</button></td>
+            </tr>
+          </tbody>          
+        </table>
+      </section>
+
+      <section id="Users" class="users">
+        <h2>Gestion des Utilisateurs</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Rôle</th>
+              <th>Photo de profil</th>
+              <th>Pseudo</th>
+              <th>E-mail</th>
+              <th>Mot de passe Haché</th>
+              <th>Numéro de téléphone</th>
+              <th>Date de Naissance</th>
+              <th>Adresse</th>
+              <th>Date de création</th>
+              <th>Actions disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Logan</td>
+              <td>Derseher</td>
+              <td>admin</td>
+              <td><img src="" alt="profile picture"></td>
+              <td>louolou</td>
+              <td>martykillian7@gmail.com</td>
+              <td>ceceiestuntest1234**/*/</td>
+              <td>06.24.49.91.65</td>
+              <td>2003-07-03</td>
+              <td>28 Rue Emile Bender</td>
+              <td>2024-06-10</td>
+              <td><button>Créer</button> <button>Modifier</button> <button>Supprimer</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="Blog" class="blog">
+        <h2>Gestion des Articles de Blog</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>image</th>
+              <th>Slug</th>
+              <th>Contenu</th>
+              <th>Auteur</th>
+              <th>Photo de profil</th>
+              <th>Date de création</th>
+              <th>Actions disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L'Assension de Monkey D Luffy : Analyse de son Pa...</td>
+              <td><img src="" alt="blog image"></td>
+              <td>l-assension-de-monkey-d-luffy-analyse-de-son-parco...</td>
+              <td>Monkey D Luffy, Capitaine des Chapeaux de Paille...</td>
+              <td>louolou</td>
+              <td><img src="" alt="profile picture"></td>
+              <td>2024-06-10</td>
+              <td><button>Créer</button> <button>Modifier</button> <button>Supprimer</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="Avis" class="avis">
+        <h2>Gestion des Avis</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Note</th>
+              <th>Commentaire</th>
+              <th>Utilisateur</th>
+              <th>Photo de profil</th>
+              <th>Date de création</th>
+              <th>Actions disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Figurine Luffy</td>
+              <td>5</td>
+              <td>Monkey D Luffy, Capitaine des Chapeaux de Paille...</td>
+              <td>loulou</td>
+              <td><img src="" alt="profile image"></td>
+              <td>2024-06-10</td>
+              <td><button>Modifier</button> <button>Supprimer</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="Promo" class="promo">
+        <h2>Gestion des Promotions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Description</th>
+              <th>Pourcentage de réduction</th>
+              <th>Début de l'opération</th>
+              <th>Fin de l'opération</th>
+              <th>Date de création</th>
+              <th>Actions disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BIENVENUE10</td>
+              <td>Offre de Bienvenue à -10% sur tout le catalogue av...</td>
+              <td>10%</td>
+              <td>0000-00-00</td>
+              <td>0000-00-00</td>
+              <td>2024-06-10</td>
+              <td><button>Créer</button> <button>Modifier</button> <button>Supprimer</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Autres sections (Clients, Avis, Statistiques, Paramètres) -->
+    </main>
+  </div>
+</body>
+</html>
+<script src="script.js"></script>

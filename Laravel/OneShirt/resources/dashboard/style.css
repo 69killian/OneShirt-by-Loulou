@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+  }
+  
+  .dashboard {
+    display: flex;
+    min-height: 100vh;
+  }
+ /* Styles pour le bouton hamburger */
+.hamburger {
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    padding: 15px;
+    position: absolute; /* Positionner le bouton en absolu */
+    top: 11px; /* Alignement en haut */
+    left: 15px; /* Alignement à gauche */
+    z-index: 1000; /* Assurer que le bouton soit au-dessus des autres éléments */
+}
+
+/* Styles de la sidebar */
+.sidebar {
+    background-color: #242424;
+    color: #fff;
+    width: 250px;
+    padding-top: 25px;
+    border-right: 1px solid #545454;
+    transition: transform 0.3s ease; /* Utiliser transform pour un effet plus fluide */
+    transform: translateX(0); /* Position normale */
+    height: 100vh; /* Hauteur pleine */
+    position: fixed; /* Fixer la sidebar sur l'écran */
+}
+
+/* Styles pour la sidebar repliée */
+.sidebar.collapsed {
+    transform: translateX(-100%); /* Déplacer la sidebar hors de l'écran */
+}
+
+/* Styles pour les éléments de la sidebar */
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Masquer le texte des éléments quand replié */
+.sidebar.collapsed ul li a span {
+    display: none; /* Masquer le texte */
+}
+
+/* Styles pour chaque élément de la liste */
+.sidebar ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar ul li {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 15px 10px;
+    border-top: 1px solid #545454;
+    transition: background-color 0.3s ease;
+}
+
+/* Style des liens */
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacement entre l'icône et le texte */
+}
+
+/* Effet de survol */
+.sidebar ul li:hover {
+    background-color: #1a1a1a;
+}
+
+/* Couleur de l'icône */
+.sidebar ul li a i {
+    font-size: 18px;
+}
+
+/* Styles pour le contenu principal */
+.main-content {
+    margin-left: 250px; /* Ajustez si nécessaire */
+    transition: margin-left 0.3s ease; /* Ajoutez une transition pour le contenu principal */
+}
+
+/* Styles pour le contenu principal quand la sidebar est repliée */
+.sidebar.collapsed + .main-content {
+    margin-left: 0; /* Réduire la marge quand la sidebar est cachée */
+}
+
+
+/* Styles pour le contenu principal pour éviter qu'il soit masqué */
+.main-content {
+    margin-left: 250px; /* Ajustez si nécessaire */
+}
+
+/* Styles pour le contenu principal quand la sidebar est repliée */
+.sidebar.collapsed + .main-content {
+    margin-left: 50px; /* Ajuster la marge quand la sidebar est repliée */
+}
+
+  
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  header h1 {
+    font-size: 24px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info span {
+    margin-right: 10px;
+  }
+  
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .overview {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+  }
+  
+  .card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .products, .orders, .users, .blog, .avis, .promo {
+    margin-top: 20px;
+  }
+  
+  .products h2, .orders h2, .users h2, .blog h2, .avis h2, .promo h2 {
+    margin-bottom: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none; /* Suppression de la bordure */
+    border-radius: 8px; /* Arrondi des coins */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ajout d'une ombre */
+    overflow: hidden; /* Pour éviter que les coins arrondis soient coupés */
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    background-color: #121212; /* Couleur de fond pour mieux voir les coins arrondis */
+  }
+
+  td {
+    border-top: #545454 solid 1px;
+  }
+  
+  th {
+    font-weight: bold;
+    background-color: #242424;
+  }
+
+  /* Style de base pour les cellules d'état */
+  .orders button.status {
+    padding: 0px 0px; /* Réduire l'espace interne */
+    font-size: 12px; /* Réduire la taille de la police */
+    text-align: center;
+    border-radius: 12px;
+}
+
+button.status i {
+    margin-right: 5px; /* Espace entre l'icône et le texte */
+  }
+
+  button.status.paid i {
+    margin-right: 5px; /* Espace entre l'icône et le texte */
+    color: #004085;
+  }
+
+  button.status.preparation i {
+    margin-right: 5px; /* Espace entre l'icône et le texte */
+    color: #856404;
+  }
+  
+
+  
+  /* Style pour l'état "payée" */
+  .orders button.status.paid {
+    background-color: #cce5ff; /* Fond bleu clair */
+    color: #004085;           /* Texte bleu foncé */
+    border-radius: 20px;
+    padding: 4px 5px;
+  }
+  
+  /* Style pour l'état "en préparation" */
+  .orders button.status.preparation {
+    background-color: #ffe5cc; /* Fond orange clair */
+    color: #856404;            /* Texte orange foncé */
+    border-radius: 20px;
+    padding: 4px 5px;
+  }
+  
+  /* Style pour l'état "expédiée" */
+  .orders button.status.shipped {
+    background-color: #d4edda; /* Fond vert clair */
+    color: #155724;            /* Texte vert foncé */
+    border-radius: 20px;
+    padding: 4px 5px;
+  }
+  
+  
+  button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  
