@@ -4,6 +4,7 @@
         <div class="register-page">
             <RegisterForm />
         </div>
+        <Newsletter/>
       <Footer/>
     </div>
   </template>
@@ -12,10 +13,12 @@
   import RegisterForm from '@/components/RegisterForm.vue';
   import Footer from '../js/components/Footer.vue';
   import Header from '../js/components/Header.vue';
+  import Newsletter from "@/components/Newsletter.vue";
   
   export default {
     components: {
       RegisterForm,
+      Newsletter,
       Footer,
       Header,
     }

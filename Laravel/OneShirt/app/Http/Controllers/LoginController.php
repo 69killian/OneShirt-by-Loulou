@@ -24,27 +24,24 @@ class LoginController extends Controller
         // Détermination du type de champ (email ou nom d'utilisateur)
         $fieldType = filter_var($request->name, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
     
-        // Recherche de l'utilisateur
-        $user = User::where($fieldType, $request->name)->first();
-    
-        if ($user && Hash::check($request->password, $user->password_hash)) {
-            // Connexion de l'utilisateur
-            Auth::login($user);
-    
-            // Préparation des données utilisateur pour la réponse JSON
-            $userData = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                // Ajoutez d'autres informations si nécessaire
-            ];
-    
-            Log::info('Connexion réussie pour l\'utilisateur', ['user_id' => $user->id]);
-    
-            // Retourne une réponse JSON avec l'option JSON_UNESCAPED_UNICODE
-            return response()->json(['message' => 'Connexion réussie', 'user' => $userData], 200, [], JSON_UNESCAPED_UNICODE);
+        try {
+            $user = User::where($fieldType, $request->name)->first();
+            if ($user && Hash::check($request->password, $user->password_hash)) {
+                // Connexion de l'utilisateur
+                Auth::login($user);
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ];
+                Log::info('Connexion réussie pour l\'utilisateur', ['user_id' => $user->id]);
+                return response()->json(['message' => 'Connexion réussie', 'user' => $userData], 200, [], JSON_UNESCAPED_UNICODE);
+            }
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la tentative de connexion', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Une erreur est survenue lors de la connexion.'], 500);
         }
-    
+        
         // Si les informations sont incorrectes
         Log::error('Échec de la connexion', ['name' => $request->name]);
         return response()->json(['message' => 'Les informations de connexion sont incorrectes'], 401);

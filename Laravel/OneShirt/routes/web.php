@@ -58,7 +58,7 @@ Route::post('/api/login', [LoginController::class, 'login']);
 
 
 // Route pour créer un utilisateur
-Route::post('/register', [RegisterController::class, 'store']);
+Route::post('/api/register', [RegisterController::class, 'store']);
 
 
 // Route Pour envoi de Mail via PHPMailer et Laravel

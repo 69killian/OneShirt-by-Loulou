@@ -38,9 +38,6 @@ class RegisterController extends Controller
             'password_hash' => Hash::make($validatedData['password']),  // Hashage du mot de passe
         ]);
 
-        // Authentification automatique de l'utilisateur après inscription
-        Auth::login($user);
-
         // Message de Réussite
         return response()->json(['message' => 'Inscription réussie!']);
     }

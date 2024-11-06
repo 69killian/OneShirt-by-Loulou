@@ -61,7 +61,7 @@ methods: {
   async submitForm() {
     try {
       // API pour envoyer les données du formulaire
-      const response = await axios.post('/register', this.formData);
+      const response = await axios.post('/api/register', this.formData);
       console.log(response.data);
       // Gère la réponse et redirige
       this.$router.push('/');

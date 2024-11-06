@@ -20,7 +20,7 @@
           <tr v-for="product in products" :key="product.id">
             <td>{{ product.name }}</td>
             <td>
-              <img :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
+              <img class="img-crud" :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
             </td>
             <td>{{ product.description || 'Description non disponible' }}</td>
             <td>{{ product.type || 'N/A' }}</td>
@@ -28,7 +28,7 @@
             <td>{{ product.price ? `${product.price}€` : 'N/A' }}</td>
             <td>{{ product.stock_quantity || 'N/A' }}</td>
             <td>{{ product.promotion || 'aucune' }}</td>
-            <td>{{ product.created_at || 'N/A' }}</td>
+            <td>{{ product.created_at.substr(0, 10) || 'N/A' }}</td>
             <td>
               <button @click="createProduct(product)">Créer</button>
               <button @click="editProduct(product)">Modifier</button>
@@ -137,6 +137,12 @@
   
   button:hover {
     background-color: #0056b3;
+  }
+
+  .img-crud {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
   }
  
     </style>

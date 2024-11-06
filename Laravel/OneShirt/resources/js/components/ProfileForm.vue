@@ -110,7 +110,7 @@ export default {
     return {
       isEditing: false,
       profile: {}, // Informations du profil utilisateur
-      editableProfile: {}
+      editableProfile: {},
     };
   },
   mounted() {
@@ -172,7 +172,7 @@ export default {
       const file = event.target.files[0];
       this.editableProfile.profile_picture = file;
     }
-  }
+  },
 };
 </script>
 
