@@ -140,4 +140,11 @@ export default {
   button:hover {
     background-color: #0056b3;
   }
+
+  .profile_pic {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    object-fit: cover;
+  }
     </style>
