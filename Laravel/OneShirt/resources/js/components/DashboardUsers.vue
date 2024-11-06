@@ -1,47 +1,71 @@
 <template>
-    
-    <section id="Users" class="users">
-        <h2>Gestion des Utilisateurs</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Prénom</th>
-              <th>Nom</th>
-              <th>Rôle</th>
-              <th>Photo de profil</th>
-              <th>Pseudo</th>
-              <th>E-mail</th>
-              <th>Mot de passe Haché</th>
-              <th>Numéro de téléphone</th>
-              <th>Date de Naissance</th>
-              <th>Adresse</th>
-              <th>Date de création</th>
-              <th>Actions disponibles</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Logan</td>
-              <td>Derseher</td>
-              <td>admin</td>
-              <td><img src="" alt="profile picture"></td>
-              <td>louolou</td>
-              <td>martykillian7@gmail.com</td>
-              <td>ceceiestuntest1234**/*/</td>
-              <td>06.24.49.91.65</td>
-              <td>2003-07-03</td>
-              <td>28 Rue Emile Bender</td>
-              <td>2024-06-10</td>
-              <td><button>Créer</button> <button>Modifier</button> <button>Supprimer</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+  <section id="Users" class="users">
+    <h2>Gestion des Utilisateurs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Rôle</th>
+          <th>Photo de profil</th>
+          <th>Pseudo</th>
+          <th>E-mail</th>
+          <th>Mot de passe Haché</th>
+          <th>Numéro de téléphone</th>
+          <th>Date de Naissance</th>
+          <th>Adresse</th>
+          <th>Date de création</th>
+          <th>Actions disponibles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.role }}</td>
+          <td><img class="profile_picture" :src="'data:image/png;base64,' + user.profile_picture" alt="profile picture" /></td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.hashed_password }}</td>
+          <td>{{ user.phone_number }}</td>
+          <td>{{ user.birth_date }}</td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.created_at }}</td>
+          <td>
+            <button>Créer</button>
+            <button>Modifier</button>
+            <button>Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </template>
-    
-    <script>
-    
-    </script>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      users: [], // Tableau pour stocker les utilisateurs récupérés
+    };
+  },
+  mounted() {
+    this.fetchUsers();
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const response = await axios.get('/api/users'); // Appel à l'API
+        this.users = response.data; // Assigner les données des utilisateurs
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs:", error);
+      }
+    },
+  },
+};
+</script>
     
     <style>
         .users {
@@ -87,5 +111,12 @@
   
   button:hover {
     background-color: #0056b3;
+  }
+
+  .profile_picture {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    object-fit: cover;
   }
     </style>
