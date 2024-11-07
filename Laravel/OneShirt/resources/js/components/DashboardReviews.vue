@@ -16,11 +16,18 @@
       <tbody>
         <!-- Affichage des avis -->
         <tr v-for="review in reviews" :key="review.id">
-          <td>{{ getProductById(review.product_id).name }}</td>
+          <td>{{ getProductById(review.product_id)?.name || 'Produit introuvable' }}</td>
           <td>{{ review.rating }}</td>
           <td>{{ review.comment }}</td>
-          <td>{{ getUserById(review.user_id).username || 'Utilisateur introuvable' }}</td>
-          <td><img class="profile-pic" :src="'data:image/png;base64,' + getUserById(review.user_id).profile_picture" alt="Profile image" /></td>
+          <td>{{ getUserById(review.user_id)?.username || 'Utilisateur introuvable' }}</td>
+          <td>
+            <img
+              v-if="getUserById(review.user_id)?.profile_picture"
+              class="profile-pic"
+              :src="'data:image/png;base64,' + getUserById(review.user_id).profile_picture"
+              alt="Profile image"
+            />
+          </td>
           <td>{{ review.created_at.substr(0,10) }}</td>
           <td>
             <button @click="editReview(review.id)">Modifier</button>
@@ -42,7 +49,6 @@ export default {
     };
   },
   methods: {
-    // Méthode pour récupérer les avis
     fetchReviews() {
       fetch("/reviews")
         .then((response) => response.json())
@@ -54,7 +60,6 @@ export default {
         });
     },
 
-    // Méthode pour récupérer les produits
     fetchProducts() {
       fetch("/api/products")
         .then((response) => response.json())
@@ -66,7 +71,6 @@ export default {
         });
     },
 
-    // Méthode pour récupérer les utilisateurs
     fetchUsers() {
       fetch("/api/users")
         .then((response) => response.json())
@@ -78,24 +82,19 @@ export default {
         });
     },
 
-    // Méthode pour obtenir un utilisateur par son ID
     getUserById(userId) {
       return this.users.find(user => user.id === userId);
     },
 
-    // Méthode pour obtenir un produit par son ID
     getProductById(productId) {
       return this.products.find(product => product.id === productId);
     },
 
-    // Méthodes pour modifier et supprimer un avis
     editReview(reviewId) {
-      // Logique pour modifier un avis
       console.log('Modifier l\'avis', reviewId);
     },
 
     deleteReview(reviewId) {
-      // Logique pour supprimer un avis
       console.log('Supprimer l\'avis', reviewId);
     },
   },
@@ -107,6 +106,7 @@ export default {
   },
 };
 </script>
+
     
     <style>
     .avis {

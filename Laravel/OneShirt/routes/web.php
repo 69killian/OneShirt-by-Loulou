@@ -12,7 +12,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProductSizeController;
 use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\CartController;
-
+use App\Http\Controllers\ProductImageController;
 
 // Route pour ajouter un nouveau produit au panier de la page des produits
 Route::post('/api/cart/add/{productId}', [CartController::class, 'addCartItem']);
@@ -97,6 +97,29 @@ Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
 
 
+
+
+
+// Route pour créer une nouvelle Image de produit
+Route::post('/api/create/product-image', [ProductImageController::class, 'store']);
+
+// Route pour mettre à jour une image d'un produit
+Route::put('/api/upadte/product-image/{productId}', [ProductImageController::class, 'update']);
+
+// Route pour supprimer l'image d'un Produit (fait pour être supprimé avec le produit)
+Route::delete('/api/delete/product-image/{id}', [ProductImageController::class, 'delete']);
+
+
+
+// Route pour créer un nouveau produit
+Route::post('/api/create/products', [ProductController::class, 'store']);
+
+//Route pour mettre à jour un produit existant
+Route::put('/api/update/products/{productId}', [ProductController::class, 'update']);
+
+// Route pour supprimer un produit existant
+Route::delete('/api/delete/products/{id}', [ProductController::class, 'destroy']);
+
 // Route pour récupération des pages de produits
 Route::get('/api/produit/{id}', [ProductController::class, 'show']);
 
@@ -105,6 +128,11 @@ Route::get('/api/produit/{id}', [ProductController::class, 'show']);
 Route::get('/api/products', 
     [ProductController::class, 'index']
 );
+
+
+
+
+
 
 // Route pour récupéraion des Figurines
 Route::get('/api/figurines', [ProductController::class, 'getFigurines']);

@@ -58,6 +58,82 @@ class ProductController extends Controller
         }
     }
 
+
+
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'nullable|string',
+            'color' => 'nullable|string',
+            'price' => 'required|numeric',
+            'stock_quantity' => 'required|integer',
+            'promotion_id' => 'nullable|integer|exists:promotions,id'
+        ]);
+
+        try {
+            $product = Product::create($request->all());
+            Log::info('Produit créé avec succès:', ['id' => $product->id]);
+            return response()->json($product, 201);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création du produit:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erreur lors de la création du produit'], 500);
+        }
+    }
+
+
+
+
+
+
+    // Méthode pour mettre à jour un produit
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'nullable|string',
+            'color' => 'nullable|string',
+            'price' => 'nullable|numeric',
+            'stock_quantity' => 'nullable|integer',
+            'promotion_id' => 'nullable|integer|exists:promotions,id'
+        ]);
+
+        try {
+            $product = Product::findOrFail($id);
+            $product->update($request->all());
+            Log::info('Produit mis à jour avec succès:', ['id' => $product->id]);
+            return response()->json($product);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la mise à jour du produit:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erreur lors de la mise à jour du produit'], 500);
+        }
+    }
+
+
+
+
+
+    
+
+    // Méthode pour supprimer un produit
+    public function destroy($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+            Log::info('Produit supprimé avec succès:', ['id' => $id]);
+            return response()->json(['message' => 'Produit supprimé avec succès']);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la suppression du produit:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erreur lors de la suppression du produit'], 500);
+        }
+    }
+
+
     /**
      * Détecte le type MIME de l'image.
      *
