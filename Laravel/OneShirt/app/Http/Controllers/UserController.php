@@ -115,4 +115,139 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Profile updated successfully'], 200);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Ceci sont les différents CRUD 
+    des utilisateurs pour le Dashboard
+    */
+
+
+
+    public function createUser(Request $request): JsonResponse
+{
+    // Validation des données
+    $validatedData = $request->validate([
+        'username' => 'required|string|max:255|unique:users,username',
+        'firstname' => 'required|string|max:255',
+        'lastname' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users,email',
+        'phone' => 'required|string|max:15',
+        'birthdate' => 'required|date',
+        'address' => 'required|string|max:255',
+        'postalcode' => 'required|string|max:20',
+        'profile_picture' => 'nullable|image|max:2048',
+        'role' => 'required|string',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Initialisation de la variable pour l'image
+    $profilePictureData = null;
+
+    // Vérification si un fichier d'image a été téléchargé
+    if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
+        $image = $request->file('profile_picture');
+        
+        // Lecture de l'image en tant que données binaires
+        $profilePictureData = file_get_contents($image->getRealPath());
+    }
+
+    // Création du nouvel utilisateur
+    $user = User::create([
+        'username' => $validatedData['username'],
+        'first_name' => $validatedData['firstname'],
+        'last_name' => $validatedData['lastname'],
+        'email' => $validatedData['email'],
+        'phone_number' => $validatedData['phone'],
+        'date_of_birth' => $validatedData['birthdate'],
+        'address' => $validatedData['address'],
+        'postal_address' => $validatedData['postalcode'],
+        'password_hash' => Hash::make($validatedData['password']),  // Hashage du mot de passe
+        'role' => $validatedData['role'],
+        'profile_picture' => $profilePictureData,  // Enregistrement de l'image dans la base de données
+    ]);
+
+    // Message de Réussite
+    return response()->json(['message' => 'Création du compte effectuée.']);
+}
+
+
+    
+
+
+
+    public function updateUser(Request $request, $id): JsonResponse
+{
+    $request->validate([
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'username' => 'required|string',
+        'email' => 'required|email',
+        'address' => 'nullable|string',
+        'postal_address' => 'nullable|string',
+        'phone_number' => 'nullable|string',
+        'date_of_birth' => 'nullable|date',
+        'profile_picture' => 'nullable|image|max:2048',
+        'role' => 'required|string', // ajout du rôle
+    ]);
+
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+    }
+
+    $user->first_name = $request->first_name;
+    $user->last_name = $request->last_name;
+    $user->username = $request->username;
+    $user->email = $request->email;
+    $user->address = $request->address;
+    $user->postal_address = $request->postal_address;
+    $user->phone_number = $request->phone_number;
+    $user->date_of_birth = $request->date_of_birth;
+    $user->role = $request->role;
+
+    if ($request->hasFile('profile_picture')) {
+        $image = $request->file('profile_picture');
+        $imageData = file_get_contents($image->getRealPath());
+        $user->profile_picture = $imageData;
+    }
+
+    try {
+        $user->save();
+        return response()->json(['message' => 'Utilisateur mis à jour avec succès'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Échec de la mise à jour'], 500);
+    }
+}
+
+
+
+
+public function deleteUser($id): JsonResponse
+{
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+    }
+
+    try {
+        $user->delete();
+        return response()->json(['message' => 'Utilisateur supprimé avec succès'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Échec de la suppression'], 500);
+    }
+}
+
+
 }

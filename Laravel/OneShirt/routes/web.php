@@ -73,12 +73,32 @@ Route::get('/reviews', [ReviewController::class, 'index']);
 Route::post('/api/reviews/insert', [ReviewController::class, 'store']);
 
 
+
+
+
+
+// Route pour créer un nouvel Utilisateur
+Route::post('/api/create/users', [UserController::class, 'createUser']);
+
+// Route pour modifier un Utilisateur
+Route::put('api/update/users/{id}', [UserController::class, 'updateUser']);
+
+
+// Route pour supprimer un Utilisateur
+Route::delete('/api/delete/users/{id}', [UserController::class, 'deleteUser']);
+
+
 // Route pour récupérer les Informations Utilisateur
 Route::get('/api/users', [UserController::class, 'getAllUsers']);
 
 
 // Route pour récupérer les infos d'un utilisateur par son identifiant
 Route::get('/api/users/{id}', [UserController::class, 'getUserById']);
+
+
+
+
+
 
 
 // Route pour récupérer les commentaires par articles
@@ -108,6 +128,7 @@ Route::put('/api/upadte/product-image/{productId}', [ProductImageController::cla
 
 // Route pour supprimer l'image d'un Produit (fait pour être supprimé avec le produit)
 Route::delete('/api/delete/product-image/{id}', [ProductImageController::class, 'delete']);
+
 
 
 
