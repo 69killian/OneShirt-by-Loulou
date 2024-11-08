@@ -2,10 +2,10 @@
   <section id="products" class="products">
     <h2>Gestion des Produits</h2>
 
-    <!-- Affichage du formulaire de création -->
-    <div v-if="isCreating" class="create-product-form">
-      <h3>Créer un nouveau produit</h3>
-      <form @submit.prevent="confirmCreateProduct">
+    <!-- Formulaire de création ou de modification -->
+    <div v-if="isCreating || isEditing" class="create-product-form">
+      <h3>{{ isCreating ? 'Créer un nouveau produit' : 'Modifier le produit' }}</h3>
+      <form @submit.prevent="isCreating ? confirmCreateProduct() : confirmEditProduct()">
         <div>
           <label for="name">Nom:</label>
           <input v-model="newProduct.name" type="text" id="name" required placeholder="Nom du Produit"/>
@@ -16,7 +16,6 @@
         </div>
         <div>
           <label for="type">Type:</label>
-          <!-- Utilisation du selecteur pour afficher les types de produits -->
           <select v-model="newProduct.type" id="type" required>
             <option value="">Sélectionnez un type</option>
             <option v-for="type in productTypes" :key="type" :value="type">{{ type }}</option>
@@ -28,7 +27,7 @@
         </div>
         <div>
           <label for="price">Prix:</label>
-          <input v-model="newProduct.price" type="number" id="price" required placeholder="Prix" />
+          <input v-model="newProduct.price" type="text" id="price" required placeholder="Prix" MIN="0"/>
         </div>
         <div>
           <label for="stock_quantity">Stock:</label>
@@ -39,7 +38,7 @@
           <input v-model="newProduct.promotion_id" type="text" id="promotion" placeholder="Promotion"/>
         </div>
         <div>
-          <button type="submit">Confirmer la création</button>
+          <button type="submit">Confirmer {{ isCreating ? 'la création' : 'la modification' }}</button>
           <button @click="cancelCreate">Annuler</button>
         </div>
       </form>
@@ -92,7 +91,7 @@ export default {
   data() {
     return {
       products: [],
-      productTypes: [], // Tableau pour stocker les types uniques de produits
+      productTypes: [],
       newProduct: {
         name: '',
         description: '',
@@ -102,7 +101,9 @@ export default {
         stock_quantity: 0,
         promotion_id: null,
       },
-      isCreating: false, // Afficher ou masquer le formulaire de création
+      isCreating: false,
+      isEditing: false, // Indicateur pour savoir si on est en mode édition
+      currentProduct: null, // Stocke le produit actuellement en cours de modification
     };
   },
   methods: {
@@ -114,8 +115,6 @@ export default {
             ...product,
             image: product.images && product.images.length > 0 ? product.images[0].image_base64 : '',
           }));
-
-          // Extraire les types uniques de produits
           this.productTypes = [...new Set(this.products.map((product) => product.type))];
         })
         .catch((error) => {
@@ -126,47 +125,63 @@ export default {
       return product.image || '/images/default.jpg';
     },
     showCreateForm() {
-      this.isCreating = true; // Affiche le formulaire de création
+      this.isCreating = true;
+      this.isEditing = false;
+      this.clearNewProduct();
+    },
+    showEditForm(product) {
+      this.isCreating = false;
+      this.isEditing = true;
+      this.currentProduct = { ...product }; // Copie des données du produit
+      this.newProduct = { ...product }; // Pré-remplissage du formulaire avec les données du produit
     },
     cancelCreate() {
-      this.isCreating = false; // Masque le formulaire de création
-      this.clearNewProduct(); // Réinitialise les champs du formulaire
+      this.isCreating = false;
+      this.isEditing = false;
+      this.clearNewProduct();
     },
     confirmCreateProduct() {
       if (confirm('Voulez-vous vraiment créer ce produit ?')) {
         this.createProduct();
       }
     },
+    confirmEditProduct() {
+      if (confirm('Voulez-vous vraiment modifier ce produit ?')) {
+        this.updateProduct();
+      }
+    },
     createProduct() {
       axios
         .post('/api/create/products', this.newProduct)
         .then((response) => {
-          this.products.push(response.data); // Ajoute le nouveau produit à la liste
-          console.log('Produit créé avec succès:', response.data);
-          this.cancelCreate(); // Masque le formulaire et réinitialise les champs
+          this.products.push(response.data);
+          this.cancelCreate();
         })
         .catch((error) => {
           console.error('Erreur lors de la création du produit:', error);
         });
     },
-    editProduct(product) {
+    updateProduct() {
       axios
-        .put(`/api/update/products/${product.id}`, product)
+        .put(`/api/update/products/${this.currentProduct.id}`, this.newProduct)
         .then((response) => {
-          const index = this.products.findIndex((p) => p.id === product.id);
+          const index = this.products.findIndex((p) => p.id === this.currentProduct.id);
           this.products[index] = response.data;
-          console.log('Produit mis à jour avec succès:', response.data);
+          this.cancelCreate();
+          window.location.reload();
         })
         .catch((error) => {
           console.error('Erreur lors de la mise à jour du produit:', error);
         });
+    },
+    editProduct(product) {
+      this.showEditForm(product);
     },
     deleteProduct(id) {
       axios
         .delete(`/api/delete/products/${id}`)
         .then(() => {
           this.products = this.products.filter((product) => product.id !== id);
-          console.log('Produit supprimé avec succès:', id);
         })
         .catch((error) => {
           console.error('Erreur lors de la suppression du produit:', error);
@@ -185,10 +200,11 @@ export default {
     },
   },
   mounted() {
-    this.fetchProducts(); // Récupérer les produits au montage du composant
+    this.fetchProducts();
   },
 };
 </script>
+
 
     
     <style>

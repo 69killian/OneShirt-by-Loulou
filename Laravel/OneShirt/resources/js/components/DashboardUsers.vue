@@ -2,7 +2,6 @@
   <section id="Users" class="users">
     <h2>Gestion des Utilisateurs</h2>
 
-    <button @click="showForm('create')" v-if="!isFormVisible">Créer un utilisateur</button>
 
     <div v-if="isFormVisible" class="user-form">
       <h3>{{ isEditMode ? 'Modifier Utilisateur' : 'Créer un Utilisateur' }}</h3>
