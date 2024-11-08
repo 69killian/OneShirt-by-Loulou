@@ -30,7 +30,7 @@
           </td>
           <td>{{ review.created_at.substr(0,10) }}</td>
           <td>
-            <button @click="deleteReview(review.id)">Supprimer</button>
+            <button @click="deleteReview(review.id)">Invalider un avis (supprimer)</button>
           </td>
         </tr>
       </tbody>

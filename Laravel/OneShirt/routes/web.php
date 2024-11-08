@@ -123,6 +123,18 @@ Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
 
 
+// Route pour créer un article dashboard
+Route::post('/api/blog-articles/create', [BlogArticleController::class, 'store']);
+
+
+// Route pour modifier un article dashboard
+Route::put('/api/blog-articles/update/{id}', [BlogArticleController::class, 'update']);
+
+
+// Route pour supprimer les articles du dashboard
+Route::delete('/api/blog-articles/delete/{id}', [BlogArticleController::class, 'destroy']);
+
+
 
 
 

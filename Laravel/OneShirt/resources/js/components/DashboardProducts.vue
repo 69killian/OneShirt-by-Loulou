@@ -1,6 +1,7 @@
 <template>
   <section id="products" class="products">
     <h2>Gestion des Produits</h2>
+    <button @click="showCreateForm">Créer un Produit</button>
 
     <!-- Formulaire de création ou de modification -->
     <div v-if="isCreating || isEditing" class="create-product-form">
@@ -74,7 +75,6 @@
           <td>{{ product.promotion || 'aucune' }}</td>
           <td>{{ product.created_at.substr(0, 10) || 'N/A' }}</td>
           <td>
-            <button @click="showCreateForm">Créer</button>
             <button @click="editProduct(product)">Modifier</button>
             <button @click="deleteProduct(product.id)">Supprimer</button>
           </td>

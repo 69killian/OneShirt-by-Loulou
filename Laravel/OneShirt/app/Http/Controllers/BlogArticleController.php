@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BlogArticle; // Assurez-vous que ce modèle est correctement importé
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BlogArticleController extends Controller
@@ -20,6 +22,8 @@ class BlogArticleController extends Controller
 
         return response()->json($articles, 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+
 
     public function show($slug): JsonResponse
     {
@@ -49,5 +53,55 @@ class BlogArticleController extends Controller
     
 
 
+
+    // Créer un nouvel article de blog
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:blog_articles,slug',
+            'content' => 'required',
+            'image' => 'required|string', // image sous forme base64
+            'author_id' => 'required|exists:users,id',
+        ]);
+
+        
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $article = BlogArticle::create($request->all());
+        return response()->json($article, 201);
+    }
+
+    // Mettre à jour un article de blog existant
+    public function update(Request $request, $id)
+    {
+        $article = BlogArticle::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|required|string|max:255',
+            'slug' => 'sometimes|required|string|unique:blog_articles,slug,' . $id,
+            'content' => 'sometimes|required',
+            'image' => 'sometimes|required|string',
+            'author_id' => 'sometimes|required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $article->update($request->all());
+        return response()->json($article, 200);
+    }
+
+    // Supprimer un article de blog
+    public function destroy($id)
+    {
+        $article = BlogArticle::findOrFail($id);
+        $article->delete();
+        return response()->json(['message' => 'Article supprimé avec succès'], 200);
+    }
 
 }
