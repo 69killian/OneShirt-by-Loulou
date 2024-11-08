@@ -65,6 +65,9 @@ Route::post('/api/register', [RegisterController::class, 'store']);
 Route::post('/api/send-email', [MailController::class, 'sendEmail']);
 
 
+// Route pour supprimer un avis
+Route::delete('/api/reviews/delete/{id}', [ReviewController::class, 'deleteReview']);
+
 // Route pour récupérer les avis 
 Route::get('/reviews', [ReviewController::class, 'index']);
 

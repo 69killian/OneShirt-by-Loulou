@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
@@ -57,5 +59,18 @@ class ReviewController extends Controller
     }
 
 
+    public function deleteReview($id)
+{
+    try {
+        $review = Review::findOrFail($id);
+        $review->delete();
+        Log::info('Produit supprimé avec succès:', ['id' => $id]);
+        return response()->json(['message' => 'Avis supprimé avec succès']);
+    } catch (\Exception $e) {
+        Log::error('Erreur lors de la suppression de l\'avis:', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Erreur lors de la suppression de l\'avis'], 500);
+    }
 }
 
+
+}

@@ -30,7 +30,6 @@
           </td>
           <td>{{ review.created_at.substr(0,10) }}</td>
           <td>
-            <button @click="editReview(review.id)">Modifier</button>
             <button @click="deleteReview(review.id)">Supprimer</button>
           </td>
         </tr>
@@ -90,13 +89,30 @@ export default {
       return this.products.find(product => product.id === productId);
     },
 
-    editReview(reviewId) {
-      console.log('Modifier l\'avis', reviewId);
-    },
 
     deleteReview(reviewId) {
-      console.log('Supprimer l\'avis', reviewId);
+  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  fetch(`/api/reviews/delete/${reviewId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': token,  // Add the CSRF token here
     },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === 'Avis supprimé avec succès') {
+        // Remove the review from the local list after deletion
+        this.reviews = this.reviews.filter((review) => review.id !== reviewId);
+      } else {
+        console.error('Erreur lors de la suppression de l\'avis:', data.message);
+      }
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la suppression de l\'avis:', error);
+    });
+},
   },
 
   created() {
