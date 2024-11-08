@@ -7,10 +7,10 @@
     <div v-if="isFormVisible" class="user-form">
       <h3>{{ isEditMode ? 'Modifier Utilisateur' : 'Créer un Utilisateur' }}</h3>
       <form @submit.prevent="submitForm">
-        <input v-model="form.first_name" placeholder="Prénom" required />
+        <input v-model="form.first_name" placeholder="Prénom"  required/>
         <input v-model="form.last_name" placeholder="Nom" required />
         <input v-model="form.role" placeholder="Rôle" required />
-        <input type="file" @change="onFileChange" />
+        <input type="file" @change="onFileChange" id="profile_picture" />
         <input v-model="form.username" placeholder="Pseudo" required />
         <input v-model="form.email" placeholder="E-mail" type="email" required />
         <input v-model="form.phone_number" placeholder="Téléphone" />
@@ -100,42 +100,41 @@ export default {
       }
     },
     async submitForm() {
-      try {
-        const formData = new FormData();
-        console.log("Formulaire:", this.form); // Debug - Afficher le contenu du formulaire
+    try {
+      const formData = new FormData();
 
-        // Ajout des données du formulaire à FormData
-        for (let key in this.form) {
-          if (this.form[key] !== null && this.form[key] !== '') {
-            formData.append(key, this.form[key]);
-          }
+      // Ajout des données du formulaire à FormData
+      for (let key in this.form) {
+        if (this.form[key] !== null && this.form[key] !== '') {
+          formData.append(key, this.form[key]);
         }
-
-        // Si on est en mode édition, on ne passe pas le mot de passe si il est vide
-        if (this.isEditMode && !this.form.password) {
-          formData.delete('password');
-          console.log("Mot de passe supprimé pour l'édition"); // Debug
-        }
-
-        // Envoi de la requête API pour créer ou mettre à jour l'utilisateur
-        if (this.isEditMode) {
-          console.log("Mise à jour de l'utilisateur", this.editUserId); // Debug
-          await axios.put(`/api/update/users/${this.editUserId}`, formData);
-          alert('Utilisateur mis à jour');
-        } else {
-          console.log("Création de l'utilisateur"); // Debug
-          await axios.post('/api/create/users', formData);
-          alert('Utilisateur créé');
-        }
-
-        // Rafraîchissement des utilisateurs et réinitialisation du formulaire
-        this.fetchUsers();
-        this.cancelForm();
-      } catch (error) {
-        console.error("Erreur lors de la soumission du formulaire:", error);
-        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
       }
-    },
+
+      // Envoi de la requête API
+      if (this.isEditMode) {
+        await axios.post(`/api/update/users/${this.editUserId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        alert('Utilisateur mis à jour');
+      } else {
+        await axios.post('/api/create/users', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        alert('Utilisateur créé');
+      }
+
+      this.fetchUsers();
+      this.cancelForm();
+    } catch (error) {
+      console.error("Erreur lors de la soumission du formulaire:", error);
+      alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+    }
+  },
+
     showForm(mode) {
       this.isFormVisible = true;
       this.isEditMode = mode === 'edit';
@@ -175,8 +174,13 @@ export default {
       this.editUserId = null;
     },
     onFileChange(event) {
-      this.form.profile_picture = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      this.form.profile_picture = file;
+    } else {
+      this.form.profile_picture = null;  // Si aucun fichier n'est sélectionné, on remet à null
     }
+  }
   },
 };
 </script>

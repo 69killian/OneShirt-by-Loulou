@@ -77,11 +77,14 @@ Route::post('/api/reviews/insert', [ReviewController::class, 'store']);
 
 
 
+
+
 // Route pour créer un nouvel Utilisateur
 Route::post('/api/create/users', [UserController::class, 'createUser']);
 
+
 // Route pour modifier un Utilisateur
-Route::put('api/update/users/{id}', [UserController::class, 'updateUser']);
+Route::post('/api/update/users/{id}', [UserController::class, 'updateUser']);
 
 
 // Route pour supprimer un Utilisateur

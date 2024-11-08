@@ -187,9 +187,12 @@ class UserController extends Controller
 
 
 
-    public function updateUser(Request $request, $id): JsonResponse
+public function updateUser(Request $request, $id): JsonResponse
 {
-    $request->validate([
+    Log::info($request->all());
+
+    // Validation des champs (on ne valide 'profile_picture' que si un fichier est fourni)
+    $rules = [
         'first_name' => 'required|string',
         'last_name' => 'required|string',
         'username' => 'required|string',
@@ -198,38 +201,51 @@ class UserController extends Controller
         'postal_address' => 'nullable|string',
         'phone_number' => 'nullable|string',
         'date_of_birth' => 'nullable|date',
-        'profile_picture' => 'nullable|image|max:2048',
-        'role' => 'required|string', // ajout du rôle
-    ]);
+        'role' => 'required|string',
+    ];
 
-    $user = User::find($id);
-    if (!$user) {
-        return response()->json(['error' => 'Utilisateur non trouvé'], 404);
-    }
-
-    $user->first_name = $request->first_name;
-    $user->last_name = $request->last_name;
-    $user->username = $request->username;
-    $user->email = $request->email;
-    $user->address = $request->address;
-    $user->postal_address = $request->postal_address;
-    $user->phone_number = $request->phone_number;
-    $user->date_of_birth = $request->date_of_birth;
-    $user->role = $request->role;
-
+    // On ajoute la validation pour 'profile_picture' uniquement si un fichier est présent
     if ($request->hasFile('profile_picture')) {
-        $image = $request->file('profile_picture');
-        $imageData = file_get_contents($image->getRealPath());
-        $user->profile_picture = $imageData;
+        $rules['profile_picture'] = 'image';
     }
 
+    $request->validate($rules);
+
+    // Récupération de l'utilisateur
+    $user = User::findOrFail($id);
+
+    // Mise à jour des autres champs de l'utilisateur
+    $user->fill($request->except('profile_picture'));
+
+    // Vérification et traitement de l'image si elle est présente
+    if ($request->hasFile('profile_picture')) {
+        try {
+            $image = $request->file('profile_picture');
+
+            // Si le fichier est valide et si c'est bien une image
+            if ($image->isValid()) {
+                $imageData = file_get_contents($image->getRealPath());
+                $user->profile_picture = $imageData;  // Sauvegarde de l'image dans la base de données
+            } else {
+                return response()->json(['error' => 'Le fichier envoyé n\'est pas une image valide.'], 400);
+            }
+        } catch (\Exception $e) {
+            Log::error("Erreur lors du traitement de l'image : " . $e->getMessage());
+            return response()->json(['error' => 'Le traitement de l\'image a échoué.'], 500);
+        }
+    }
+
+    // Sauvegarde des modifications dans la base de données
     try {
         $user->save();
-        return response()->json(['message' => 'Utilisateur mis à jour avec succès'], 200);
+        return response()->json(['message' => 'Utilisateur mis à jour avec succès.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Échec de la mise à jour'], 500);
+        Log::error("Erreur lors de la mise à jour de l'utilisateur dans la base de données : " . $e->getMessage());
+        return response()->json(['error' => 'Échec de la mise à jour de l\'utilisateur.'], 500);
     }
 }
+
+
 
 
 
