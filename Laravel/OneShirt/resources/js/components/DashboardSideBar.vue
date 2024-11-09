@@ -14,6 +14,7 @@
         <li><a href="#promotions"><i class="fas fa-tags"></i> <span>Promotions</span></a></li>
         <li><a href="#orders"><i class="fas fa-receipt"></i> <span>Commandes</span></a></li>
         <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Statistiques</span></a></li>
+        <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></a></li>
       </ul>
     </nav>
   </template>
