@@ -6,7 +6,7 @@
     <button @click="showCreateForm = !showCreateForm">
       {{ showCreateForm ? 'Annuler' : 'Créer un Article' }}
     </button>
-    
+
     <!-- Formulaire de création d'article -->
     <div v-if="showCreateForm" class="create-article-form">
       <h3>Créer un Nouvel Article</h3>
@@ -48,7 +48,11 @@
         <textarea v-model="currentArticle.content" required></textarea>
 
         <label for="image">Image</label>
-        <input type="file" @change="handleImageUpload" />
+        <input type="file" @change="handleImageUpload" id="image" />
+        <div v-if="imagePreview">
+          <h4>Aperçu de l'image :</h4>
+          <img :src="imagePreview" alt="Aperçu de l'image" width="100" />
+        </div>
 
         <label for="author_id">Auteur</label>
         <select v-model="currentArticle.author_id" required>
@@ -94,7 +98,6 @@
   </section>
 </template>
 
-
 <script>
 import axios from "axios";
 
@@ -119,7 +122,8 @@ export default {
         content: '',
         image: '',
         author_id: null
-      }
+      },
+      imagePreview: null // Variable pour l'aperçu de l'image
     };
   },
   mounted() {
@@ -150,14 +154,6 @@ export default {
         article.author = author ? author : null;
       });
     },
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.newArticle.image = reader.result.split(',')[1]; // Convertir en Base64 et enlever le préfixe
-      };
-      reader.readAsDataURL(file);
-    },
     async createArticle() {
       try {
         const response = await axios.post('/api/blog-articles/create', this.newArticle);
@@ -173,20 +169,28 @@ export default {
       this.currentArticle = { ...article };
       this.showEditForm = true; // Afficher le formulaire de modification
     },
-    async updateArticle() {
-      try {
-        const response = await axios.put(`/api/blog-articles/update/${this.currentArticle.id}`, this.currentArticle);
-        
-        // Mettre à jour l'article dans le tableau
-        const index = this.articles.findIndex(article => article.id === this.currentArticle.id);
-        if (index !== -1) {
-          this.articles[index] = response.data;
-        }
-
-        this.showEditForm = false; // Fermer le formulaire après l'édition
-        console.log("Article mis à jour avec succès");
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour de l'article :", error);
+    updateArticle() {
+  axios.put(`/api/blog-articles/update/${this.currentArticle.id}`, {
+    title: this.currentArticle.title,
+    slug: this.currentArticle.slug,
+    content: this.currentArticle.content,
+    image: this.currentArticle.image,
+  })
+  .then((response) => {
+    console.log(response.data); // Vérification de la réponse
+    this.$router.push({ name: "dashboard-blog" });
+  })
+  .catch((error) => {
+    console.log(error.response);
+  });
+},
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.newArticle.image = file;
+        this.imagePreview = URL.createObjectURL(file); // Crée l'aperçu de l'image
+      } else {
+        this.imagePreview = null;
       }
     },
     async deleteArticle(id) {
@@ -199,7 +203,7 @@ export default {
       }
     },
     getUserById(id) {
-      return this.users.find(user => user.id === id);
+      return this.users.find(user => user.id === id) || {};
     }
   }
 };

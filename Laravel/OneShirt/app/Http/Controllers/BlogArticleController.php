@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BlogArticleController extends Controller
 {
@@ -61,10 +62,9 @@ class BlogArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|unique:blog_articles,slug',
             'content' => 'required',
-            'image' => 'required|string', // image sous forme base64
+            'image' => 'nullable|image|max:2048',
             'author_id' => 'required|exists:users,id',
         ]);
-
         
 
         if ($validator->fails()) {
@@ -75,28 +75,50 @@ class BlogArticleController extends Controller
         return response()->json($article, 201);
     }
 
-    // Mettre à jour un article de blog existant
+
+
+
+
+    
+
     public function update(Request $request, $id)
-    {
-        $article = BlogArticle::findOrFail($id);
+{
+    $article = BlogArticle::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|unique:blog_articles,slug,' . $id,
-            'content' => 'sometimes|required',
-            'image' => 'sometimes|required|string',
-            'author_id' => 'sometimes|required|exists:users,id',
-        ]);
+    // Validation des données envoyées
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'slug' => 'required|string|max:255',
+        'content' => 'required|string',
+        'image' => 'nullable|image|max:2048',  // Validation de l'image
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
+    // Mise à jour de l'article
+    $article->title = $validatedData['title'];
+    $article->slug = $validatedData['slug'];
+    $article->content = $validatedData['content'];
 
-        $article->update($request->all());
-        return response()->json($article, 200);
+    // Vérification et mise à jour de l'image si présente
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('images', 'public');
+        $article->image = $imagePath; // Enregistrer le chemin d'accès
     }
 
-    // Supprimer un article de blog
+    $article->save();
+
+    return response()->json($article, 200);
+}
+
+
+    
+    
+
+
+
+
+    
+
+    // Supprime un article de blog
     public function destroy($id)
     {
         $article = BlogArticle::findOrFail($id);
