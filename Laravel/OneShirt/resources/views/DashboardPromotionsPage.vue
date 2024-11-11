@@ -2,22 +2,19 @@
     <div class="dashboard">
         <DashboardSideBar :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
         <main class="main-content" :class="{ 'collapsed': sidebarCollapsed }">
-            <DashboardHeader />
-            <DashboardOverview />        
+            <DashboardPromotions />
         </main>
     </div>
 </template>
 
 <script>
 import DashboardSideBar from "@/components/DashboardSideBar.vue";
-import DashboardHeader from '@/components/DashboardHeader.vue';
-import DashboardOverview from '@/components/DashboardOverview.vue';
+import DashboardPromotions from '@/components/DashboardPromotions.vue';
 
 export default {
     components: {
         DashboardSideBar,
-        DashboardHeader,
-        DashboardOverview,
+        DashboardPromotions,
     },
     data() {
         return {

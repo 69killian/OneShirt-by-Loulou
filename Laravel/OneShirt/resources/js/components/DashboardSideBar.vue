@@ -11,9 +11,8 @@
         <li><router-link to="/dashboard/users"><i class="fas fa-users"></i> <span>Utilisateurs</span></router-link></li>
         <li><router-link to="/dashboard/blog"><i class="fas fa-blog"></i> <span>Blog</span></router-link></li>
         <li><router-link to="/dashboard/avis"><i class="fas fa-star"></i> <span>Avis</span></router-link></li>
-        <li><a href="#promotions"><i class="fas fa-tags"></i> <span>Promotions</span></a></li>
+        <li><router-link to="/dashboard/promotions"><i class="fas fa-tags"></i> <span>Promotions</span></router-link></li>
         <li><router-link to="/dashboard/orders"><i class="fas fa-receipt"></i> <span>Commandes</span></router-link></li>
-        <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Statistiques</span></a></li>
         <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></a></li>
       </ul>
     </nav>
