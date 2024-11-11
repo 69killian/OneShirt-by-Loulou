@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -38,12 +39,17 @@ class User extends Authenticatable
         return $this->hasOne(Cart::class);
     }
 
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($user) {
-            $user->password_hash = bcrypt($user->password_hash); // Utilisez `password_hash`
+            $user->password_hash = Hash::make($user->password_hash);
         });
     }
 }

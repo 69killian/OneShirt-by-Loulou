@@ -18,7 +18,7 @@ class CartController extends Controller
                 'authenticated' => true,
                 'user' => [
                     'id' => $user->id,
-                    'last_name' => $user->last_name,
+                    'first_name' => $user->last_name,
                     'email' => $user->email,
                 ]
             ], 200);

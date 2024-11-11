@@ -21,8 +21,6 @@
 <script>
 import axios from 'axios';
 
-
-
 export default {
   name: 'ConnexionForm',
   data() {
@@ -49,6 +47,7 @@ try {
 } catch (error) {
   if (error.response && error.response.status === 401) {
     this.errorMessage = 'Les informations de connexion sont incorrectes.';
+    console.log(error.response);
   } else {
     this.errorMessage = 'Une erreur s\'est produite.';
   }
