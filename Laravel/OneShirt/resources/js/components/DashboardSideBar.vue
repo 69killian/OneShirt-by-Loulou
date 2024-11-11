@@ -13,7 +13,7 @@
         <li><router-link to="/dashboard/avis"><i class="fas fa-star"></i> <span>Avis</span></router-link></li>
         <li><router-link to="/dashboard/promotions"><i class="fas fa-tags"></i> <span>Promotions</span></router-link></li>
         <li><router-link to="/dashboard/orders"><i class="fas fa-receipt"></i> <span>Commandes</span></router-link></li>
-        <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></a></li>
+        <li><button @click="handleLogout()"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></button></li>
       </ul>
     </nav>
   </template>
@@ -25,6 +25,19 @@
         type: Boolean,
         required: true
       }
+    },
+    methods: {
+      async handleLogout() {
+      try {
+        await axios.post('/api/logout');
+        localStorage.removeItem('user');
+        this.isAuthenticated = false;
+        this.totalQuantity = 0;
+        this.$router.push('/');
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion', error);
+      }
+    },
     }
   }
   </script>
