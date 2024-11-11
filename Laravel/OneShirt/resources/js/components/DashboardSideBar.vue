@@ -6,8 +6,8 @@
     <nav :class="['sidebar', { collapsed }]">
       <h2>OneShirt</h2>
       <ul>
-        <li><a href="#overview"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></a></li>
-        <li><a href="#products"><i class="fas fa-box"></i> <span>Produits</span></a></li>
+        <li><router-link to="/dashboard"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></router-link></li>
+        <li><router-link to="/dashboard/products"><i class="fas fa-box"></i> <span>Produits</span></router-link></li>
         <li><a href="#users"><i class="fas fa-users"></i> <span>Utilisateurs</span></a></li>
         <li><a href="#blog"><i class="fas fa-blog"></i> <span>Blog</span></a></li>
         <li><a href="#reviews"><i class="fas fa-star"></i> <span>Avis</span></a></li>
