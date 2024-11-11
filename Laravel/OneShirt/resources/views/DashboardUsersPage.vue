@@ -4,6 +4,7 @@
         <main class="main-content" :class="{ 'collapsed': sidebarCollapsed }">
             <DashboardHeader />
             <DashboardOverview />
+            <DashboardUsers />
             <DashboardOrders />
             <DashboardBlog />
             <DashboardReviews />
@@ -14,22 +15,12 @@
 
 <script>
 import DashboardSideBar from "@/components/DashboardSideBar.vue";
-import DashboardHeader from '@/components/DashboardHeader.vue';
-import DashboardOverview from '@/components/DashboardOverview.vue';
-import DashboardOrders from '@/components/DashboardOrders.vue';
-import DashboardBlog from '@/components/DashboardBlog.vue';
-import DashboardReviews from '@/components/DashboardReviews.vue';
-import DashboardPromotions from '@/components/DashboardPromotions.vue';
+import DashboardUsers from '@/components/DashboardUsers.vue';
 
 export default {
     components: {
         DashboardSideBar,
-        DashboardHeader,
-        DashboardOverview,
-        DashboardOrders,
-        DashboardBlog,
-        DashboardReviews,
-        DashboardPromotions,
+        DashboardUsers,
     },
     data() {
         return {

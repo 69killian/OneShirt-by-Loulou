@@ -51,7 +51,7 @@
           <td>{{ user.phone_number }}</td>
           <td>{{ user.birth_date }}</td>
           <td>{{ user.address }}</td>
-          <td>{{ user.created_at }}</td>
+          <td>{{ user.created_at.substr(0, 10) }}</td>
           <td>
             <button @click="editUser(user)">Modifier</button>
             <button @click="deleteUser(user.id)">Supprimer</button>
