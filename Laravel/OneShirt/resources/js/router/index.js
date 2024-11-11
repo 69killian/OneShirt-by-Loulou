@@ -26,9 +26,11 @@ import DashboardProductPage from '../../views/DashboardProductPage.vue';
 import DashboardUsersPage from '../../views/DashboardUsersPage.vue';
 import DashboardBlogPage from '../../views/DashboardBlogPage.vue';
 import DashboardReviewsPage from '../../views/DashboardReviewsPage.vue';
+import DashboardOrdersPage from '../../views/DashboardOrdersPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
+  { path: '/dashboard/orders', name: 'dahsboardorders', component: DashboardOrdersPage },
   { path: '/dashboard/avis', name: 'dashboardreviews', component: DashboardReviewsPage },
   { path: '/dashboard/blog', name: 'dashboardblog', component: DashboardBlogPage },
   { path: '/dashboard/users', name: 'dashboardusers', component: DashboardUsersPage },
