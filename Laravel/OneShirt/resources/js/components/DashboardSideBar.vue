@@ -10,7 +10,7 @@
         <li><router-link to="/dashboard/products"><i class="fas fa-box"></i> <span>Produits</span></router-link></li>
         <li><router-link to="/dashboard/users"><i class="fas fa-users"></i> <span>Utilisateurs</span></router-link></li>
         <li><router-link to="/dashboard/blog"><i class="fas fa-blog"></i> <span>Blog</span></router-link></li>
-        <li><a href="#reviews"><i class="fas fa-star"></i> <span>Avis</span></a></li>
+        <li><router-link to="/dashboard/avis"><i class="fas fa-star"></i> <span>Avis</span></router-link></li>
         <li><a href="#promotions"><i class="fas fa-tags"></i> <span>Promotions</span></a></li>
         <li><a href="#orders"><i class="fas fa-receipt"></i> <span>Commandes</span></a></li>
         <li><a href="#analytics"><i class="fas fa-chart-pie"></i> <span>Statistiques</span></a></li>
