@@ -12,7 +12,7 @@
   
       <div class="footer-usecases">
         <div class="bold-footer"><p>Administration</p></div>
-        <p>CroVex Admin</p>
+        <router-link to="/dashboard/connexion" style="text-decoration: none; color: white;">Dashboard Admin</router-link>
         <p>Statistiques</p>
         <router-link to="/profil" style="text-decoration: none; color: white;">Mon Profil</router-link>
         <p>Promo</p>

@@ -54,6 +54,10 @@ Route::post('/api/logout', [LoginController::class, 'logout']);
 
 
 // Route pour connexion utilisateur
+Route::post('/api/login/dashboard', [LoginController::class, 'AdminLogin']);
+
+
+// Route pour connexion utilisateur
 Route::post('/api/login', [LoginController::class, 'login']);
 
 
