@@ -1,20 +1,20 @@
 <template>
     <div>
       <h1>Procéder au paiement</h1>
-      <p class="description">Veuillez vérifier vos informations et compléter les informations de paiement.</p>
-      <PaymentConnectedForm />
+      <p class="description">Veuillez vérifier vos informations</p>
+      <PaymentUserInfo />
       <Newsletter style="display: none;"/>
     </div>
   </template>
   
   <script>
-  import PaymentConnectedForm from '@/components/PaymentConnectedForm.vue';
-  import Newsletter from '../js/components/Newsletter.vue';
+  import Newsletter from '@/components/Newsletter.vue';
+import PaymentUserInfo from '@/components/PaymentUserInfo.vue';
   
   export default {
     name: 'PaymentConnected',
     components: {
-      PaymentConnectedForm,
+      PaymentUserInfo,
       Newsletter,
     },
   };

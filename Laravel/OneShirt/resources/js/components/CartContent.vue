@@ -128,7 +128,7 @@ export default {
     this.totalQuantity = this.products.reduce((acc, product) => acc + product.quantity, 0);
     },
     proceedToPayment() {
-      this.$router.push(this.isLoggedIn ? '/paiementconnecte' : '/paiementvisiteur');
+      this.$router.push(this.isLoggedIn ? '/paymentuserinfo' : '/connexion');
     }
   },
   mounted() {

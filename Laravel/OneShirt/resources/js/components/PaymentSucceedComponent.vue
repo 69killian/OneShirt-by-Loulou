@@ -1,22 +1,45 @@
 <template>
-    <div class="error-container">
-      <div class="title-success">
-        <h1>Félicitation Pirate !</h1>
-        <p class="description">Tu sera redirigé vers la page d'accueil</p>
-      </div>
+  <div class="error-container">
+    <div class="title-success">
+      <h1>Félicitations Pirate !</h1>
+      <p class="description">Ta commande sera enregistrée et tu seras redirigé vers la page d'accueil.</p>
     </div>
-  </template>
-  
+  </div>
+</template>
+
   <script>
-  export default {
-    mounted() {
-      // Redirection vers le panier après un délai de 3 secondes
-      setTimeout(() => {
-        this.$router.push('/');
-      }, 3000);
+export default {
+  mounted() {
+    // Appeler la méthode pour enregistrer la commande
+    this.storeOrder();
+
+    // Rediriger vers la page d'accueil après un délai de 3 secondes
+    setTimeout(() => {
+      this.$router.push('/');
+    }, 10000);
+  },
+  methods: {
+    async storeOrder() {
+      try {
+        // Faire la requête pour enregistrer la commande sur le backend
+        const response = await axios.post('/api/store-order', {
+          // Vous pouvez envoyer ici les informations de la commande (par exemple)
+          cartId: this.cartId,
+          totalAmount: this.totalPrice,
+          // Ajoutez d'autres informations de la commande selon vos besoins
+        });
+
+        // Vous pouvez afficher un message ou un log ici si nécessaire
+        console.log("Commande enregistrée avec succès :", response.data);
+
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la commande :", error);
+      }
     }
   }
-  </script>
+}
+</script>
+
   
   <style scoped>
   body {

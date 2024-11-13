@@ -18,6 +18,9 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    Header set Content-Security-Policy "script-src 'self' https://js.stripe.com https://b.stripecdn.com https://hcaptcha.com"
+
 </IfModule>
 
 

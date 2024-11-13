@@ -29,9 +29,11 @@ import DashboardReviewsPage from '../../views/DashboardReviewsPage.vue';
 import DashboardOrdersPage from '../../views/DashboardOrdersPage.vue';
 import DashboardPromotionsPage from '../../views/DashboardPromotionsPage.vue';
 import DashboardConnexionPage from '../../views/DashboardConnexionPage.vue';
+import PaymentUserInfoPage from '../../views/PaymentUserInfoPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home }, 
+  { path: '/paymentuserinfo', name: 'paymentuserinfo', component:PaymentUserInfoPage },
   { path: '/dashboard/connexion', name: 'dashboardconnexionpage', component: DashboardConnexionPage },
   { path: '/dashboard/promotions', name: 'dashboardpromotions', component: DashboardPromotionsPage },
   { path: '/dashboard/orders', name: 'dahsboardorders', component: DashboardOrdersPage },
