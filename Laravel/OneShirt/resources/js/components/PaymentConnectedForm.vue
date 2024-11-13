@@ -3,11 +3,20 @@
     <form @submit.prevent="submitPayment">
       <div class="form-content">
         <div class="payment-info">
-          <img src="../../../public/images/i43cmo34.bmp" alt="Stripe" style="height: 100px;">
+          <img src="../../../public/images/i43cmo34.bmp" alt="Stripe" style="height: 100px; object-fit: cover;">
 
           <!-- Affichage du montant -->
           <div class="amount">
             <p>Montant total : {{ totalPrice }} €</p>
+          </div>
+
+          <div class="products-list">
+            <h3>Produits dans votre panier :</h3>
+            <ul>
+              <li v-for="(product, index) in products" :key="index">
+                {{ product.quantity }} x {{ product.name }} - {{ product.price }} €
+              </li>
+            </ul>
           </div>
 
           <!-- Affichage des informations utilisateur -->
@@ -55,7 +64,8 @@ export default {
       cardExpiry: null,
       cardCvc: null,
       totalPrice: null,
-      user: {}  // Stocker les informations de l'utilisateur
+      user: {}, 
+      products: [],
     };
   },
   async mounted() {
@@ -82,6 +92,7 @@ export default {
       // Définir le montant total dans la donnée
       this.totalPrice = data.total_amount;  // Afficher le montant total en euros
       this.user = data.user;  // Stocker les informations utilisateur
+      this.products = data.products;
 
     } catch (error) {
       console.error("Erreur lors de l'initialisation de Stripe ou de la récupération du montant:", error);
