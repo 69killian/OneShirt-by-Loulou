@@ -19,6 +19,7 @@ use App\Http\Controllers\OrderController;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use App\Models\Cart;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,13 @@ Route::post('/api/payment-intent', function (Request $request) {
         return response()->json(['error' => 'User not authenticated'], 403);
     }
 
+    // Récupérer l'utilisateur authentifié
     $user = Auth::user();
+
+    // Vérifier si l'utilisateur a les informations nécessaires
+    if (!$user->first_name || !$user->last_name || !$user->email || !$user->phone_number || !$user->address) {
+        return response()->json(['error' => 'Incomplete user information'], 400);
+    }
 
     // Récupérer les informations du panier de l'utilisateur
     $cart = Cart::where('user_id', $user->id)->first();
@@ -72,13 +79,22 @@ Route::post('/api/payment-intent', function (Request $request) {
         'payment_method_types' => ['card'],
     ]);
 
-    // Retourner le client_secret, le montant total en euros et les détails des produits
+    // Retourner le client_secret, le montant total en euros, les détails des produits, et les informations utilisateur
     return response()->json([
         'client_secret' => $paymentIntent->client_secret,
         'total_amount' => $totalAmount,  // Retourner le montant total en euros
         'products' => $productDetails,  // Détails des produits
+        'user' => [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'phone_number' => $user->phone_number,
+            'address' => $user->address,  // Assurez-vous que le champ 'address' existe dans votre table users
+        ]
     ]);
 });
+
+
 
 
 

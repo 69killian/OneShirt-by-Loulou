@@ -3,21 +3,19 @@
     <form @submit.prevent="submitPayment">
       <div class="form-content">
         <div class="payment-info">
-          <img src="../../../public/images/i43cmo34.bmp" alt="Stripe" style="height: 100px; object-fit: cover;">
-          
+          <img src="../../../public/images/i43cmo34.bmp" alt="Stripe" style="height: 100px;">
+
           <!-- Affichage du montant -->
           <div class="amount">
             <p>Montant total : {{ totalPrice }} €</p>
           </div>
 
-          <!-- Affichage des noms des produits dans le panier -->
-          <div class="products-list">
-            <h3>Produits dans votre panier :</h3>
-            <ul>
-              <li v-for="(product, index) in products" :key="index">
-                {{ product.quantity }} x {{ product.name }} - {{ product.price }} €
-              </li>
-            </ul>
+          <!-- Affichage des informations utilisateur -->
+          <div class="user-info">
+            <p><strong>Nom:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Téléphone:</strong> {{ user.phone_number }}</p>
+            <p><strong>Adresse:</strong> {{ user.address }}</p>
           </div>
 
           <!-- Champ pour le numéro de carte -->
@@ -56,8 +54,8 @@ export default {
       cardNumber: null,
       cardExpiry: null,
       cardCvc: null,
-      totalPrice: null,  // Montant total du panier
-      products: [],  // Liste des produits du panier
+      totalPrice: null,
+      user: {}  // Stocker les informations de l'utilisateur
     };
   },
   async mounted() {
@@ -76,16 +74,17 @@ export default {
       this.cardExpiry.mount('#card-expiry');
       this.cardCvc.mount('#card-cvc');
 
-      // Récupérer les détails du panier depuis le backend
+      // Récupérer le montant du panier et les informations utilisateur depuis le backend
       const { data } = await axios.post('/api/payment-intent', {
         currency: 'eur',  // Vous pouvez spécifier la devise ici
       });
 
-      // Définir le montant total et la liste des produits
-      this.totalPrice = data.total_amount;
-      this.products = data.products;  // Enregistrer les produits dans une liste
+      // Définir le montant total dans la donnée
+      this.totalPrice = data.total_amount;  // Afficher le montant total en euros
+      this.user = data.user;  // Stocker les informations utilisateur
+
     } catch (error) {
-      console.error("Erreur lors de l'initialisation de Stripe ou de la récupération du panier:", error);
+      console.error("Erreur lors de l'initialisation de Stripe ou de la récupération du montant:", error);
     }
   },
   methods: {
@@ -119,6 +118,7 @@ export default {
   },
 };
 </script>
+
 
 
 
