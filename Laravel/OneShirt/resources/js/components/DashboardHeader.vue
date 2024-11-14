@@ -1,14 +1,36 @@
 <template>
     <header>
         <h1>Tableau de Bord</h1>
-        <div class="user-info">
-            <span>Bienvenue, (username)</span>
-            <img src="" alt="Photo de profil" class="profile-pic">
+        <div class="user-info" v-if="user">
+            <span>Bienvenue, {{ user.username }}</span>
+            <img class="profile-pic" :src="'data:image/png;base64,' + user.profile_picture" alt="Photo de profil">
         </div>
     </header>
 </template>
 
 <script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      user: null // Pour stocker les informations de l'utilisateur
+    };
+  },
+  mounted() {
+    this.fetchUserInfo();
+  },
+  methods: {
+    async fetchUserInfo() {
+      try {
+        const response = await axios.get('/api/profile');
+        this.user = response.data;
+      } catch (error) {
+        console.error('Erreur lors de la récupération utilisateur', error);
+      }
+    },
+  }
+};
 </script>
 
 <style scoped>

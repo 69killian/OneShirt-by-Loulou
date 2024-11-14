@@ -16,58 +16,69 @@ class OrderController extends Controller
  
 
     public function storeOrderAfterPayment(Request $request)
-    {
-        // Vérification de l'utilisateur authentifié
-        if (!Auth::check()) {
-            return response()->json(['error' => 'User not authenticated'], 403);
-        }
-        
-        $user = Auth::user();
-
-        // Récupération des informations du panier de l'utilisateur
-        $cart = Cart::where('user_id', $user->id)->first();
-        if (!$cart) {
-            return response()->json(['error' => 'Cart not found'], 404);
-        }
-
-        // Récupération des articles du panier avec les informations sur les produits
-        $cartItems = $cart->items()->with('product')->get();
-        if ($cartItems->isEmpty()) {
-            return response()->json(['error' => 'Cart is empty'], 400);
-        }
-
-        // Calcule le montant total de la commande
-        $totalAmount = 0;
-        foreach ($cartItems as $cartItem) {
-            $totalAmount += $cartItem->quantity * $cartItem->product->price;
-        }
-
-        // Crée une nouvelle commande
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total_amount' => $totalAmount,
-            'payment_status' => 'paid', // Statut du paiement
-            'payment_method' => 'stripe', // Méthode de paiement
-            'shipping_address' => $user->address, // Adresse de livraison
-            'billing_address' => $user->address, // Adresse de facturation (facultatif)
-        ]);
-
-        // Ajoute les articles de la commande avec le prix unitaire
-        foreach ($cartItems as $cartItem) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $cartItem->product_id,
-                'quantity' => $cartItem->quantity,
-                'unit_price' => $cartItem->product->price,
-                'total_price' => $cartItem->quantity * $cartItem->product->price,
-            ]);
-        }
-
-        // Supprime les articles du panier après la commande
-        $cart->items()->delete();
-
-        return response()->json(['message' => 'Order created successfully'], 201);
+{
+    // Vérification de l'utilisateur authentifié
+    if (!Auth::check()) {
+        return response()->json(['error' => 'User not authenticated'], 403);
     }
+    
+    $user = Auth::user();
+
+    // Récupération des informations du panier de l'utilisateur
+    $cart = Cart::where('user_id', $user->id)->first();
+    if (!$cart) {
+        return response()->json(['error' => 'Cart not found'], 404);
+    }
+
+    // Récupération des articles du panier avec les informations sur les produits
+    $cartItems = $cart->items()->with('product')->get();
+    if ($cartItems->isEmpty()) {
+        return response()->json(['error' => 'Cart is empty'], 400);
+    }
+
+    // Calcule le montant total de la commande
+    $totalAmount = 0;
+    foreach ($cartItems as $cartItem) {
+        $totalAmount += $cartItem->quantity * $cartItem->product->price;
+    }
+
+    // Crée une nouvelle commande
+    $order = Order::create([
+        'user_id' => $user->id,
+        'total_amount' => $totalAmount,
+        'payment_status' => 'paid', // Statut du paiement
+        'payment_method' => 'stripe', // Méthode de paiement
+        'shipping_address' => $user->address, // Adresse de livraison
+        'billing_address' => $user->address, // Adresse de facturation (facultatif)
+    ]);
+
+    // Ajoute les articles de la commande et décrémente le stock
+    foreach ($cartItems as $cartItem) {
+        // Mise à jour du stock de chaque produit
+        $product = $cartItem->product;
+        if ($product->stock_quantity >= $cartItem->quantity) {
+            $product->stock_quantity -= $cartItem->quantity;
+            $product->save(); // Enregistre la mise à jour du stock
+        } else {
+            return response()->json(['error' => 'Not enough stock for product ' . $product->name], 400);
+        }
+
+        // Ajoute l'article à la commande
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $cartItem->product_id,
+            'quantity' => $cartItem->quantity,
+            'unit_price' => $cartItem->product->price,
+            'total_price' => $cartItem->quantity * $cartItem->product->price,
+        ]);
+    }
+
+    // Supprime les articles du panier après la commande
+    $cart->items()->delete();
+
+    return response()->json(['message' => 'Order created successfully'], 201);
+}
+
 
 
 
