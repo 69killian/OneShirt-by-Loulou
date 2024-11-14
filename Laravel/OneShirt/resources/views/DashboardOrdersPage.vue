@@ -3,6 +3,7 @@
         <DashboardSideBar :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
         <main class="main-content" :class="{ 'collapsed': sidebarCollapsed }">
             <DashboardOrders />
+            <Newsletter style="display: none;"/>
         </main>
     </div>
 </template>
@@ -10,10 +11,12 @@
 <script>
 import DashboardSideBar from "@/components/DashboardSideBar.vue";
 import DashboardOrders from '@/components/DashboardOrders.vue';
+import Newsletter from "@/components/Newsletter.vue";
 
 export default {
     components: {
         DashboardSideBar,
+        Newsletter,
         DashboardOrders,
     },
     data() {

@@ -1,46 +1,84 @@
 <template>
-    <section id="orders" class="orders">
-        <h2>Commandes</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID Commande</th>
-              <th>Client</th>
-              <th>Total</th>
-              <th>Date</th>
-              <th>État</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1023</td>
-              <td>Jean Dupont</td>
-              <td>€45</td>
-              <td>01/11/2024</td>
-              <td><button class="status shipped">Expédiée</button></td>
-            </tr>
-            <tr>
-              <td>#1024</td>
-              <td>Julia Test</td>
-              <td>€64</td>
-              <td>01/11/2024</td>
-              <td><button class="status preparation"><i class="fas fa-spinner fa-spin"></i> En préparation</button></td>
-            </tr>
-            <tr>
-              <td>#1025</td>
-              <td>Marc Tovaro</td>
-              <td>€432</td>
-              <td>01/11/2024</td>
-              <td><button class="status paid"><i class="fas fa-check-circle"></i> Payée</button></td>
-            </tr>
-          </tbody>          
-        </table>
-      </section>
+  <section id="orders" class="orders">
+    <h2>Commandes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Commande</th>
+          <th>Client</th>
+          <th>Montant Total</th>
+          <th>Date</th>
+          <th>Adresse de Livraison</th>
+          <th>Méthode de paiement</th>
+          <th>État</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders" :key="order.id">
+          <td>{{ order.id }}</td>
+          <td>{{ getUserName(order.user_id) }}</td>
+          <td>{{ order.total_amount }} €</td>
+          <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
+          <td>{{ order.shipping_address }}</td>
+          <td>{{ order.payment_method }}</td>
+          <td>
+            <button :class="['status', order.payment_status === 'paid' ? 'paid' : 'pending']">
+              <i :class="order.payment_status === 'paid' ? 'fas fa-check-circle' : 'fas fa-hourglass-half'"></i>
+              {{ order.payment_status === 'paid' ? 'Payée' : 'En attente' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </template>
-    
-    <script>
-    
-    </script>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'Orders',
+  data() {
+    return {
+      orders: [],
+      users: {} // Dictionnaire pour stocker les utilisateurs récupérés
+    };
+  },
+  async created() {
+    try {
+      const response = await axios.get('/api/orders');
+      this.orders = response.data;
+
+      // Récupération des utilisateurs associés aux commandes
+      await this.fetchUsers();
+    } catch (error) {
+      console.error("Erreur lors de la récupération des commandes :", error);
+    }
+  },
+  methods: {
+    // Méthode pour récupérer les informations d'un utilisateur par son ID
+    async fetchUsers() {
+      try {
+        for (let order of this.orders) {
+          if (!this.users[order.user_id]) { // Si l'utilisateur n'a pas encore été récupéré
+            const response = await axios.get(`/api/users/${order.user_id}`);
+            this.users[order.user_id] = response.data; // Ajoute l'utilisateur au dictionnaire
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
+      }
+    },
+    // Méthode pour obtenir le nom de l'utilisateur
+    getUserName(userId) {
+      const user = this.users[userId];
+      return user ? `${user.first_name} ${user.last_name}` : 'Utilisateur non trouvé';
+    }
+  }
+};
+</script>
+
+
     
     <style>
      .orders {

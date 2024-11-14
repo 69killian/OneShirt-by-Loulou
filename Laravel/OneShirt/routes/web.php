@@ -23,6 +23,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
+// Route pour récupérer les commandes sur le Dashboard Admin
+Route::get('/api/orders', [OrderController::class, 'index']);
+
 // Route pour validation de la commande, si le payement est réussi
 Route::post('/api/process-order', [OrderController::class, 'storeOrderAfterPayment']);
 
