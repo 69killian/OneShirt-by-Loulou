@@ -70,62 +70,60 @@ export default {
   },
   async mounted() {
     try {
-      // Initialiser Stripe
+      // Initialisation Stripe
       this.stripe = await loadStripe('pk_test_51QKGeBB2WDE1V89YoLATB9ZjT5wXHhHYWTOq8BAtBPhro1B2Dl1HDFupfTEhg8RuVeYqm3VXfTXvh0uBudNmX62l00WcYyiZyt');
       this.elements = this.stripe.elements();
 
-      // Créer chaque champ Stripe pour la carte
+      // Crée chaque champ Stripe pour la carte
       this.cardNumber = this.elements.create('cardNumber');
       this.cardExpiry = this.elements.create('cardExpiry');
       this.cardCvc = this.elements.create('cardCvc');
 
-      // Monter les champs dans le DOM
+      // Monte les champs dans le DOM
       this.cardNumber.mount('#card-number');
       this.cardExpiry.mount('#card-expiry');
       this.cardCvc.mount('#card-cvc');
 
-      // Récupérer le montant du panier et les informations utilisateur depuis le backend
+      // Récupère le montant du panier et les informations utilisateur depuis le backend
       const { data } = await axios.post('/api/payment-intent', {
         currency: 'eur',  // Vous pouvez spécifier la devise ici
       });
 
-      // Définir le montant total dans la donnée
-      this.totalPrice = data.total_amount;  // Afficher le montant total en euros
-      this.user = data.user;  // Stocker les informations utilisateur
+      // Défini le montant total 
+      this.totalPrice = data.total_amount;  // Affiche le montant total en euros
+      this.user = data.user;  // Stocke les informations utilisateur
       this.products = data.products;
 
     } catch (error) {
       console.error("Erreur lors de l'initialisation de Stripe ou de la récupération du montant:", error);
+      this.$router.push('/erreurpaiement');
     }
   },
   methods: {
     async submitPayment() {
-      try {
-        // Créer un PaymentIntent sur le backend avec le montant total
-        const { data } = await axios.post('/api/payment-intent', {
-          amount: this.totalPrice * 100,  // Montant multiplié par 100 pour convertir en centimes
-          currency: 'eur',
-        });
+  try {
+    const { data } = await axios.post('/api/payment-intent', {
+      amount: this.totalPrice * 100, 
+      currency: 'eur',
+    });
 
-        const { client_secret } = data;
+    const { client_secret } = data;
 
-        // Confirmer le paiement avec les informations de la carte
-        const { error } = await this.stripe.confirmCardPayment(client_secret, {
-          payment_method: {
-            card: this.cardNumber,  // On passe le champ de la carte
-          },
-        });
+    const { error } = await this.stripe.confirmCardPayment(client_secret, {
+      payment_method: { card: this.cardNumber },
+    });
 
-        if (error) {
-          console.error("Erreur lors du paiement :", error);
-          document.getElementById('card-errors').textContent = error.message;
-        } else {
-          this.$router.push('/paiementreussi');
-        }
-      } catch (error) {
-        console.error("Erreur lors de la requête de paiement :", error);
-      }
-    },
+    if (error) {
+      console.error("Erreur lors du paiement :", error);
+      document.getElementById('card-errors').textContent = error.message;
+    } else {
+      await axios.post('/api/process-order'); 
+      this.$router.push('/paiementreussi');
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête de paiement :", error);
+  }
+},
   },
 };
 </script>

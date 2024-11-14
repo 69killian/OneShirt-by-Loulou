@@ -10,32 +10,14 @@
   <script>
 export default {
   mounted() {
-    // Appeler la méthode pour enregistrer la commande
-    this.storeOrder();
 
     // Rediriger vers la page d'accueil après un délai de 3 secondes
     setTimeout(() => {
       this.$router.push('/');
-    }, 10000);
+    }, 5000);
   },
   methods: {
-    async storeOrder() {
-      try {
-        // Faire la requête pour enregistrer la commande sur le backend
-        const response = await axios.post('/api/store-order', {
-          // Vous pouvez envoyer ici les informations de la commande (par exemple)
-          cartId: this.cartId,
-          totalAmount: this.totalPrice,
-          // Ajoutez d'autres informations de la commande selon vos besoins
-        });
-
-        // Vous pouvez afficher un message ou un log ici si nécessaire
-        console.log("Commande enregistrée avec succès :", response.data);
-
-      } catch (error) {
-        console.error("Erreur lors de l'enregistrement de la commande :", error);
-      }
-    }
+  
   }
 }
 </script>
