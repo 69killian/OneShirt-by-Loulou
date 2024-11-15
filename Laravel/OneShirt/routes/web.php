@@ -223,7 +223,7 @@ Route::post('/api/blog-articles/create', [BlogArticleController::class, 'store']
 
 
 // Route pour modifier un article dashboard
-Route::put('/api/blog-articles/update/{id}', [BlogArticleController::class, 'update']);
+Route::post('/api/blog-articles/update/{id}', [BlogArticleController::class, 'update']);
 
 
 // Route pour supprimer les articles du dashboard

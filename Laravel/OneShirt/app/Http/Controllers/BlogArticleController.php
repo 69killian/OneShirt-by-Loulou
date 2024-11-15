@@ -80,35 +80,46 @@ class BlogArticleController extends Controller
 
 
     
-
     public function update(Request $request, $id)
-{
-    $article = BlogArticle::findOrFail($id);
-
-    // Validation des données envoyées
-    $validatedData = $request->validate([
-        'title' => 'required|string|max:255',
-        'slug' => 'required|string|max:255',
-        'content' => 'required|string',
-        'image' => 'nullable|image|max:2048',  // Validation de l'image
-    ]);
-
-    // Mise à jour de l'article
-    $article->title = $validatedData['title'];
-    $article->slug = $validatedData['slug'];
-    $article->content = $validatedData['content'];
-
-    // Vérification et mise à jour de l'image si présente
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('images', 'public');
-        $article->image = $imagePath; // Enregistrer le chemin d'accès
+    {
+        $article = BlogArticle::findOrFail($id);
+    
+        // Validation des données envoyées
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|max:2048',  // Validation de l'image
+        ]);
+    
+        // Mise à jour des données textuelles
+        $article->title = $validatedData['title'];
+        $article->slug = $validatedData['slug'];
+        $article->content = $validatedData['content'];
+    
+        // Gestion du téléchargement de l'image
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
+                $article->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+            }
+        } catch (\Exception $e) {
+            Log::error("Image processing failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image processing failed'], 500);
+        }
+    
+        // Sauvegarde des modifications
+        try {
+            $article->save(); // Enregistrer l'article dans la base de données
+        } catch (\Exception $e) {
+            Log::error("Database save error: " . $e->getMessage());
+            return response()->json(['error' => 'Failed to update article'], 500);
+        }
+    
+        return response()->json($article, 200);
     }
-
-    $article->save();
-
-    return response()->json($article, 200);
-}
-
+    
 
     
     

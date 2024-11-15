@@ -50,9 +50,9 @@
         <label for="image">Image</label>
         <input type="file" @change="handleImageUpload" id="image" />
         <div v-if="imagePreview">
-          <h4>Aperçu de l'image :</h4>
-          <img :src="imagePreview" alt="Aperçu de l'image" width="100" />
-        </div>
+  <h4>Aperçu de l'image :</h4>
+  <img :src="imagePreview" alt="Aperçu de l'image" width="100" />
+</div>
 
         <label for="author_id">Auteur</label>
         <select v-model="currentArticle.author_id" required>
@@ -107,12 +107,12 @@ export default {
       articles: [],
       users: [],
       showCreateForm: false,
-      showEditForm: false, // Nouvelle variable pour contrôler l'affichage du formulaire de modification
+      showEditForm: false, // Variable pour contrôler l'affichage du formulaire de modification
       newArticle: {
         title: '',
         slug: '',
         content: '',
-        image: '',
+        image: null, // Champ image initialisé à null
         author_id: null
       },
       currentArticle: {
@@ -120,7 +120,7 @@ export default {
         title: '',
         slug: '',
         content: '',
-        image: '',
+        image: null, // Champ image initialisé à null
         author_id: null
       },
       imagePreview: null // Variable pour l'aperçu de l'image
@@ -156,7 +156,24 @@ export default {
     },
     async createArticle() {
       try {
-        const response = await axios.post('/api/blog-articles/create', this.newArticle);
+        const formData = new FormData();
+        // Ajout des champs requis au FormData
+        formData.append('title', this.newArticle.title);
+        formData.append('slug', this.newArticle.slug);
+        formData.append('content', this.newArticle.content);
+        formData.append('author_id', this.newArticle.author_id);
+
+        // Si une image est présente, on l'ajoute au FormData
+        if (this.newArticle.image) {
+          formData.append('image', this.newArticle.image);
+        }
+
+        const response = await axios.post('/api/blog-articles/create', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
         this.articles.push(response.data);
         this.showCreateForm = false; // Ferme le formulaire après la création
         console.log("Article créé avec succès");
@@ -165,34 +182,66 @@ export default {
       }
     },
     openEditForm(article) {
-      // Remplir l'article à modifier dans le formulaire
-      this.currentArticle = { ...article };
-      this.showEditForm = true; // Afficher le formulaire de modification
-    },
-    updateArticle() {
-  axios.put(`/api/blog-articles/update/${this.currentArticle.id}`, {
-    title: this.currentArticle.title,
-    slug: this.currentArticle.slug,
-    content: this.currentArticle.content,
-    image: this.currentArticle.image,
-  })
-  .then((response) => {
-    console.log(response.data); // Vérification de la réponse
-    this.$router.push({ name: "dashboard-blog" });
-  })
-  .catch((error) => {
-    console.log(error.response);
-  });
+  // Remplir l'article à modifier dans le formulaire
+  this.currentArticle = { ...article };
+
+  // Vérifier si l'image est une URL ou un fichier pour créer un aperçu
+  if (this.currentArticle.image && this.currentArticle.image instanceof File) {
+    this.imagePreview = URL.createObjectURL(this.currentArticle.image); // Si c'est un fichier
+  } else if (this.currentArticle.image) {
+    this.imagePreview = this.currentArticle.image; // Si c'est une URL d'image
+  } else {
+    this.imagePreview = null; // Aucun aperçu si pas d'image
+  }
+
+  this.showEditForm = true; // Afficher le formulaire de modification
 },
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.newArticle.image = file;
-        this.imagePreview = URL.createObjectURL(file); // Crée l'aperçu de l'image
-      } else {
-        this.imagePreview = null;
+    async updateArticle() {
+      try {
+        const formData = new FormData();
+        // Ajout des champs à mettre à jour
+        formData.append('title', this.currentArticle.title);
+        formData.append('slug', this.currentArticle.slug);
+        formData.append('content', this.currentArticle.content);
+        formData.append('author_id', this.currentArticle.author_id);
+
+        // Si une nouvelle image est ajoutée, l'ajouter au FormData
+        if (this.currentArticle.image) {
+          formData.append('image', this.currentArticle.image);
+        }
+
+        const response = await axios.post(`/api/blog-articles/update/${this.currentArticle.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          } 
+        });
+
+        // Mise à jour de l'article dans le tableau
+        const index = this.articles.findIndex(article => article.id === this.currentArticle.id);
+        if (index !== -1) {
+          this.articles[index] = response.data;
+        }
+
+        this.showEditForm = false;
+        console.log("Article mis à jour avec succès");
+        location.reload();
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'article :", error);
+        location.reload();
       }
     },
+    handleImageUpload(event) {
+    const file = event.target.files[0]; // Get the first selected file
+    if (file) {
+      this.imagePreview = URL.createObjectURL(file); // Create a URL for the file
+      // Assign the file to the article's image (this will later be submitted)
+      if (this.showCreateForm) {
+        this.newArticle.image = file; // For creating new article
+      } else {
+        this.currentArticle.image = file; // For editing an existing article
+      }
+    }
+  },
     async deleteArticle(id) {
       try {
         await axios.delete(`/api/blog-articles/delete/${id}`);
