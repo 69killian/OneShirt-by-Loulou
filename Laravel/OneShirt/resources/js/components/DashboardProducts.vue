@@ -38,6 +38,13 @@
           <label for="promotion">Promotion:</label>
           <input v-model="newProduct.promotion_id" type="text" id="promotion" placeholder="Promotion"/>
         </div>
+        
+        <!-- Champ pour télécharger l'image -->
+        <div>
+          <label for="product_image">Image du produit:</label>
+          <input type="file" id="product_image" @change="onImageSelected" />
+        </div>
+        
         <div>
           <button type="submit">Confirmer {{ isCreating ? 'la création' : 'la modification' }}</button>
           <button @click="cancelCreate">Annuler</button>
@@ -100,6 +107,7 @@ export default {
         price: 0,
         stock_quantity: 0,
         promotion_id: null,
+        image: null, // Ajout pour l'image
       },
       isCreating: false,
       isEditing: false, // Indicateur pour savoir si on est en mode édition
@@ -162,18 +170,25 @@ export default {
         });
     },
     updateProduct() {
-      axios
-        .put(`/api/update/products/${this.currentProduct.id}`, this.newProduct)
-        .then((response) => {
-          const index = this.products.findIndex((p) => p.id === this.currentProduct.id);
-          this.products[index] = response.data;
-          this.cancelCreate();
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.error('Erreur lors de la mise à jour du produit:', error);
-        });
-    },
+  // Met à jour le produit
+  axios
+    .post(`/api/update/products/${this.currentProduct.id}`, this.newProduct)
+    .then((response) => {
+      // Met à jour la liste des produits avec le produit mis à jour
+      const index = this.products.findIndex((p) => p.id === this.currentProduct.id);
+      this.products[index] = response.data;
+
+      // Si une nouvelle image a été sélectionnée, mettre à jour l'image
+      if (this.newProduct.image) {
+        this.updateImage();
+      } else {
+        this.cancelCreate(); // Annule l'édition si pas d'image à mettre à jour
+      }
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la mise à jour du produit:', error);
+    });
+},
     editProduct(product) {
       this.showEditForm(product);
     },
@@ -196,14 +211,42 @@ export default {
         price: 0,
         stock_quantity: 0,
         promotion_id: null,
+        image: null,
       };
     },
+    onImageSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.newProduct.image = file;
+      }
+    },
+    updateImage() {
+  // Prépare le FormData pour l'upload de l'image
+  const formData = new FormData();
+  formData.append('image', this.newProduct.image);
+
+  // Envoie l'image
+  axios
+    .post(`/api/update/product-image/${this.currentProduct.id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((response) => {
+      console.log('Image mise à jour avec succès:', response.data);
+      this.fetchProducts(); // Met à jour la liste des produits après l'upload
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la mise à jour de l\'image:', error);
+    });
+},
   },
   mounted() {
     this.fetchProducts();
   },
 };
 </script>
+
 
 
     

@@ -237,7 +237,7 @@ Route::delete('/api/blog-articles/delete/{id}', [BlogArticleController::class, '
 Route::post('/api/create/product-image', [ProductImageController::class, 'store']);
 
 // Route pour mettre à jour une image d'un produit
-Route::put('/api/upadte/product-image/{productId}', [ProductImageController::class, 'update']);
+Route::post('/api/update/product-image/{productId}', [ProductImageController::class, 'update']);
 
 // Route pour supprimer l'image d'un Produit (fait pour être supprimé avec le produit)
 Route::delete('/api/delete/product-image/{id}', [ProductImageController::class, 'delete']);
@@ -249,7 +249,7 @@ Route::delete('/api/delete/product-image/{id}', [ProductImageController::class, 
 Route::post('/api/create/products', [ProductController::class, 'store']);
 
 //Route pour mettre à jour un produit existant
-Route::put('/api/update/products/{productId}', [ProductController::class, 'update']);
+Route::post('/api/update/products/{productId}', [ProductController::class, 'update']);
 
 // Route pour supprimer un produit existant
 Route::delete('/api/delete/products/{id}', [ProductController::class, 'destroy']);

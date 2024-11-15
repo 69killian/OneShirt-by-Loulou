@@ -177,8 +177,10 @@ export default {
         this.articles.push(response.data);
         this.showCreateForm = false; // Ferme le formulaire après la création
         console.log("Article créé avec succès");
+        location.reload();
       } catch (error) {
         console.error("Erreur lors de la création de l'article :", error);
+        location.reload();
       }
     },
     openEditForm(article) {

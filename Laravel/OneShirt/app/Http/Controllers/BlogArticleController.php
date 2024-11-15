@@ -62,18 +62,44 @@ class BlogArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|unique:blog_articles,slug',
             'content' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048',  // Validation de l'image
             'author_id' => 'required|exists:users,id',
         ]);
-        
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
-        $article = BlogArticle::create($request->all());
+    
+        // Création de l'article
+        $article = new BlogArticle();
+        $article->title = $request->input('title');
+        $article->slug = $request->input('slug');
+        $article->content = $request->input('content');
+        $article->author_id = $request->input('author_id');
+    
+        // Gestion du téléchargement de l'image
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
+                $article->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+            }
+        } catch (\Exception $e) {
+            Log::error("Image processing failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image processing failed'], 500);
+        }
+    
+        // Sauvegarde de l'article
+        try {
+            $article->save(); // Enregistrer l'article dans la base de données
+        } catch (\Exception $e) {
+            Log::error("Database save error: " . $e->getMessage());
+            return response()->json(['error' => 'Failed to create article'], 500);
+        }
+    
         return response()->json($article, 201);
     }
+    
 
 
 
