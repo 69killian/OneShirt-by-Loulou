@@ -245,14 +245,33 @@ export default {
   editProduct(product) {
     this.showEditForm(product);
   },
+  deleteImage(imageId) {
+    axios
+      .delete(`/api/delete/product-image/${imageId}`)
+      .then(() => {
+        console.log('Image supprimée avec succès');
+        this.fetchProducts(); // Met à jour la liste des produits après la suppression de l'image
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la suppression de l\'image:', error);
+      });
+  },
   deleteProduct(id) {
+    const product = this.products.find((product) => product.id === id);
+    if (product && product.image) {
+      const imageId = product.image.id; // Assure-toi que l'ID de l'image est disponible dans le produit
+      this.deleteImage(imageId); // Supprime d'abord l'image associée
+    }
+    
     axios
       .delete(`/api/delete/products/${id}`)
       .then(() => {
         this.products = this.products.filter((product) => product.id !== id);
+        location.reload();
       })
       .catch((error) => {
         console.error('Erreur lors de la suppression du produit:', error);
+        location.reload();
       });
   },
   clearNewProduct() {

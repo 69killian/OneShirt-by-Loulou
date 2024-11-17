@@ -121,16 +121,22 @@ class ProductImageController extends Controller
      */
     public function delete($imageId)
     {
-        $productImage = ProductImage::findOrFail($imageId);
-
-        // Supprime l'image du stockage
-        if (Storage::disk('public')->exists($productImage->image)) {
-            Storage::disk('public')->delete($productImage->image);
+        // Recherche de l'image dans la base de données en utilisant l'imageId
+        $productImage = ProductImage::find($imageId);
+    
+        if ($productImage) {
+            // Supprime l'image du stockage
+            if (Storage::disk('public')->exists($productImage->image)) {
+                Storage::disk('public')->delete($productImage->image);
+            }
+    
+            // Supprime l'enregistrement de la base de données
+            $productImage->delete();
+    
+            return response()->json(['message' => 'Image supprimée avec succès!'], 200);
+        } else {
+            return response()->json(['message' => 'Image non trouvée'], 404);
         }
-
-        // Supprime l'enregistrement de la base de données
-        $productImage->delete();
-
-        return response()->json(['message' => 'Image supprimée avec succès!'], 200);
     }
+    
 }
