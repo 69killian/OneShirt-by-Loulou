@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class BlogArticleController extends Controller
 {
@@ -162,5 +163,71 @@ class BlogArticleController extends Controller
         $article->delete();
         return response()->json(['message' => 'Article supprimé avec succès'], 200);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     // Créer un nouvel article de blog par l'identifiant d'une personne connectée
+     public function storebyId(Request $request)
+     {
+         $validator = Validator::make($request->all(), [
+             'title' => 'required|string|max:255',
+             'slug' => 'required|string|unique:blog_articles,slug',
+             'content' => 'required',
+             'image' => 'nullable|image|max:2048',  // Validation de l'image
+             'author_id' => 'required|exists:users,id',
+         ]);
+     
+         if ($validator->fails()) {
+             return response()->json(['errors' => $validator->errors()], 400);
+         }
+     
+         // Création de l'article
+         $article = new BlogArticle();
+         $article->title = $request->input('title');
+         $article->slug = $request->input('slug');
+         $article->content = $request->input('content');
+         $article->author_id = $request->input('author_id');
+     
+        // Gestion du téléchargement de l'image
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $path = $image->store('blog_images', 'public'); 
+                $article->image = $path; 
+            }
+        } catch (\Exception $e) {
+            Log::error("Image processing failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image processing failed'], 500);
+        }
+
+         // Sauvegarde de l'article
+         try {
+             $article->save(); // Enregistrer l'article dans la base de données
+         } catch (\Exception $e) {
+             Log::error("Database save error: " . $e->getMessage());
+             return response()->json(['error' => 'Failed to create article'], 500);
+         }
+     
+         return response()->json($article, 201);
+     }
+
 
 }

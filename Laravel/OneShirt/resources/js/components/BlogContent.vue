@@ -1,14 +1,47 @@
 <template>
   <div>
+    <!-- Titre de la section Blog -->
     <div class="title-blogs">
       <h1>Blog</h1>
     </div>
 
+    <!-- Bouton pour créer un article -->
+    <div class="create-article-btn">
+      <button @click="showCreateForm = !showCreateForm">
+        {{ showCreateForm ? 'Annuler' : 'Créer un article' }}
+      </button>
+    </div>
+
+    <!-- Formulaire pour créer un article -->
+    <div v-if="showCreateForm" class="create-article-form">
+      <h2>Créer un nouvel article</h2>
+      <form @submit.prevent="createArticle">
+        <div class="form-group">
+          <label for="title">Titre :</label>
+          <input type="text" id="title" v-model="newArticle.title" required />
+        </div>
+        <div class="form-group">
+          <label for="slug">Slug :</label>
+          <input type="text" id="slug" v-model="newArticle.slug" required />
+        </div>
+        <div class="form-group">
+          <label for="content">Contenu :</label>
+          <textarea id="content" v-model="newArticle.content" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="image">Image :</label>
+          <input type="file" id="image" @change="handleImageUpload" />
+        </div>
+        <button type="submit">Créer l'article</button>
+      </form>
+    </div>
+
+    <!-- Affichage des articles -->
     <section class="Blogs">
       <router-link
-      v-for="article in articles"
-      :key="article.id"
-      :to="`/article/${article.slug}`"
+        v-for="article in articles"
+        :key="article.id"
+        :to="`/article/${article.slug}`"
         class="blog-card animate"
       >
         <img
@@ -30,7 +63,6 @@
         </section>
       </router-link>
     </section>
-
   </div>
 </template>
 
@@ -41,13 +73,23 @@ export default {
     return {
       articles: [],
       users: [],
+      showCreateForm: false, // Afficher ou masquer le formulaire
+      newArticle: {
+        title: '',
+        slug: '',
+        content: '',
+        image: null, // Image du nouvel article
+        author_id: null, // ID de l'auteur connecté
+      },
     };
   },
   mounted() {
     this.fetchArticles();
     this.fetchUsers();
+    this.fetchCurrentUser(); // Récupérer l'utilisateur connecté
   },
   methods: {
+    // Récupérer tous les articles du blog
     async fetchArticles() {
       try {
         const response = await axios.get('/api/blog-articles');
@@ -56,6 +98,7 @@ export default {
         console.error('Erreur lors de la récupération des articles :', error);
       }
     },
+    // Récupérer tous les utilisateurs
     async fetchUsers() {
       try {
         const response = await axios.get('/api/users');
@@ -64,12 +107,66 @@ export default {
         console.error('Erreur lors de la récupération des utilisateurs :', error);
       }
     },
+    // Récupérer l'utilisateur actuellement connecté
+    async fetchCurrentUser() {
+      try {
+        const response = await axios.get('/api/auth/check'); // Cette route renvoie l'utilisateur connecté
+        if (response.data.user) {
+          this.newArticle.author_id = response.data.user.id; // Associer l'utilisateur connecté à l'article
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur connecté :', error);
+      }
+    },
+    // Trouver un utilisateur par son ID
     getUserById(id) {
       return this.users.find(user => user.id === id);
-    }
-  }
-}
+    },
+    // Gérer l'upload d'image
+    handleImageUpload(event) {
+      const file = event.target.files[0]; // Get the first selected file
+      if (file) {
+        this.newArticle.image = file; // On garde le fichier pour l'envoyer avec l'article
+      }
+    },
+    // Créer un article
+    async createArticle() {
+      if (!this.newArticle.image) {
+        alert('Veuillez ajouter une image pour l\'article');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        // Ajout des champs requis au FormData
+        formData.append('title', this.newArticle.title);
+        formData.append('slug', this.newArticle.slug);
+        formData.append('content', this.newArticle.content);
+        formData.append('author_id', this.newArticle.author_id); // Associer l'utilisateur
+
+        // Si une image est présente, on l'ajoute au FormData
+        formData.append('image', this.newArticle.image);
+
+        const response = await axios.post('/api/blog-articles/create', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        this.articles.push(response.data); // Ajouter l'article créé à la liste
+        this.showCreateForm = false; // Fermer le formulaire après la création
+        this.newArticle = { title: '', slug: '', content: '', image: null }; // Réinitialiser le formulaire
+        console.log("Article créé avec succès");
+        location.reload();
+      } catch (error) {
+        console.error("Erreur lors de la création de l'article :", error);
+        location.reload();
+      }
+    },
+  },
+};
 </script>
+
 
 
 
@@ -206,6 +303,67 @@ margin-top: 5px;
 .blog-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 4px 8px rgba(152, 152, 152, 0.2);
+}
+
+
+/* Styles du bouton Créer un article */
+.create-article-btn {
+  text-align: center;
+  margin: 20px;
+}
+
+.create-article-btn button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-article-btn button:hover {
+  background-color: #0056b3;
+}
+
+/* Styles du formulaire */
+.create-article-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.create-article-form .form-group {
+  margin-bottom: 15px;
+}
+
+.create-article-form label {
+  color: white;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.create-article-form input,
+.create-article-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  color: black;
+}
+
+.create-article-form button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-article-form button:hover {
+  background-color: #218838;
 }
 
 @keyframes fadeInUp {

@@ -214,6 +214,10 @@ Route::post('api/article/{slug}/comments', [BlogCommentController::class, 'store
 Route::get('/api/blog-articles', [BlogArticleController::class, 'index']);
 
 
+// Route pour créer un article sur le site
+Route::post('/api/blog-articles/create/user', [BlogArticleController::class, 'storeById']);
+
+
 // Route pour récupération des page d'articles
 Route::get('api/blog-articles/{slug}', [BlogArticleController::class, 'show']);
 
@@ -230,7 +234,8 @@ Route::post('/api/blog-articles/update/{id}', [BlogArticleController::class, 'up
 Route::delete('/api/blog-articles/delete/{id}', [BlogArticleController::class, 'destroy']);
 
 
-
+// Route pour créer un article dashboard
+Route::post('/api/blog-articles/create/{userId}', [BlogArticleController::class, 'storeById']);
 
 
 // Route pour créer une nouvelle Image de produit
