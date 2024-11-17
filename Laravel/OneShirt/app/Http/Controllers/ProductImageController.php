@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProductImageController extends Controller
 {
@@ -25,25 +26,41 @@ class ProductImageController extends Controller
      * Ajoute une nouvelle image pour un produit.
      */
     public function store(Request $request, $productId)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-        $product = Product::findOrFail($productId);
-
-        // Enregistre l'image dans le stockage public
-        $imagePath = $request->file('image')->store('product_images', 'public');
-
-        // Crée un enregistrement dans la table product_images
-        $productImage = new ProductImage();
-        $productImage->product_id = $product->id;
-        $productImage->image = $imagePath; // Chemin du fichier
-        $productImage->mime_type = $request->file('image')->getMimeType();
-        $productImage->save();
-
-        return response()->json(['message' => 'Image ajoutée avec succès!', 'image' => $productImage], 201);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
     }
+
+    $product = Product::findOrFail($productId);
+
+    $productImage = new ProductImage();
+    $productImage->product_id = $product->id;
+
+    // Traitement de l'image en tant que donnée binaire
+    try {
+        $image = $request->file('image');
+        $productImage->image = file_get_contents($image->getRealPath()); // Stocker l'image en binaire dans la base de données
+    } catch (\Exception $e) {
+        Log::error("Image processing failed: " . $e->getMessage());
+        return response()->json(['error' => 'Image processing failed'], 500);
+    }
+
+    // Sauvegarder l'image dans la base de données
+    try {
+        $productImage->save();
+    } catch (\Exception $e) {
+        Log::error("Database save error: " . $e->getMessage());
+        return response()->json(['error' => 'Failed to save product image'], 500);
+    }
+
+    return response()->json(['message' => 'Image ajoutée avec succès!', 'image' => $productImage], 201);
+}
+
+
 
 
 
@@ -51,10 +68,14 @@ class ProductImageController extends Controller
     /**
      * Met à jour l'image d'un produit.
      */
-    public function update(Request $request, $imageId)
+    public function update(Request $request, $productId)
     {
-        // Recherche de l'image produit associée
-        $productImage = ProductImage::findOrFail($imageId);
+        // Recherche de l'image produit associée à ce produit (par product_id)
+        $productImage = ProductImage::where('product_id', $productId)->first();
+    
+        if (!$productImage) {
+            return response()->json(['error' => 'Image not found for this product'], 404);
+        }
     
         // Validation des données envoyées
         $validatedData = $request->validate([
@@ -81,12 +102,13 @@ class ProductImageController extends Controller
             return response()->json(['error' => 'Failed to update product image'], 500);
         }
     
-        // Retourne uniquement les informations nécessaires (pas l'image binaire brute)
+        // Retourne uniquement les informations nécessaires
         return response()->json([
             'message' => 'Image mise à jour avec succès!',
             'image_id' => $productImage->id, // Retourne l'ID de l'image mise à jour
         ], 200);
     }
+    
     
     
 

@@ -107,69 +107,122 @@ export default {
         price: 0,
         stock_quantity: 0,
         promotion_id: null,
-        image: null, // Ajout pour l'image
+        image: null,
       },
       isCreating: false,
-      isEditing: false, // Indicateur pour savoir si on est en mode édition
-      currentProduct: null, // Stocke le produit actuellement en cours de modification
+      isEditing: false,
+      currentProduct: null,
     };
   },
   methods: {
-    fetchProducts() {
-      axios
-        .get('/api/products')
-        .then((response) => {
-          this.products = response.data.map((product) => ({
-            ...product,
-            image: product.images && product.images.length > 0 ? product.images[0].image_base64 : '',
-          }));
-          this.productTypes = [...new Set(this.products.map((product) => product.type))];
-        })
-        .catch((error) => {
-          console.error('Erreur lors de la récupération des produits:', error);
-        });
-    },
-    getProductImage(product) {
-      return product.image || '/images/default.jpg';
-    },
-    showCreateForm() {
-      this.isCreating = true;
-      this.isEditing = false;
-      this.clearNewProduct();
-    },
-    showEditForm(product) {
-      this.isCreating = false;
-      this.isEditing = true;
-      this.currentProduct = { ...product }; // Copie des données du produit
-      this.newProduct = { ...product }; // Pré-remplissage du formulaire avec les données du produit
-    },
-    cancelCreate() {
-      this.isCreating = false;
-      this.isEditing = false;
-      this.clearNewProduct();
-    },
-    confirmCreateProduct() {
-      if (confirm('Voulez-vous vraiment créer ce produit ?')) {
-        this.createProduct();
-      }
-    },
-    confirmEditProduct() {
-      if (confirm('Voulez-vous vraiment modifier ce produit ?')) {
-        this.updateProduct();
-      }
-    },
-    createProduct() {
+  fetchProducts() {
+    axios
+      .get('/api/products')
+      .then((response) => {
+        this.products = response.data.map((product) => ({
+          ...product,
+          image: product.images && product.images.length > 0 ? product.images[0].image_base64 : '',
+        }));
+        this.productTypes = [...new Set(this.products.map((product) => product.type))];
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des produits:', error);
+      });
+  },
+  getProductImage(product) {
+    return product.image || '/images/default.jpg';
+  },
+  showCreateForm() {
+    this.isCreating = true;
+    this.isEditing = false;
+    this.clearNewProduct();
+  },
+  showEditForm(product) {
+    this.isCreating = false;
+    this.isEditing = true;
+    this.currentProduct = { ...product }; // Copie des données du produit
+    this.newProduct = { ...product }; // Pré-remplissage du formulaire avec les données du produit
+  },
+  cancelCreate() {
+    this.isCreating = false;
+    this.isEditing = false;
+    this.clearNewProduct();
+  },
+  confirmCreateProduct() {
+    if (confirm('Voulez-vous vraiment créer ce produit ?')) {
+      this.createProduct();
+    }
+  },
+  confirmEditProduct() {
+    if (confirm('Voulez-vous vraiment modifier ce produit ?')) {
+      this.updateProduct();
+    }
+  },
+  createProduct() {
       axios
         .post('/api/create/products', this.newProduct)
         .then((response) => {
-          this.products.push(response.data);
-          this.cancelCreate();
+          const createdProduct = response.data;
+
+          // Si une image est sélectionnée, créer l'image pour le produit
+          if (this.newProduct.image) {
+            this.createImage(createdProduct.id);
+          } else {
+            this.products.push(createdProduct);
+            this.cancelCreate();
+          }
         })
         .catch((error) => {
           console.error('Erreur lors de la création du produit:', error);
         });
     },
-    updateProduct() {
+    createImage(productId) {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      const formData = new FormData();
+      formData.append('image', this.newProduct.image);
+
+      axios
+        .post(`/api/create/product-image/${productId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-CSRF-TOKEN': csrfToken,
+          },
+        })
+        .then((response) => {
+          console.log('Image créée avec succès:', response.data);
+          this.fetchProducts(); // Met à jour la liste des produits
+          this.cancelCreate();
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la création de l\'image:', error);
+        });
+    },
+  updateImage() {
+    // Récupère le token CSRF depuis la balise méta
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Prépare le FormData pour l'upload de l'image
+    const formData = new FormData();
+    formData.append('image', this.newProduct.image);
+
+    // Envoie l'image
+    axios
+      .post(`/api/update/product-image/${this.currentProduct.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-CSRF-TOKEN': csrfToken, // Ajout du token CSRF
+        },
+      })
+      .then((response) => {
+        console.log('Image mise à jour avec succès:', response.data);
+        this.fetchProducts(); // Met à jour la liste des produits après l'upload
+        this.cancelCreate();
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la mise à jour de l\'image:', error);
+      });
+  },
+  updateProduct() {
   // Met à jour le produit
   axios
     .post(`/api/update/products/${this.currentProduct.id}`, this.newProduct)
@@ -189,68 +242,45 @@ export default {
       console.error('Erreur lors de la mise à jour du produit:', error);
     });
 },
-    editProduct(product) {
-      this.showEditForm(product);
-    },
-    deleteProduct(id) {
-      axios
-        .delete(`/api/delete/products/${id}`)
-        .then(() => {
-          this.products = this.products.filter((product) => product.id !== id);
-        })
-        .catch((error) => {
-          console.error('Erreur lors de la suppression du produit:', error);
-        });
-    },
-    clearNewProduct() {
-      this.newProduct = {
-        name: '',
-        description: '',
-        type: '',
-        color: '',
-        price: 0,
-        stock_quantity: 0,
-        promotion_id: null,
-        image: null,
-      };
-    },
-    onImageSelected(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.newProduct.image = file;
-      }
-    },
-    updateImage() {
-    // Récupère le token CSRF depuis la balise méta
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Prépare le FormData pour l'upload de l'image
-    const formData = new FormData();
-    formData.append('image', this.newProduct.image);
-
-    // Envoie l'image
+  editProduct(product) {
+    this.showEditForm(product);
+  },
+  deleteProduct(id) {
     axios
-      .post(`/api/update/product-image/${this.currentProduct.id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-CSRF-TOKEN': csrfToken, // Ajout du token CSRF
-        },
-      })
-      .then((response) => {
-        console.log('Image mise à jour avec succès:', response.data);
-        this.fetchProducts(); // Met à jour la liste des produits après l'upload
-        location.reload();
+      .delete(`/api/delete/products/${id}`)
+      .then(() => {
+        this.products = this.products.filter((product) => product.id !== id);
       })
       .catch((error) => {
-        console.error('Erreur lors de la mise à jour de l\'image:', error);
+        console.error('Erreur lors de la suppression du produit:', error);
       });
-    },
   },
+  clearNewProduct() {
+    this.newProduct = {
+      name: '',
+      description: '',
+      type: '',
+      color: '',
+      price: 0,
+      stock_quantity: 0,
+      promotion_id: null,
+      image: null,
+    };
+  },
+  onImageSelected(event) {
+    const file = event.target.files[0];
+    if (file) {
+      this.newProduct.image = file;
+    }
+  },
+},
   mounted() {
     this.fetchProducts();
   },
 };
 </script>
+
+
 
 
 

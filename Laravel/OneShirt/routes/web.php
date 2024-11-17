@@ -234,7 +234,7 @@ Route::delete('/api/blog-articles/delete/{id}', [BlogArticleController::class, '
 
 
 // Route pour créer une nouvelle Image de produit
-Route::post('/api/create/product-image', [ProductImageController::class, 'store']);
+Route::post('/api/create/product-image/{productId}', [ProductImageController::class, 'store']);
 
 // Route pour mettre à jour une image d'un produit
 Route::post('/api/update/product-image/{productId}', [ProductImageController::class, 'update']);
