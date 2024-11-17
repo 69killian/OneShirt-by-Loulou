@@ -6,6 +6,7 @@ use App\Models\ProductImage;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProductImageController extends Controller
 {
@@ -44,33 +45,54 @@ class ProductImageController extends Controller
         return response()->json(['message' => 'Image ajoutée avec succès!', 'image' => $productImage], 201);
     }
 
+
+
+
     /**
      * Met à jour l'image d'un produit.
      */
     public function update(Request $request, $imageId)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
-        ]);
-
+        // Recherche de l'image produit associée
         $productImage = ProductImage::findOrFail($imageId);
-        $product = $productImage->product;
-
-        // Supprime l'ancienne image du stockage
-        if (Storage::disk('public')->exists($productImage->image)) {
-            Storage::disk('public')->delete($productImage->image);
+    
+        // Validation des données envoyées
+        $validatedData = $request->validate([
+            'image' => 'required|image|max:2048', // Validation de l'image
+        ]);
+    
+        // Gestion du téléchargement de l'image
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
+                $productImage->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+            }
+        } catch (\Exception $e) {
+            Log::error("Image processing failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image processing failed'], 500);
         }
-
-        // Enregistre la nouvelle image dans le stockage public
-        $imagePath = $request->file('image')->store('product_images', 'public');
-
-        // Met à jour l'enregistrement dans la table product_images
-        $productImage->image = $imagePath;
-        $productImage->mime_type = $request->file('image')->getMimeType();
-        $productImage->save();
-
-        return response()->json(['message' => 'Image mise à jour avec succès!', 'image' => $productImage], 200);
+    
+        // Sauvegarde des modifications
+        try {
+            $productImage->save(); // Enregistrer les modifications dans la base de données
+        } catch (\Exception $e) {
+            Log::error("Database save error: " . $e->getMessage());
+            return response()->json(['error' => 'Failed to update product image'], 500);
+        }
+    
+        // Retourne uniquement les informations nécessaires (pas l'image binaire brute)
+        return response()->json([
+            'message' => 'Image mise à jour avec succès!',
+            'image_id' => $productImage->id, // Retourne l'ID de l'image mise à jour
+        ], 200);
     }
+    
+    
+
+
+
+
 
     /**
      * Supprime l'image d'un produit.

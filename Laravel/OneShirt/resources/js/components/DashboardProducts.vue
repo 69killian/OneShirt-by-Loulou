@@ -221,25 +221,30 @@ export default {
       }
     },
     updateImage() {
-  // Prépare le FormData pour l'upload de l'image
-  const formData = new FormData();
-  formData.append('image', this.newProduct.image);
+    // Récupère le token CSRF depuis la balise méta
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  // Envoie l'image
-  axios
-    .post(`/api/update/product-image/${this.currentProduct.id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then((response) => {
-      console.log('Image mise à jour avec succès:', response.data);
-      this.fetchProducts(); // Met à jour la liste des produits après l'upload
-    })
-    .catch((error) => {
-      console.error('Erreur lors de la mise à jour de l\'image:', error);
-    });
-},
+    // Prépare le FormData pour l'upload de l'image
+    const formData = new FormData();
+    formData.append('image', this.newProduct.image);
+
+    // Envoie l'image
+    axios
+      .post(`/api/update/product-image/${this.currentProduct.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-CSRF-TOKEN': csrfToken, // Ajout du token CSRF
+        },
+      })
+      .then((response) => {
+        console.log('Image mise à jour avec succès:', response.data);
+        this.fetchProducts(); // Met à jour la liste des produits après l'upload
+        location.reload();
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la mise à jour de l\'image:', error);
+      });
+    },
   },
   mounted() {
     this.fetchProducts();
