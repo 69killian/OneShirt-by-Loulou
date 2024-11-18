@@ -14,6 +14,7 @@ use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromotionController;
 
 
 use Stripe\Stripe;
@@ -22,6 +23,21 @@ use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+
+
+// Route pour récupération des Promotions
+Route::get('/promotions', [PromotionController::class, 'index']);
+
+// Route pour création des Promotions
+Route::post('/promotions/store', [PromotionController::class, 'store']);
+
+// Route pour mettre à jour les Promotions
+Route::put('/promotions/update/{promotion}', [PromotionController::class, 'update']);
+
+// Route pour supprimer une opération de Promotion
+Route::delete('/promotions/delete/{promotion}', [PromotionController::class, 'destroy']);
+
 
 
 // Route pour récupérer les commandes sur le Dashboard Admin
