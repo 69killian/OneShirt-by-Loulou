@@ -35,9 +35,14 @@
           <input v-model="newProduct.stock_quantity" type="number" id="stock_quantity" required placeholder="Quantité en Stock"/>
         </div>
         <div>
-          <label for="promotion">Promotion:</label>
-          <input v-model="newProduct.promotion_id" type="text" id="promotion" placeholder="Promotion"/>
-        </div>
+        <label for="promotion_id">Promotion:</label>
+        <select v-model="newProduct.promotion_id" id="promotion_id">
+          <option value="">Aucune promotion</option>
+          <option v-for="promotion in promotions" :key="promotion.id" :value="promotion.id">
+            {{ promotion.name }}
+          </option>
+        </select>
+      </div>
         
         <!-- Champ pour télécharger l'image -->
         <div>
@@ -79,7 +84,7 @@
           <td>{{ product.color || 'N/A' }}</td>
           <td>{{ product.price ? `${product.price}€` : 'N/A' }}</td>
           <td>{{ product.stock_quantity || 'N/A' }}</td>
-          <td>{{ product.promotion || 'aucune' }}</td>
+          <td>{{ getPromotionNameById(product.promotion_id) }}</td>
           <td>{{ product.created_at.substr(0, 10) || 'N/A' }}</td>
           <td>
             <button @click="editProduct(product)">Modifier</button>
@@ -98,6 +103,7 @@ export default {
   data() {
     return {
       products: [],
+      promotions: [],
       productTypes: [],
       newProduct: {
         name: '',
@@ -129,8 +135,22 @@ export default {
         console.error('Erreur lors de la récupération des produits:', error);
       });
   },
+  fetchPromotions() {
+  axios
+    .get('/promotions')
+    .then((response) => {
+      this.promotions = response.data; // Stockage des promotions
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la récupération des promotions:', error);
+    });
+  },
   getProductImage(product) {
     return product.image || '/images/default.jpg';
+  },
+  getPromotionNameById(promotionId) {
+  const promotion = this.promotions.find((promo) => promo.id === promotionId);
+  return promotion ? promotion.name : 'Aucune promotion'; 
   },
   showCreateForm() {
     this.isCreating = true;
@@ -167,13 +187,16 @@ export default {
           // Si une image est sélectionnée, créer l'image pour le produit
           if (this.newProduct.image) {
             this.createImage(createdProduct.id);
+            location.reload();
           } else {
             this.products.push(createdProduct);
             this.cancelCreate();
+            location.reload();
           }
         })
         .catch((error) => {
           console.error('Erreur lors de la création du produit:', error);
+          location.reload();
         });
     },
     createImage(productId) {
@@ -192,9 +215,11 @@ export default {
           console.log('Image créée avec succès:', response.data);
           this.fetchProducts(); // Met à jour la liste des produits
           this.cancelCreate();
+          location.reload();
         })
         .catch((error) => {
           console.error('Erreur lors de la création de l\'image:', error);
+          location.reload();
         });
     },
   updateImage() {
@@ -217,9 +242,11 @@ export default {
         console.log('Image mise à jour avec succès:', response.data);
         this.fetchProducts(); // Met à jour la liste des produits après l'upload
         this.cancelCreate();
+        location.reload();
       })
       .catch((error) => {
         console.error('Erreur lors de la mise à jour de l\'image:', error);
+        location.reload();
       });
   },
   updateProduct() {
@@ -251,9 +278,11 @@ export default {
       .then(() => {
         console.log('Image supprimée avec succès');
         this.fetchProducts(); // Met à jour la liste des produits après la suppression de l'image
+        location.reload();
       })
       .catch((error) => {
         console.error('Erreur lors de la suppression de l\'image:', error);
+        location.reload();
       });
   },
   deleteProduct(id) {
@@ -295,6 +324,7 @@ export default {
 },
   mounted() {
     this.fetchProducts();
+    this.fetchPromotions(); // Récupération des promotions
   },
 };
 </script>
