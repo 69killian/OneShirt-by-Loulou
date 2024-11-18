@@ -10,7 +10,17 @@
       <router-link :to="`/produit/${product.id}`" class="product-link" style="color: black; text-decoration: none;">
         <img :src="product.images[0]?.image_base64" alt="Product Images">
         <p>{{ product.name }}</p>
-        <p>{{ product.price }}€</p>
+        <span v-if="product.promotion_id" style="display: flex; gap: 5px;">
+            <!-- Prix original barré -->
+            <p class="original-price" style="text-decoration: line-through;">
+              {{ product.price }}€
+            </p>
+            <!-- Prix réduit -->
+            <p class="discounted-price" style="color: blueviolet;">
+              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+            </p>
+          </span>
+          <p v-else>{{ product.price }}€ {{ product.promotion_id }}</p>
       </router-link>
     </div>
     <div style="margin-top: 20px; color: white;">
@@ -26,17 +36,19 @@
 export default {
   data() {
     return {
-      products: []
+      products: [],
+      promotions: [],
     }
   },
   computed: {
     limitedProducts() {
       // Limiter à 4 produits
       return this.products.slice(0, 4);
-    }
+    },
   },
   mounted() {
     this.fetchProducts();
+    this.fetchPromotions();
   },
   methods: {
     async fetchProducts() {
@@ -57,10 +69,32 @@ export default {
           product.style.transform = 'translateY(0)';
         }, 100 * index);
       });
+    },
+    calculateDiscountedPrice(originalPrice, promotionId) {
+    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
     }
+    return originalPrice; // Retourne le prix original si aucune promotion
+    },
+    async fetchPromotions() {
+      try {
+        const response = await axios.get('/promotions');
+        this.promotions = response.data;
+        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+      } catch (error) {
+        console.error('Erreur lors de la récupération des promotions:', error);
+      }
+    },
   }
 }
 </script>
+
+
 
 <style scoped>
 

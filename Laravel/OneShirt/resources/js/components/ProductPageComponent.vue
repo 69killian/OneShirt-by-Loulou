@@ -10,7 +10,19 @@
     <article>
       <div class="product-desc">
         <p class="product-name-desc">{{ product.name }}</p>
-        <p class="price-product-desc">{{ product.price }}€</p>
+        <div>
+          <span v-if="product.promotion_id">
+            <!-- Prix original barré -->
+            <p class="original-price" style="text-decoration: line-through;">
+              {{ product.price }}€
+            </p>
+            <!-- Prix réduit -->
+            <p class="discounted-price" style="font-size: 35px;">
+              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+            </p>
+          </span>
+          <p v-else>{{ product.price }}€ {{ product.promotion_id }}</p>
+        </div>
         <p class="type-of-product">{{ product.description }}</p>
       </div>
 
@@ -75,6 +87,7 @@ export default {
   return {
     product: {},
     sizes: [],
+    promotions: [],
     selectedSize: null,
     availableSizes: [],
     activeIndex: null,
@@ -101,6 +114,7 @@ export default {
     const productId = this.$route.params.id;
     this.fetchProduct(productId);
     this.fetchSizes(productId); 
+    this.fetchPromotions();
     this.$nextTick(() => {
         this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
     });
@@ -167,11 +181,29 @@ export default {
         };
         return sizeMap[sizeId] || 'Taille inconnue'; // Retourne 'Taille inconnue' si l'ID n'est pas dans le mapping
     },
-    
+    calculateDiscountedPrice(originalPrice, promotionId) {
+    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
+    }
+    return originalPrice; // Retourne le prix original si aucune promotion
+  },    
+  async fetchPromotions() {
+      try {
+        const response = await axios.get('/promotions');
+        this.promotions = response.data;
+        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+      } catch (error) {
+        console.error('Erreur lors de la récupération des promotions:', error);
+      }
+    },
 },
 };
 </script>
-
 
 
 

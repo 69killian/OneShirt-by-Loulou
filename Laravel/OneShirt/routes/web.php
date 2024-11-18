@@ -23,6 +23,8 @@ use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Promotion;
+
 
 
 
@@ -78,13 +80,28 @@ Route::post('/api/payment-intent', function (Request $request) {
     $productDetails = [];
 
     foreach ($cartItems as $cartItem) {
-        $totalAmount += $cartItem->quantity * $cartItem->product->price;
+        // Récupère le produit et sa promotion associée
+        $product = $cartItem->product;
+        $promotion = $product->promotion_id ? Promotion::find($product->promotion_id) : null;
 
-        // Ajoute le nom du produit et son prix dans le tableau
+        // Calcule le prix après réduction si une promotion est appliquée
+        $productPrice = $product->price;
+        if ($promotion) {
+            $discountPercentage = $promotion->discount_percentage;
+            $discountAmount = $productPrice * ($discountPercentage / 100);
+            $productPrice = $productPrice - $discountAmount;
+        }
+
+        // Ajoute le prix du produit après réduction et autres détails dans le tableau
+        $totalAmount += $cartItem->quantity * $productPrice;
+
         $productDetails[] = [
-            'name' => $cartItem->product->name,
-            'price' => $cartItem->product->price,
+            'name' => $product->name,
+            'price' => $productPrice,  // Le prix après réduction
+            'promotion_id' => $product->promotion_id,
             'quantity' => $cartItem->quantity,
+            'discount_percentage' => $promotion ? $promotion->discount_percentage : 0,
+            'original_price' => $cartItem->product->price,  // Le prix original avant réduction
         ];
     }
 
@@ -115,6 +132,7 @@ Route::post('/api/payment-intent', function (Request $request) {
         ]
     ]);
 });
+
 
 
 

@@ -82,7 +82,15 @@
           <td>{{ product.description || 'Description non disponible' }}</td>
           <td>{{ product.type || 'N/A' }}</td>
           <td>{{ product.color || 'N/A' }}</td>
-          <td>{{ product.price ? `${product.price}€` : 'N/A' }}</td>
+          <td>
+          <span v-if="product.promotion_id">
+            <span class="original-price">{{ product.price }}€</span>
+            <span class="discounted-price">
+              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+            </span>
+          </span>
+          <span v-else>{{ product.price }}€</span>
+          </td>
           <td>{{ product.stock_quantity || 'N/A' }}</td>
           <td>{{ getPromotionNameById(product.promotion_id) }}</td>
           <td>{{ product.created_at.substr(0, 10) || 'N/A' }}</td>
@@ -321,6 +329,14 @@ export default {
       this.newProduct.image = file;
     }
   },
+  calculateDiscountedPrice(originalPrice, promotionId) {
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      return (originalPrice - discount).toFixed(2); // Prix réduit avec 2 décimales
+    }
+    return originalPrice; // Retourne le prix original si aucune promotion
+  },
 },
   mounted() {
     this.fetchProducts();
@@ -477,5 +493,17 @@ button[type="button"]:hover {
   .create-product-form button[type="button"]:hover {
     background-color: #5a6268;
   }
+
+  .original-price {
+  text-decoration: line-through;
+  color: gray;
+  margin-right: 5px;
+}
+
+.discounted-price {
+  color: green;
+  font-weight: bold;
+}
+
  
     </style>

@@ -184,6 +184,7 @@ class ProductController extends Controller
                     'price' => $product->price,
                     'images' => $images, // Utilisation de l'array d'images formaté
                     'average_reviews' => $product->average_reviews,
+                    'promotion_id' => $product->promotion_id,
                     'size' => $size,
                 ];
             });
@@ -235,6 +236,7 @@ class ProductController extends Controller
                     'price' => $product->price,
                     'images' => $images, // Utilisation de l'array d'images formaté
                     'average_reviews' => $product->average_reviews,
+                    'promotion_id' => $product->promotion_id,
                     'size' => $size,
                 ];
             });
@@ -296,11 +298,7 @@ class ProductController extends Controller
             ], 500);
         }
     }
-    
-    
-
-
-    
+        
     
 
 

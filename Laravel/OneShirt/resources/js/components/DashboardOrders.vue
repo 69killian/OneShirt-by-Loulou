@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       orders: [],
+      promotions: [],
       users: {} // Dictionnaire pour stocker les utilisateurs récupérés
     };
   },
@@ -53,7 +54,8 @@ export default {
       await this.fetchUsers();
     } catch (error) {
       console.error("Erreur lors de la récupération des commandes :", error);
-    }
+    };
+    this.fetchPromotions();
   },
   methods: {
     // Méthode pour récupérer les informations d'un utilisateur par son ID
@@ -67,6 +69,26 @@ export default {
         }
       } catch (error) {
         console.error("Erreur lors de la récupération des utilisateurs :", error);
+      }
+    },
+    calculateDiscountedPrice(originalPrice, promotionId) {
+    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
+    }
+    return originalPrice; // Retourne le prix original si aucune promotion
+    },
+    async fetchPromotions() {
+      try {
+        const response = await axios.get('/promotions');
+        this.promotions = response.data;
+        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+      } catch (error) {
+        console.error('Erreur lors de la récupération des promotions:', error);
       }
     },
     // Méthode pour obtenir le nom de l'utilisateur

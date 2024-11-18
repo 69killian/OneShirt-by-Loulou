@@ -11,13 +11,24 @@
           </div>
 
           <div class="products-list">
-            <h3>Produits dans votre panier :</h3>
-            <ul>
-              <li v-for="(product, index) in products" :key="index">
-                {{ product.quantity }} x {{ product.name }} - {{ product.price }} €
-              </li>
-            </ul>
-          </div>
+  <h3>Produits dans votre panier :</h3>
+  <ul>
+    <li v-for="(product, index) in products" :key="index">
+      {{ product.quantity }} x {{ product.name }} -
+      <span v-if="product.promotion_id">
+            <!-- Prix original barré -->
+            <span class="original-price" style="text-decoration: line-through;">
+              {{ product.price }}€
+            </span>
+            <!-- Prix réduit -->
+            <span class="discounted-price">
+              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+            </span>
+          </span>
+          <span v-else>{{ product.price }}€ {{ product.promotion_id }}</span>
+    </li>
+  </ul>
+</div>
 
           <!-- Affichage des informations utilisateur -->
           <div class="user-info">
@@ -66,7 +77,11 @@ export default {
       totalPrice: null,
       user: {}, 
       products: [],
+      promotions: [],
     };
+  },
+  created() {
+    this.fetchPromotions();
   },
   async mounted() {
     try {
@@ -124,9 +139,32 @@ export default {
     console.error("Erreur lors de la requête de paiement :", error);
   }
 },
+    async fetchPromotions() {
+      try {
+        const response = await axios.get('/promotions');
+        this.promotions = response.data;
+        console.log("Promotions:", this.promotions);  // Vérifie que les promotions sont bien récupérées
+      } catch (error) {
+        console.error('Erreur lors de la récupération des promotions:', error);
+      }
+    },
+    calculateDiscountedPrice(originalPrice, promotionId) {
+    console.log("Promotion ID:", promotionId); // Vérifie si promotion_id est bien passé
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    console.log("Promotion trouvée:", promotion); // Affiche la promotion trouvée
+    
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifie le calcul du prix réduit
+      return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
+    }
+    return originalPrice; // Retourne le prix original si aucune promotion
+    },
   },
 };
 </script>
+
+
 
 
 

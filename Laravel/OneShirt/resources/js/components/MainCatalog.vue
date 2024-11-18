@@ -66,7 +66,17 @@
           <div>
             <img :src="getProductImage(product)" :alt="`Image de ${product.name}`" />
             <p>{{ product.name }}</p>
-            <p>{{ product.price }}€</p>
+          <span v-if="product.promotion_id">
+            <!-- Prix original barré -->
+            <p class="original-price" style="text-decoration: line-through;">
+              {{ product.price }}€
+            </p>
+            <!-- Prix réduit -->
+            <p class="discounted-price">
+              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+            </p>
+          </span>
+          <p v-else>{{ product.price }}€ {{ product.promotion_id }}</p>
             <p>Description: {{ product.description }}</p>
             <p>Avis: {{ product.reviews ? product.reviews.toFixed(1) : 'N/A' }} ★</p>
             <p>Taille: {{ product.size.join(', ') }}</p>
@@ -112,6 +122,7 @@
         itemsPerPage: 6,
         searchQuery: '',
         sortKey: '',
+        promotions: [],
       };
     },
     computed: {
@@ -198,13 +209,37 @@
       sortBy(key) {
         this.sortKey = key;
         this.currentPage = 1;
+      },
+      calculateDiscountedPrice(originalPrice, promotionId) {
+    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    const promotion = this.promotions.find(promo => promo.id === promotionId);
+    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    if (promotion && promotion.discount_percentage) {
+      const discount = (originalPrice * promotion.discount_percentage) / 100;
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
+    }
+    return originalPrice; // Retourne le prix original si aucune promotion
+    },
+    async fetchPromotions() {
+      try {
+        const response = await axios.get('/promotions');
+        this.promotions = response.data;
+        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+      } catch (error) {
+        console.error('Erreur lors de la récupération des promotions:', error);
       }
+    },
     },
     mounted() {
       this.fetchProducts();
+      this.fetchPromotions();
     }
   };
   </script>
+
+  
+
   
   <style scoped>
   .main-catalog {
