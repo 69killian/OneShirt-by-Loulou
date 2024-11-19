@@ -28,25 +28,47 @@ use App\Models\Promotion;
 
 
 
-// Route pour récupération des Promotions
-Route::get('/promotions', [PromotionController::class, 'index']);
+Route::post('/api/stripe/webhook', function (Request $request) {
+    Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-// Route pour création des Promotions
-Route::post('/promotions/store', [PromotionController::class, 'store']);
+    $payload = $request->getContent();
+    $sigHeader = $request->header('Stripe-Signature');
+    $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
 
-// Route pour mettre à jour les Promotions
-Route::put('/promotions/update/{promotion}', [PromotionController::class, 'update']);
+    try {
+        $event = \Stripe\Webhook::constructEvent(
+            $payload, $sigHeader, $endpointSecret
+        );
+    } catch (\UnexpectedValueException $e) {
+        return response()->json(['error' => 'Invalid payload'], 400);
+    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+        return response()->json(['error' => 'Invalid signature'], 400);
+    }
 
-// Route pour supprimer une opération de Promotion
-Route::delete('/promotions/delete/{promotion}', [PromotionController::class, 'destroy']);
+    if ($event->type === 'payment_intent.succeeded') {
+        $paymentIntent = $event->data->object;
 
+        // Récupération des informations nécessaires (par exemple, ID utilisateur ou panier)
+        $metadata = $paymentIntent->metadata;
 
+        $cart = Cart::where('user_id', $metadata->user_id)->first();
+        if ($cart) {
+            $cartItems = $cart->items()->with('product')->get();
 
-// Route pour récupérer les commandes sur le Dashboard Admin
-Route::get('/api/orders', [OrderController::class, 'index']);
+            foreach ($cartItems as $cartItem) {
+                $product = $cartItem->product;
+                $product->stock_quantity -= $cartItem->quantity;
+                $product->save();
+            }
 
-// Route pour validation de la commande, si le payement est réussi
-Route::post('/api/process-order', [OrderController::class, 'storeOrderAfterPayment']);
+            // Vide le panier
+            $cart->items()->delete();
+        }
+    }
+
+    return response()->json(['status' => 'success'], 200);
+});
+
 
 // Route pour paiement Stripe et récupération des données
 Route::post('/api/payment-intent', function (Request $request) {
@@ -137,6 +159,32 @@ Route::post('/api/payment-intent', function (Request $request) {
 
 
 
+// Route pour récupération des Promotions
+Route::get('/promotions', [PromotionController::class, 'index']);
+
+
+// Route pour création des Promotions
+Route::post('/promotions/store', [PromotionController::class, 'store']);
+
+
+// Route pour mettre à jour les Promotions
+Route::put('/promotions/update/{promotion}', [PromotionController::class, 'update']);
+
+
+// Route pour supprimer une opération de Promotion
+Route::delete('/promotions/delete/{promotion}', [PromotionController::class, 'destroy']);
+
+
+// Route pour récupérer les commandes sur le Dashboard Admin
+Route::get('/api/orders', [OrderController::class, 'index']);
+
+
+// Route pour récupérer les produits des commandes sur le DashboardAdmin
+Route::get('/api/orderItems', [OrderController::class, 'index']);
+
+
+// Route pour validation de la commande, si le payement est réussi
+Route::post('/api/process-order', [OrderController::class, 'storeOrderAfterPayment']);
 
 
 // Route pour ajouter un nouveau produit au panier de la page des produits
