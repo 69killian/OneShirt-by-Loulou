@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    // Converti en UTF-8 les données
     private function convertToUtf8($data)
     {
         if (is_array($data)) {
@@ -22,14 +23,15 @@ class UserController extends Controller
         return $data;
     }
 
+    // Récupération de tous les utilisateurs pour affichage
     public function getAllUsers(): JsonResponse
     {
         $users = User::all();
 
-        // Convertir les données en UTF-8
+        // Converti les données en UTF-8
         $users = $this->convertToUtf8($users);
 
-        // Encoder les images de profil en base64
+        // Encode les images de profil en base64
         $users->transform(function ($user) {
             if ($user->profile_picture) {
                 $user->profile_picture = base64_encode($user->profile_picture);
@@ -41,25 +43,27 @@ class UserController extends Controller
     }
 
 
+    // Récupération d'un utilisateur par son identifiant
     public function getUserById($id): JsonResponse
 {
-    // Rechercher l'utilisateur par ID
+    // Recherche l'utilisateur par ID
     $user = User::find($id);
 
     if (!$user) {
         return response()->json(['error' => 'Utilisateur non trouvé'], 404);
     }
 
-    // Encoder l'image de profil en base64 si elle existe
+    // Encode l'image de profil en base64 si elle existe
     if ($user->profile_picture) {
         $user->profile_picture = base64_encode($user->profile_picture);
     }
 
-    // Retourner les données utilisateur au format JSON
+    // Retourne les données utilisateur au format JSON
     return response()->json($user);
 }
 
 
+    // Mise à jour du profil après validation du formualaire
     public function updateProfile(Request $request)
     {
         // Affiche les données reçues pour le débogage
@@ -74,16 +78,16 @@ class UserController extends Controller
             'postal_address' => 'nullable|string',
             'phone_number' => 'nullable|string',
             'date_of_birth' => 'nullable|date',
-            'profile_picture' => 'nullable|image|max:2048', // Limite de taille de l'image
+            'profile_picture' => 'nullable|image|max:2048',
         ]);
     
-        $user = Auth::user(); // Récupérer l'utilisateur connecté
+        $user = Auth::user(); // Récupération de l'utilisateur connecté
         
         if (!($user instanceof User)) {
             return response()->json(['error' => 'User is not an instance of User model'], 500);
         }
         
-        // Mettre à jour les données de texte
+        // Mise à jour des données de texte
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->username = $request->username;
@@ -93,21 +97,21 @@ class UserController extends Controller
         $user->phone_number = $request->phone_number;
         $user->date_of_birth = $request->date_of_birth;
     
-        // Gérer le téléchargement de l'image
+        // Gestion du téléchargement de l'image
         try {
             if ($request->hasFile('profile_picture')) {
                 $image = $request->file('profile_picture');
                 $imageData = file_get_contents($image->getRealPath());
-                $user->profile_picture = $imageData; // Stocker l'image dans la base de données
+                $user->profile_picture = $imageData; // Stocke l'image dans la base de données
             }
         } catch (\Exception $e) {
             Log::error("Image processing failed: " . $e->getMessage());
             return response()->json(['error' => 'Image processing failed'], 500);
         }
         
-        // Enregistrer les modifications
+        // Enregistre les modifications
         try {
-            $user->save(); // Enregistrer les modifications
+            $user->save(); // Enregistre les modifications
         } catch (\Exception $e) {
             Log::error("Database save error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to update profile'], 500);

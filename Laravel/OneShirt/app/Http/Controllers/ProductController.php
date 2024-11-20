@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    // Récupération des informations des produits
     public function index()
     {
         try {
@@ -24,7 +25,7 @@ class ProductController extends Controller
                         $image->image_base64 = $mimeType 
                             ? 'data:' . $mimeType . ';base64,' . base64_encode($image->image)
                             : base64_encode($image->image);
-                        unset($image->image); // Optionnel : supprime le champ binaire original
+                        unset($image->image); 
                         return $image;
                     });
                 }
@@ -61,7 +62,7 @@ class ProductController extends Controller
 
 
 
-
+    // Création de nouveaux produits
     public function store(Request $request)
     {
         $request->validate([
@@ -75,6 +76,7 @@ class ProductController extends Controller
         ]);
 
         try {
+            // Créer le produit et insère les informations
             $product = Product::create($request->all());
             Log::info('Produit créé avec succès:', ['id' => $product->id]);
             return response()->json($product, 201);
@@ -89,7 +91,7 @@ class ProductController extends Controller
 
 
 
-    // Méthode pour mettre à jour un produit
+    // Mise à jour du produit
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -119,7 +121,7 @@ class ProductController extends Controller
 
     
 
-    // Méthode pour supprimer un produit
+    // Suppression du produit
     public function destroy($id)
     {
         try {
@@ -166,7 +168,7 @@ class ProductController extends Controller
                     $image->image_base64 = $mimeType 
                         ? 'data:' . $mimeType . ';base64,' . base64_encode($image->image)
                         : base64_encode($image->image);
-                    unset($image->image); // Optionnel : supprime le champ binaire original
+                    unset($image->image); 
                     return $image;
                 });
     
@@ -254,7 +256,7 @@ class ProductController extends Controller
             // Récupération du produit avec ses images, avis et tailles associées
             $product = Product::with(['images', 'reviews', 'sizes',])->find($id);
             
-            // Vérifier si le produit existe
+            // Vérifie si le produit existe
             if (!$product) {
                 return response()->json(['message' => 'Produit non trouvé'], 404);
             }
@@ -265,7 +267,7 @@ class ProductController extends Controller
             // Encode les images en base64 et prépare les autres champs
             if ($product->images) {
                 $product->images->map(function ($image) {
-                    // Vérifier si l'image est définie
+                    // Vérifie si l'image est définie
                     if ($image->image) {
                         // Encodage de l'image en base64
                         $image->image_base64 = 'data:image/png;base64,' . base64_encode($image->image); 
@@ -288,7 +290,7 @@ class ProductController extends Controller
             // Extrait les tailles sous forme de tableau
             $product->size = $product->sizes ? $product->sizes->pluck('name')->toArray() : [];
     
-            // Retourner les détails du produit, y compris les images encodées
+            // Retourne les détails du produit, y compris les images encodées
             return response()->json($product);
         } catch (\Exception $e) {
             // Gestion des erreurs

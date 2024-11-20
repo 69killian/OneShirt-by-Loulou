@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlogArticle; // Assurez-vous que ce modèle est correctement importé
+use App\Models\BlogArticle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class BlogArticleController extends Controller
     public function index(): JsonResponse
     {
         $articles = BlogArticle::all()->map(function($article) {
-            // Encodez l'image si elle existe
+            // Encode l'image si elle existe
             if ($article->image) {
                 $article->image = base64_encode($article->image);
             }
@@ -35,18 +35,16 @@ class BlogArticleController extends Controller
             return response()->json(['message' => 'Article non trouvé'], 404);
         }
     
-        // Encodez l'image si elle existe
+        // Encode l'image si elle existe
         if ($article->image) {
-            // Utilisez stream_get_contents uniquement si l'image est un flux
-            // Vérifiez si l'image est un BLOB
             if (is_resource($article->image)) {
                 $article->image = base64_encode(stream_get_contents($article->image));
             } else {
-                $article->image = base64_encode($article->image); // si c'est déjà une chaîne
+                $article->image = base64_encode($article->image);
             }
         }
     
-        // Assurez-vous que le contenu est bien encodé
+        // Encodage UTF-8 du titre et du contenu
         $article->title = mb_convert_encoding($article->title, 'UTF-8', 'auto');
         $article->content = mb_convert_encoding($article->content, 'UTF-8', 'auto');
     
@@ -56,14 +54,14 @@ class BlogArticleController extends Controller
 
 
 
-    // Créer un nouvel article de blog
+    // Nouvel article de blog
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|unique:blog_articles,slug',
             'content' => 'required',
-            'image' => 'nullable|image|max:2048',  // Validation de l'image
+            'image' => 'nullable|image|max:2048',  
             'author_id' => 'required|exists:users,id',
         ]);
     
@@ -82,17 +80,17 @@ class BlogArticleController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
-                $article->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+                $imageData = file_get_contents($image->getRealPath());
+                $article->image = $imageData;
             }
         } catch (\Exception $e) {
             Log::error("Image processing failed: " . $e->getMessage());
             return response()->json(['error' => 'Image processing failed'], 500);
         }
     
-        // Sauvegarde de l'article
+        // Insertion de l'article
         try {
-            $article->save(); // Enregistrer l'article dans la base de données
+            $article->save();
         } catch (\Exception $e) {
             Log::error("Database save error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to create article'], 500);
@@ -116,7 +114,7 @@ class BlogArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|max:2048',  // Validation de l'image
+            'image' => 'nullable|image|max:2048', 
         ]);
     
         // Mise à jour des données textuelles
@@ -128,8 +126,8 @@ class BlogArticleController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
-                $article->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+                $imageData = file_get_contents($image->getRealPath()); 
+                $article->image = $imageData; 
             }
         } catch (\Exception $e) {
             Log::error("Image processing failed: " . $e->getMessage());
@@ -138,7 +136,7 @@ class BlogArticleController extends Controller
     
         // Sauvegarde des modifications
         try {
-            $article->save(); // Enregistrer l'article dans la base de données
+            $article->save();
         } catch (\Exception $e) {
             Log::error("Database save error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to update article'], 500);
@@ -173,25 +171,14 @@ class BlogArticleController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-     // Créer un nouvel article de blog par l'identifiant d'une personne connectée
+     // Crée un nouvel article de blog par l'identifiant d'une personne connectée
      public function storebyId(Request $request)
      {
          $validator = Validator::make($request->all(), [
              'title' => 'required|string|max:255',
              'slug' => 'required|string|unique:blog_articles,slug',
              'content' => 'required',
-             'image' => 'nullable|image|max:2048',  // Validation de l'image
+             'image' => 'nullable|image|max:2048', 
              'author_id' => 'required|exists:users,id',
          ]);
      
@@ -218,9 +205,9 @@ class BlogArticleController extends Controller
             return response()->json(['error' => 'Image processing failed'], 500);
         }
 
-         // Sauvegarde de l'article
+         // Insertion de l'article
          try {
-             $article->save(); // Enregistrer l'article dans la base de données
+             $article->save(); // Enregistre l'article dans la base de données
          } catch (\Exception $e) {
              Log::error("Database save error: " . $e->getMessage());
              return response()->json(['error' => 'Failed to create article'], 500);

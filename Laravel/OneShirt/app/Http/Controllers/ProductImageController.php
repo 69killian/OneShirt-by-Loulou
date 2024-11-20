@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class ProductImageController extends Controller
 {
    
+    // Récupère les images des produits
     public function getProductImage($id)
     {
         $image = ProductImage::findOrFail($id);
@@ -22,9 +23,7 @@ class ProductImageController extends Controller
         return response($imageData, 200)->header('Content-Type', $mimeType);
     }
     
-/**
-     * Ajoute une nouvelle image pour un produit.
-     */
+     // Ajoute une nouvelle image pour un produit.
     public function store(Request $request, $productId)
 {
     $validator = Validator::make($request->all(), [
@@ -43,13 +42,13 @@ class ProductImageController extends Controller
     // Traitement de l'image en tant que donnée binaire
     try {
         $image = $request->file('image');
-        $productImage->image = file_get_contents($image->getRealPath()); // Stocker l'image en binaire dans la base de données
+        $productImage->image = file_get_contents($image->getRealPath()); // Stockage de l'image en binaire dans la base de données
     } catch (\Exception $e) {
         Log::error("Image processing failed: " . $e->getMessage());
         return response()->json(['error' => 'Image processing failed'], 500);
     }
 
-    // Sauvegarder l'image dans la base de données
+    // Sauvegarde DE l'image dans la base de données
     try {
         $productImage->save();
     } catch (\Exception $e) {
@@ -65,9 +64,7 @@ class ProductImageController extends Controller
 
 
 
-    /**
-     * Met à jour l'image d'un produit.
-     */
+    // Mise à jour de l'image d'un produit.
     public function update(Request $request, $productId)
     {
         // Recherche de l'image produit associée à ce produit (par product_id)
@@ -86,8 +83,8 @@ class ProductImageController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageData = file_get_contents($image->getRealPath()); // Lire l'image dans une variable binaire
-                $productImage->image = $imageData; // Stocker l'image dans la base de données (en binaire)
+                $imageData = file_get_contents($image->getRealPath()); // Lecture de l'image dans une variable binaire
+                $productImage->image = $imageData; // Stocke l'image dans la base de données (en binaire)
             }
         } catch (\Exception $e) {
             Log::error("Image processing failed: " . $e->getMessage());
@@ -96,7 +93,7 @@ class ProductImageController extends Controller
     
         // Sauvegarde des modifications
         try {
-            $productImage->save(); // Enregistrer les modifications dans la base de données
+            $productImage->save(); // Enregistre les modifications dans la base de données
         } catch (\Exception $e) {
             Log::error("Database save error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to update product image'], 500);
@@ -116,9 +113,7 @@ class ProductImageController extends Controller
 
 
 
-    /**
-     * Supprime l'image d'un produit.
-     */
+    // Suppression de l'image d'un produit.
     public function delete($imageId)
     {
         // Recherche de l'image dans la base de données en utilisant l'imageId

@@ -10,17 +10,19 @@ use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
+
+    // Récupération de tous les avis
     public function index()
     {
-        $reviews = Review::all(); // Récupère tous les avis
+        $reviews = Review::all(); 
         return response()->json($reviews); // Retourne les données en JSON
     }
 
 
 
+    // Vérification de connexion
     public function check()
 {
-    // Vérifie la connection
     $user = Auth::user();
     // données de l'utilisateur à récupérer
     $userData = [
@@ -38,7 +40,7 @@ class ReviewController extends Controller
 
     
 
-
+    // Création d'un nouvel avis 
     public function store(Request $request)
     {
         $request->validate([
@@ -58,7 +60,7 @@ class ReviewController extends Controller
         return response()->json(['message' => 'Avis soumis avec succès'], 201);
     }
 
-
+    // Suppression d'un avis 
     public function deleteReview($id)
 {
     try {

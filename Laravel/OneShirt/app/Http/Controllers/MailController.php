@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 
 class MailController extends Controller
 {
+    // Envoie de Mail par formulaire de Contact
     public function sendEmail(Request $request)
     {
         // Validation des données

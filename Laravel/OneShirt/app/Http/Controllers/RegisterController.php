@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
+    // Création de compte
     public function store(Request $request)
     {
         // Validation des données

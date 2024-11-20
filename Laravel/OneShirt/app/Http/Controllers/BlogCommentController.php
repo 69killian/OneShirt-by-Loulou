@@ -12,16 +12,16 @@ class BlogCommentController extends Controller
 {
     public function getCommentsByArticleSlug($slug)
     {
-        // Trouver l'article par son slug
+        // Récupère l'article par son slug
         $article = BlogArticle::where('slug', $slug)->firstOrFail();
         
-        // Renvoyer les commentaires de l'article
-        return response()->json($article->comments); // Cela devrait fonctionner maintenant
+        // Renvoie les commentaires de l'article
+        return response()->json($article->comments); 
     }
     
     public function store(Request $request, $slug)
 {
-    // Vérifiez si l'utilisateur est connecté
+    // Vérifie si l'utilisateur est connecté
     if (!Auth::check()) {
         return response()->json(['message' => 'Veuillez vous connecter pour laisser un commentaire.'], 401);
     }
@@ -36,11 +36,11 @@ class BlogCommentController extends Controller
 
     // Insertion du commentaire
     $comment = new BlogComment();
-    $comment->user_id = Auth::id(); // Récupération de l'ID de l'utilisateur connecté
-    $comment->article_id = $article->id; // ID de l'article associé
-    $comment->comment = $request->comment; // Contenu du commentaire
-    $comment->article_slug = $slug; // Ajout du slug dans la colonne article_slug
-    $comment->save(); // Sauvegarde du commentaire dans la base de données
+    $comment->user_id = Auth::id(); 
+    $comment->article_id = $article->id; 
+    $comment->comment = $request->comment; 
+    $comment->article_slug = $slug; 
+    $comment->save(); 
 
     return response()->json($comment, 201); // Réponse avec le commentaire créé
 }

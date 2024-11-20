@@ -26,7 +26,7 @@ class BlogArticle extends Model
   
     public function comments()
     {
-        return $this->hasMany(BlogComment::class, 'article_id'); // Ajoutez 'article_id' ici
+        return $this->hasMany(BlogComment::class, 'article_id'); 
     }
     
 }

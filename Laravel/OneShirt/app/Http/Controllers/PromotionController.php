@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class PromotionController extends Controller
 {
+    // Récupération des Promotions
     public function index()
     {
         return response()->json(Promotion::all());
     }
 
+    // Création des Promotions
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -27,6 +29,7 @@ class PromotionController extends Controller
         return response()->json($promotion, 201);
     }
 
+    // Mise à jour des Promotions
     public function update(Request $request, Promotion $promotion)
     {
         $validated = $request->validate([
@@ -42,6 +45,7 @@ class PromotionController extends Controller
         return response()->json($promotion);
     }
 
+    // Supression des Promotions
     public function destroy(Promotion $promotion)
     {
         $promotion->delete();

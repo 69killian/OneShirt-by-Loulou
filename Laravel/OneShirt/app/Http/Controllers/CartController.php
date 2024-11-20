@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+    // Vérifie si l'utilisateur est connecté
     public function check()
     {
         if (Auth::check()) {
             $user = Auth::user();
+            // Renvoie les données de l'utilisateur connecté dans la console
             return response()->json([
                 'authenticated' => true,
                 'user' => [
@@ -27,12 +29,15 @@ class CartController extends Controller
         return response()->json(['authenticated' => false], 200);
     }
 
+
+    // Récupération des Produit assigné à un panier
     public function getCartItems()
     {
+        // récupère l'identifiant de l'utilisateur connecté et son panier
         if (Auth::check()) {
             $userId = Auth::id();
             $cart = Cart::where('user_id', $userId)->first();
-    
+            // Puis son panier
             if ($cart) {
                 return response()->json([
                     'items' => $cart->items()->with('product')->get()
@@ -46,12 +51,15 @@ class CartController extends Controller
     }
 
 
+    // Suppression des Produits du Panier
     public function removeCartItem($productId)
 {
+    // Même méthode de récupération utilisateur
     if (Auth::check()) {
         $userId = Auth::id();
         $cart = Cart::where('user_id', $userId)->first();
 
+        // Vérification et suppression avec message
         if ($cart) {
             $item = $cart->items()->where('product_id', $productId)->first();
             if ($item) {
@@ -69,7 +77,8 @@ class CartController extends Controller
 }
 
 
-public function updateCartItemQuantity(Request $request, $productId)
+    // Mise à jour des quantités des produits dans le panier
+    public function updateCartItemQuantity(Request $request, $productId)
 {
     if (Auth::check()) {
         $userId = Auth::id();
@@ -93,12 +102,13 @@ public function updateCartItemQuantity(Request $request, $productId)
 }
 
 
-    
-public function addCartItem(Request $request, $productId)
+    // Ajout d'un produit dans le panier
+    public function addCartItem(Request $request, $productId)
 {
     if (Auth::check()) {
         $userId = Auth::id();
 
+        // Création du Panier si non existant
         $cart = Cart::firstOrCreate(
             ['user_id' => $userId],
             ['created_at' => now(), 'updated_at' => now()]

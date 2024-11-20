@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 
@@ -23,13 +22,13 @@ class LoginController extends Controller
 
     $fieldType = filter_var($request->name, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-    // Trouver l'utilisateur par nom d'utilisateur ou email
+    // Trouve l'utilisateur par nom d'utilisateur ou email
     $user = User::where($fieldType, $request->name)->first();
 
     if ($user) {
         Auth::login($user);
         
-        // Construire manuellement la réponse avec uniquement les données nécessaires
+        // Construit manuellement la réponse avec les données nécessaires
         return response()->json([
             'message' => 'Connexion réussie',
             'user' => [
@@ -40,7 +39,7 @@ class LoginController extends Controller
         ], 200);
     }
 
-    // Retourner une réponse d'erreur si l'authentification échoue
+    // Retourne une réponse d'erreur si l'authentification échoue
     Log::error('Échec de la connexion', ['name' => $request->name]);
     return response()->json(['message' => 'Les informations de connexion sont incorrectes.'], 401);
 }
@@ -53,8 +52,8 @@ class LoginController extends Controller
 
 
 
-
-public function AdminLogin(Request $request)
+    // Connexion Administrateur 
+    public function AdminLogin(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -65,11 +64,11 @@ public function AdminLogin(Request $request)
 
     $fieldType = filter_var($request->name, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-    // Trouver l'utilisateur par nom d'utilisateur ou email
+    // Trouve l'utilisateur par nom d'utilisateur ou email
     $user = User::where($fieldType, $request->name)->first();
 
     if ($user) {
-        // Vérifier si l'utilisateur a le rôle "admin"
+        // Vérifie si l'utilisateur a le rôle "admin"
         if ($user->role !== 'admin') {
             Log::warning('Accès refusé : rôle insuffisant', ['name' => $request->name]);
             return response()->json(['message' => 'Vous n\'avez pas les autorisations nécessaires pour vous connecter.'], 403);
@@ -77,7 +76,7 @@ public function AdminLogin(Request $request)
 
         Auth::login($user);
 
-        // Construire manuellement la réponse avec uniquement les données nécessaires
+        // Construit manuellement la réponse avec uniquement les données nécessaires
         return response()->json([
             'message' => 'Connexion réussie',
             'user' => [
@@ -89,7 +88,7 @@ public function AdminLogin(Request $request)
         ], 200);
     }
 
-    // Retourner une réponse d'erreur si l'authentification échoue
+    // Retourne une réponse d'erreur si l'authentification échoue
     Log::error('Échec de la connexion', ['name' => $request->name]);
     return response()->json(['message' => 'Les informations de connexion sont incorrectes.'], 401);
 }
@@ -103,7 +102,7 @@ public function AdminLogin(Request $request)
 
 
 
-    // Pour formulaire du profil
+    // Récupération utilisateur pour formulaire du profil
     public function getProfile()
 {
     $user = Auth::user();
@@ -120,10 +119,10 @@ public function AdminLogin(Request $request)
 }
 
 
-
+    // Déconnexion de l'utilisateur
     public function logout(Request $request)
-    {
-        Auth::logout(); // Déconnexion de l'utilisateur
-        return response()->json(['message' => 'Déconnexion réussie']);
-    }
+{
+    Auth::logout(); 
+    return response()->json(['message' => 'Déconnexion réussie']);
+}
 }

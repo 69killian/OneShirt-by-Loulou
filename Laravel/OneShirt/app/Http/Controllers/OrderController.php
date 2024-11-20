@@ -14,7 +14,7 @@ namespace App\Http\Controllers;
 class OrderController extends Controller
 {
  
-
+    // Affichage des commandes après le paiement
     public function storeOrderAfterPayment(Request $request)
 {
     // Vérification de l'utilisateur authentifié
@@ -81,32 +81,32 @@ class OrderController extends Controller
 
 
 
-
+    // Récupération des commandes
     public function index(Request $request)
     {
         try {
-            // Ajouter un log pour vérifier l'initialisation de la méthode
+            // Log pour vérifier l'initialisation de la méthode
             Log::debug('Récupération des commandes - Début');
 
-            // Récupérer les commandes depuis la base de données
+            // Récupération des commandes depuis la base de données
             $orders = Order::all();
 
-            // Vérifier l'encodage des données avant de les retourner
+            // Vérifie l'encodage des données avant de les retourner
             $ordersJson = json_encode($orders);
 
-            // Si json_encode échoue, il peut y avoir un problème d'encodage
+            // Si json_encode échoue, retourne un problème d'encodage
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception('Erreur d\'encodage JSON: ' . json_last_error_msg());
             }
 
-            // Retourner les commandes avec un encodage correct
+            // Retourne les commandes avec un encodage correct
             return response()->json($orders);
 
         } catch (\Exception $e) {
-            // Ajouter un log pour l'exception
+            // Ajoute un log pour l'exception
             Log::error('Erreur lors de la récupération des commandes : ' . $e->getMessage());
 
-            // Retourner un message d'erreur avec le statut 500
+            // Retourne un message d'erreur avec le statut 500
             return response()->json(['error' => 'Erreur lors de la récupération des commandes.'], 500);
         }
     }
