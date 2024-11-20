@@ -1,23 +1,42 @@
 <template>
+  <!-- Header principal de la page -->
   <header id="header">
     <div class="header-left-hand">
+      <!-- Lien vers la page d'accueil avec le logo -->
       <router-link to="/">
+        <!-- Affichage du logo OneShirt -->
         <img src="../../../public/images/logosansfondcouleuroneshirt.png" class="logo" alt="Logo OneShirt">
       </router-link>
+      
+      <!-- Champ de recherche, permettant aux utilisateurs de rechercher des produits -->
       <input class="recherche" type="text" placeholder="Rechercher">
     </div>
+
     <div class="header-right-hand">
+      <!-- Composants de Tooltips, permettant d'afficher des infos contextuelles -->
       <Tooltip1 />
       <Tooltip2 />
+
+      <!-- Lien vers la page Blog -->
       <router-link to="/blog" style="text-decoration: none; color: black;">Blog</router-link>
+
+      <!-- Lien vers la page Contact -->
       <router-link to="/contact" style="text-decoration: none; color: black;">Contact</router-link>
+
+      <!-- Bouton de connexion, visible si l'utilisateur n'est pas authentifié -->
       <button v-if="!isAuthenticated" @click="goToLogin">
+        <!-- Lien vers la page de connexion -->
         <router-link to="/connexion" style="text-decoration: none; color: #a35dff;">Connexion</router-link>
       </button>
+
+      <!-- Bouton de déconnexion, visible si l'utilisateur est authentifié -->
       <button style="color: #a35dff;" v-else @click="handleLogout">
         Déconnexion
       </button>
+
+      <!-- Bouton pour accéder au panier -->
       <button>
+        <!-- Lien vers la page du panier, affichage du nombre total d'articles si > 0 -->
         <router-link to="/panier" style="text-decoration: none; color: #a35dff;">
           Panier {{ totalQuantity > 0 ? totalQuantity : '' }}
         </router-link>
@@ -26,69 +45,89 @@
   </header>
 </template>
 
+
 <script>
 import Tooltip1 from './Tooltip1.vue';
 import Tooltip2 from './Tooltip2.vue';
 import axios from 'axios';
 
 export default {
+  // Importation des composants Tooltip1 et Tooltip2
   components: {
     Tooltip1,
     Tooltip2
   },
+
   data() {
     return {
+      // Définition de l'état d'authentification et de la quantité totale d'articles dans le panier
       isAuthenticated: false,
       totalQuantity: 0,
     };
   },
+
   mounted() {
+    // Vérification de l'authentification et récupération des éléments du panier au montage du composant
     this.checkAuth();
     this.getCartItems();
   },
+
   methods: {
+    // Vérifie si l'utilisateur est authentifié en consultant le localStorage
     checkAuth() {
       const user = localStorage.getItem('user');
       this.isAuthenticated = !!user;
     },
+
+    // Récupère les articles du panier depuis l'API si l'utilisateur est authentifié
     async getCartItems() {
       if (this.isAuthenticated) {
         try {
           const response = await axios.get('/api/cart');
           const items = response.data.items;
+          // Calcule la quantité totale d'articles dans le panier
           this.totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
         } catch (error) {
           console.error('Erreur lors de la récupération des éléments du panier', error);
         }
       }
     },
+
+    // Met à jour la quantité d'un article dans le panier
     async updateCartItemQuantity(productId, quantity) {
       if (this.isAuthenticated) {
         try {
           await axios.put(`/api/cart/items/${productId}`, { quantity });
-          await this.getCartItems(); // Met à jour le nombre total après la modification
+          // Met à jour le nombre total après la modification
+          await this.getCartItems();
         } catch (error) {
           console.error('Erreur lors de la mise à jour de la quantité', error);
         }
       }
     },
+
+    // Gère la déconnexion en appelant l'API et en réinitialisant l'état local
     async handleLogout() {
       try {
         await axios.post('/api/logout');
         localStorage.removeItem('user');
         this.isAuthenticated = false;
         this.totalQuantity = 0;
+        // Redirige l'utilisateur vers la page d'accueil après la déconnexion
         this.$router.push('/');
       } catch (error) {
         console.error('Erreur lors de la déconnexion', error);
       }
     },
+
+    // Redirige l'utilisateur vers la page de connexion
     goToLogin() {
       this.$router.push('/connexion');
     }
   }
 }
 </script>
+
 
 
 

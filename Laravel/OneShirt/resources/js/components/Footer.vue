@@ -66,7 +66,7 @@
         }
       };
   
-      // Écoute l'événement de défilement
+      // Event Listener pour le Scrolling
       window.addEventListener('scroll', handleScroll);
   
       // Appel initial pour vérifier l'élément au chargement de la page

@@ -1,36 +1,50 @@
 <template>
+  <!-- Section principale pour afficher les figurines -->
   <div class="main-figurines">
+
+    <!-- Titre de la section -->
     <h2>Nos Figurines</h2>
+
+    <!-- Grille des figurines -->
     <div class="figurines-grid">
+      
+      <!-- Carte de chaque figurine, lien vers la page de produit spécifique -->
       <router-link
         class="figurine-card"
-        v-for="figurine in figurines"
+        v-for="figurine in figurines"  
         :key="figurine.id"
-        :to="{ name: 'ProductPage', params: { id: figurine.id } }"
-        style="color: black; text-decoration: none;"
+        :to="{ name: 'ProductPage', params: { id: figurine.id } }" 
+        style="color: black; text-decoration: none;"  
       >
+
+        <!-- Affichage de l'image de la figurine si elle existe -->
         <img :src="figurine.images[0].image_base64" alt="Figurine" v-if="figurine.images.length" />
+
+        <!-- Nom de la figurine -->
         <h3>{{ figurine.name }}</h3>
+
+        <!-- Description de la figurine -->
         <p>{{ figurine.description }}</p>
-        
+
+        <!-- Section affichant le prix avec ou sans promotion -->
         <div>
           <span v-if="figurine.promotion_id">
-            <!-- Prix original barré -->
+            <!-- Affichage du prix original barré si une promotion est appliquée -->
             <span class="original-price" style="text-decoration: line-through;">
               {{ figurine.price }}€
             </span>
-            <!-- Prix réduit -->
+            <!-- Affichage du prix réduit -->
             <span class="discounted-price">
               {{ calculateDiscountedPrice(figurine.price, figurine.promotion_id) }}€
             </span>
           </span>
-          <span v-else>{{ figurine.price }}€ {{ figurine.promotion_id }}</span>
+          <span v-else>{{ figurine.price }}€ {{ figurine.promotion_id }}</span> <!-- Affichage du prix sans promotion -->
         </div>
-        
       </router-link>
     </div>
   </div>
 </template>
+
 
 
 

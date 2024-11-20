@@ -1,22 +1,42 @@
 <template>
-    <div class="hamburger" @click="$emit('toggle')">
-      <i class="fas fa-bars"></i>
-    </div>
-  
-    <nav :class="['sidebar', { collapsed }]">
-      <h2>OneShirt</h2>
-      <ul>
-        <li><router-link to="/dashboard"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></router-link></li>
-        <li><router-link to="/dashboard/products"><i class="fas fa-box"></i> <span>Produits</span></router-link></li>
-        <li><router-link to="/dashboard/users"><i class="fas fa-users"></i> <span>Utilisateurs</span></router-link></li>
-        <li><router-link to="/dashboard/blog"><i class="fas fa-blog"></i> <span>Blog</span></router-link></li>
-        <li><router-link to="/dashboard/avis"><i class="fas fa-star"></i> <span>Avis</span></router-link></li>
-        <li><router-link to="/dashboard/promotions"><i class="fas fa-tags"></i> <span>Promotions</span></router-link></li>
-        <li><router-link to="/dashboard/orders"><i class="fas fa-receipt"></i> <span>Commandes</span></router-link></li>
-        <li><button @click="handleLogout()"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></button></li>
-      </ul>
-    </nav>
-  </template>
+  <!-- Bouton hamburger pour déclencher l'ouverture/fermeture du menu -->
+  <div class="hamburger" @click="$emit('toggle')">
+    <i class="fas fa-bars"></i> <!-- Icône hamburger -->
+  </div>
+
+  <!-- Navigation latérale (sidebar) avec classe dynamique pour la gestion de l'état de la barre -->
+  <nav :class="['sidebar', { collapsed }]">
+    <h2>OneShirt</h2> <!-- Titre de la sidebar -->
+
+    <!-- Liste des liens de navigation -->
+    <ul>
+      <!-- Lien vers le tableau de bord -->
+      <li><router-link to="/dashboard"><i class="fas fa-chart-line"></i> <span>Tableau de Bord</span></router-link></li>
+      
+      <!-- Lien vers la section Produits -->
+      <li><router-link to="/dashboard/products"><i class="fas fa-box"></i> <span>Produits</span></router-link></li>
+      
+      <!-- Lien vers la section Utilisateurs -->
+      <li><router-link to="/dashboard/users"><i class="fas fa-users"></i> <span>Utilisateurs</span></router-link></li>
+      
+      <!-- Lien vers la section Blog -->
+      <li><router-link to="/dashboard/blog"><i class="fas fa-blog"></i> <span>Blog</span></router-link></li>
+      
+      <!-- Lien vers la section Avis -->
+      <li><router-link to="/dashboard/avis"><i class="fas fa-star"></i> <span>Avis</span></router-link></li>
+      
+      <!-- Lien vers la section Promotions -->
+      <li><router-link to="/dashboard/promotions"><i class="fas fa-tags"></i> <span>Promotions</span></router-link></li>
+      
+      <!-- Lien vers la section Commandes -->
+      <li><router-link to="/dashboard/orders"><i class="fas fa-receipt"></i> <span>Commandes</span></router-link></li>
+      
+      <!-- Bouton pour se déconnecter -->
+      <li><button @click="handleLogout()"><i class="fas fa-chart-pie"></i> <span>Déconnexion</span></button></li>
+    </ul>
+  </nav>
+</template>
+
   
   <script>
   export default {

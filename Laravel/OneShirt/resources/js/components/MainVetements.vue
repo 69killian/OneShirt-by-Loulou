@@ -1,30 +1,49 @@
 <template>
+  <!-- Section principale pour afficher les vêtements -->
   <div class="main-vetements">
+
+    <!-- Titre de la section -->
     <h2>Nos Vêtements</h2>
+
+    <!-- Grille des vêtements -->
     <div class="vetements-grid">
+
+      <!-- Carte pour chaque vêtement, lien vers la page produit spécifique -->
       <div class="vetement-card" v-for="vetement in vetements" :key="vetement.id">
+
+        <!-- Lien vers la page du produit -->
         <router-link :to="`/produit/${vetement.id}`" class="vetement-link" style="text-decoration: none; color: black;">
+          
+          <!-- Affichage de l'image du vêtement si elle existe -->
           <img :src="vetement.images[0].image_base64" alt="Vêtement" v-if="vetement.images.length" />
+
+          <!-- Nom du vêtement -->
           <h3>{{ vetement.name }}</h3>
+
+          <!-- Description du vêtement -->
           <p>{{ vetement.description }}</p>
+
+          <!-- Section affichant le prix avec ou sans promotion -->
           <div>
-          <span v-if="vetement.promotion_id">
-            <!-- Prix original barré -->
-            <span class="original-price" style="text-decoration: line-through;">
-              {{ vetement.price }}€
+            <span v-if="vetement.promotion_id">
+              <!-- Affichage du prix original barré si une promotion est appliquée -->
+              <span class="original-price" style="text-decoration: line-through;">
+                {{ vetement.price }}€
+              </span>
+              <!-- Affichage du prix réduit -->
+              <span class="discounted-price">
+                {{ calculateDiscountedPrice(vetement.price, vetement.promotion_id) }}€
+              </span>
             </span>
-            <!-- Prix réduit -->
-            <span class="discounted-price">
-              {{ calculateDiscountedPrice(vetement.price, vetement.promotion_id) }}€
-            </span>
-          </span>
-          <span v-else>{{ vetement.price }}€ {{ vetement.promotion_id }}</span>
-        </div>
+            <!-- Affichage du prix sans promotion -->
+            <span v-else>{{ vetement.price }}€ {{ vetement.promotion_id }}</span>
+          </div>
         </router-link>
       </div>
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -47,7 +66,7 @@ export default {
       try {
         const response = await axios.get('/api/vetements');
         this.vetements = response.data;
-        console.log("Vetements:", this.vetements);  // Vérifier les figurines récupérées
+        console.log("Vetements:", this.vetements);  // Vérifie les figurines récupérées
       } catch (error) {
         console.error('Erreur lors de la récupération des vetemetns:', error);
       }
@@ -58,7 +77,7 @@ export default {
       try {
         const response = await axios.get('/promotions');
         this.promotions = response.data;
-        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+        console.log("Promotions:", this.promotions);  // Vérifie les promotions récupérées
       } catch (error) {
         console.error('Erreur lors de la récupération des promotions:', error);
       }
@@ -66,12 +85,12 @@ export default {
     
     // Calcul du prix réduit
     calculateDiscountedPrice(originalPrice, promotionId) {
-    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    console.log("Promotion ID:", promotionId); // Vérifie si promotion_id est bien passé
     const promotion = this.promotions.find(promo => promo.id === promotionId);
-    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    console.log("Promotion trouvée:", promotion); // Affiche la promotion trouvée
     if (promotion && promotion.discount_percentage) {
       const discount = (originalPrice * promotion.discount_percentage) / 100;
-      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifie le calcul du prix réduit
       return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
     }
     return originalPrice; // Retourne le prix original si aucune promotion

@@ -1,12 +1,20 @@
 <template>
+    <!-- En-tête du tableau de bord -->
     <header>
+        <!-- Titre principal de la page -->
         <h1>Tableau de Bord</h1>
+        
+        <!-- Informations utilisateur affichées uniquement si un utilisateur est connecté -->
         <div class="user-info" v-if="user">
+            <!-- Message de bienvenue affichant le nom d'utilisateur -->
             <span>Bienvenue, {{ user.username }}</span>
+            
+            <!-- Photo de profil de l'utilisateur affichée en utilisant une image encodée en base64 -->
             <img class="profile-pic" :src="'data:image/png;base64,' + user.profile_picture" alt="Photo de profil">
         </div>
     </header>
 </template>
+
 
 <script>
 import axios from 'axios';

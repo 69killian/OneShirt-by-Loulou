@@ -1,51 +1,95 @@
 <template>
-    <section class="section-newsletter">
-      <form class="form-subscription" action="">
-        <label class="email-label" for="email">Email</label>
-        <input class="email-input" type="text" name="Email" id="Email" placeholder="Entrez votre adresse Mail">
-        <button class="email-submit-button" type="submit">S'inscrire à la newsletter</button>
-      </form>
-      <div class="Pros-subscription">
-        <div>
-          <p class="title-pros">Suis nous par mail</p>
-        </div>
-        <p>Reçois des mails de qualité sur One Piece:<br> News, Articles, Promos sur ton univers préféré  </p>
+  <!-- Section principale pour la newsletter -->
+  <section class="section-newsletter">
+
+    <!-- Formulaire d'inscription à la newsletter -->
+    <form class="form-subscription" action="">
+      
+      <!-- Label pour l'email -->
+      <label class="email-label" for="email">Email</label>
+
+      <!-- Champ de saisie pour l'adresse email -->
+      <input 
+        class="email-input" 
+        type="text" 
+        name="Email" 
+        id="Email" 
+        placeholder="Entrez votre adresse Mail" 
+      />
+
+      <!-- Bouton pour soumettre l'inscription à la newsletter -->
+      <button class="email-submit-button" type="submit">S'inscrire à la newsletter</button>
+    </form>
+
+    <!-- Première section d'information pour l'abonnement -->
+    <div class="Pros-subscription">
+      <div>
+        <!-- Titre de la section "Suis nous par mail" -->
+        <p class="title-pros">Suis nous par mail</p>
       </div>
-      <div class="Pros-subscription">
-        <div>
-          <p class="title-pros">Fini les oublis </p>
-        </div>
-        <p>Ne rate plus aucune occasions sur les<br> nouveautés OneShirt ! <br></p>
+      <!-- Description de l'abonnement par mail -->
+      <p>Reçois des mails de qualité sur One Piece:<br> News, Articles, Promos sur ton univers préféré</p>
+    </div>
+
+    <!-- Deuxième section d'information pour l'abonnement -->
+    <div class="Pros-subscription">
+      <div>
+        <!-- Titre de la section "Fini les oublis" -->
+        <p class="title-pros">Fini les oublis</p>
       </div>
-    </section>
-  </template>
+      <!-- Description pour ne pas manquer les nouveautés -->
+      <p>Ne rate plus aucune occasion sur les<br> nouveautés OneShirt !</p>
+    </div>
+
+  </section>
+</template>
+
   
-  <script>
-  export default {
-    mounted() {
-      this.handleScroll();
-      window.addEventListener('scroll', this.handleScroll);
-    },
-    beforeDestroy() {
-      window.removeEventListener('scroll', this.handleScroll);
-    },
-    methods: {
-      handleScroll() {
-        const sectionNewsletter = document.querySelector('.section-newsletter');
-        if (this.isElementInViewport(sectionNewsletter)) {
-          sectionNewsletter.classList.add('animate');
-        }
-      },
-      isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-          rect.top < window.innerHeight &&
-          rect.bottom > 0
-        );
+<script>
+export default {
+  // Cette méthode est appelée après que le composant soit monté dans le DOM
+  mounted() {
+    // Appel de handleScroll pour vérifier immédiatement si la section est visible
+    this.handleScroll();
+    
+    // Ajout d'un écouteur d'événement de défilement pour déclencher handleScroll à chaque scroll
+    window.addEventListener('scroll', this.handleScroll);
+  },
+
+  // Cette méthode est appelée avant que le composant soit détruit du DOM
+  beforeDestroy() {
+    // Retrait de l'écouteur d'événement de défilement avant la destruction du composant
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+
+  methods: {
+    // Fonction de gestion du défilement
+    handleScroll() {
+      // Sélection de la section de la newsletter
+      const sectionNewsletter = document.querySelector('.section-newsletter');
+      
+      // Vérification si la section est dans la fenêtre de visualisation
+      if (this.isElementInViewport(sectionNewsletter)) {
+        // Si la section est visible, ajout de la classe 'animate'
+        sectionNewsletter.classList.add('animate');
       }
+    },
+
+    // Fonction pour vérifier si un élément est visible dans la fenêtre du navigateur
+    isElementInViewport(el) {
+      // Récupération des coordonnées de l'élément
+      const rect = el.getBoundingClientRect();
+      
+      // Vérification si l'élément est visible dans la fenêtre
+      return (
+        rect.top < window.innerHeight &&
+        rect.bottom > 0
+      );
     }
   }
-  </script>
+}
+</script>
+
   
   <style scoped>
   @keyframes fadeInUp {

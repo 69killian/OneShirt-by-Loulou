@@ -1,59 +1,83 @@
 <template>
-    <div class="title-FAQ">
-        <h1>Foire Aux Questions (FAQ)</h1>
-      </div>
-    <div class="faq-section">
-      <h1>Toutes les questions fréquemment posées</h1>
-      <p class="description">D’autres questions ? N’hésitez pas, contactez moi</p>
-      <button class="faq-section-button">
-        <router-link to="/contact" style=" text-decoration: none; color: white;">Contact</router-link>
-      </button>
-  
-      <div class="faq-item" v-for="(faq, index) in faqs" :key="index">
-        <button class="faq-question" @click="toggleFaq(index)">{{ faq.question }}</button>
-        <div
-          class="faq-answer"
-          :style="{ maxHeight: activeIndex === index ? answerHeights[index] : null, padding: activeIndex === index ? '15px 0' : '0' }"
-          ref="answers"
-        >
-          <p>{{ faq.answer }}</p>
-        </div>
+  <!-- Section titre principale de la FAQ -->
+  <div class="title-FAQ">
+    <h1>Foire Aux Questions (FAQ)</h1>
+  </div>
+
+  <!-- Section principale des questions fréquentes -->
+  <div class="faq-section">
+    <!-- Titre de la section des questions fréquentes -->
+    <h1>Toutes les questions fréquemment posées</h1>
+    
+    <!-- Description de la section FAQ -->
+    <p class="description">D’autres questions ? N’hésitez pas, contactez moi</p>
+    
+    <!-- Bouton de contact, dirige vers la page de contact -->
+    <button class="faq-section-button">
+      <router-link to="/contact" style=" text-decoration: none; color: white;">Contact</router-link>
+    </button>
+
+    <!-- Liste des éléments FAQ -->
+    <div class="faq-item" v-for="(faq, index) in faqs" :key="index">
+      <!-- Question FAQ qui, lorsqu'on clique dessus, déclenche une fonction pour afficher/cacher la réponse -->
+      <button class="faq-question" @click="toggleFaq(index)">{{ faq.question }}</button>
+      
+      <!-- Réponse FAQ qui s'affiche ou se cache en fonction de l'index actif -->
+      <div
+        class="faq-answer"
+        :style="{ maxHeight: activeIndex === index ? answerHeights[index] : null, padding: activeIndex === index ? '15px 0' : '0' }"
+        ref="answers"
+      >
+        <!-- Contenu de la réponse à la question -->
+        <p>{{ faq.answer }}</p>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
-  <script>
-  export default {
-    data() {
-      return {
-        faqs: [
-          { question: "Quel est le délai de livraison pour les produits ?", answer: "Le délai de livraison est généralement de 3 à 5 jours ouvrables, en fonction de votre emplacement." },
-          { question: "Comment puis-je suivre ma commande ?", answer: "Une fois votre commande expédiée, vous recevrez un email avec un lien de suivi." },
-          { question: "Puis-je retourner un produit ?", answer: "Oui, vous pouvez retourner un produit dans les 30 jours suivant sa réception." },
-          { question: "Quels sont les modes de paiement acceptés ?", answer: "Nous acceptons les cartes de crédit, PayPal, et les virements bancaires." },
-          { question: "Comment puis-je contacter le support client ?", answer: "Vous pouvez nous contacter via le formulaire de contact ou par téléphone au +33 1 23 45 67 89." },
-        ],
-        activeIndex: null,
-        answerHeights: [],
-      };
+<script>
+export default {
+  // Définition des données utilisées dans le composant
+  data() {
+    return {
+      // Tableau des questions et réponses de la FAQ
+      faqs: [
+        { question: "Quel est le délai de livraison pour les produits ?", answer: "Le délai de livraison est généralement de 3 à 5 jours ouvrables, en fonction de votre emplacement." },
+        { question: "Comment puis-je suivre ma commande ?", answer: "Une fois votre commande expédiée, vous recevrez un email avec un lien de suivi." },
+        { question: "Puis-je retourner un produit ?", answer: "Oui, vous pouvez retourner un produit dans les 30 jours suivant sa réception." },
+        { question: "Quels sont les modes de paiement acceptés ?", answer: "Nous acceptons les cartes de crédit, PayPal, et les virements bancaires." },
+        { question: "Comment puis-je contacter le support client ?", answer: "Vous pouvez nous contacter via le formulaire de contact ou par téléphone au +33 1 23 45 67 89." },
+      ],
+      // L'index de la question actuellement ouverte, initialement null (aucune question ouverte)
+      activeIndex: null,
+      // Tableau des hauteurs des réponses pour animer l'affichage des réponses
+      answerHeights: [],
+    };
+  },
+  mounted() {
+    // Calcul de la hauteur maximale des réponses une fois que le DOM est prêt
+    this.$nextTick(() => {
+      // Remplir answerHeights avec la hauteur des éléments de réponse
+      this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
+    });
+  },
+  methods: {
+    // Fonction pour afficher ou masquer la réponse d'une question
+    toggleFaq(index) {
+      // Si la question est déjà ouverte, on la ferme en mettant activeIndex à null
+      if (this.activeIndex === index) {
+        this.activeIndex = null;
+      } else {
+        // Sinon, on ouvre la question en définissant activeIndex sur l'index de la question
+        this.activeIndex = index;
+      }
     },
-    mounted() {
-      // Calcul de la hauteur maximale des réponses une fois que le DOM est prêt
-      this.$nextTick(() => {
-        this.answerHeights = Array.from(this.$refs.answers).map(el => `${el.scrollHeight}px`);
-      });
-    },
-    methods: {
-      toggleFaq(index) {
-        if (this.activeIndex === index) {
-          this.activeIndex = null;
-        } else {
-          this.activeIndex = index;
-        }
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
+
+
   
   <style scoped>
   .title-FAQ {

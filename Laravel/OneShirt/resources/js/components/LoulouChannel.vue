@@ -1,33 +1,42 @@
 <template>
-    
-
-     <!-- Loulou Channel -->
-
-     <section class="section-loulou">
-        <div>
-            <p class="title-section-loulou">Chaine de Loulou</p>
-            <p class="subheading-section-loulou">CEO de OneShirt</p>
+    <!-- Section Loulou Channel -->
+    <section class="section-loulou">
+  
+      <!-- Titre principal de la section et sous-titre -->
+      <div>
+        <p class="title-section-loulou">Chaine de Loulou</p>
+        <p class="subheading-section-loulou">CEO de OneShirt</p>
+      </div>
+  
+      <!-- Bloc d'information sur la chaîne de Loulou -->
+      <div class="Channel-loulou">
+        
+        <!-- Avatar et information sur l'auteur de la chaîne -->
+        <div class="avatar-review">
+          <img class="avatar" src="../../../public/images/logoloulou.jpg" alt="Chaine de loulou logo">
+          <div class="reviewer-info">
+            <p class="channel-name">Loulou</p>
+          </div>
         </div>
-        <div class="Channel-loulou">
-            <div class="avatar-review">
-            <img class="avatar" src="../../../public/images/logoloulou.jpg" alt="Chaine de loulou logo">
-            <div class="reviewer-info">
-                <p class="channel-name">Loulou</p>
-            </div>
-        </div>
+  
+        <!-- Bouton pour s'abonner à la chaîne -->
         <div class="subscribe-button">
-    <div class="button">
-        <img src="../../../public/images/ytbsansfond.png" alt="youtubelogo">
-        <div class="title-subscribe">S'Abonner</div>
-    </div>
-</div>
-    </div>
-        <div>
-            <p class="title-section-loulou">Plus de OnePiece</p>
-            <p class="subheading-section-loulou">Abonne Toi !</p>
+          <div class="button">
+            <img src="../../../public/images/ytbsansfond.png" alt="youtubelogo">
+            <div class="title-subscribe">S'Abonner</div>
+          </div>
         </div>
+      </div>
+  
+      <!-- Section de promotion pour plus de contenu One Piece -->
+      <div>
+        <p class="title-section-loulou">Plus de OnePiece</p>
+        <p class="subheading-section-loulou">Abonne Toi !</p>
+      </div>
+      
     </section>
   </template>
+  
   
   <script>
   export default {
@@ -36,7 +45,7 @@
   
   <style scoped>
   
-/** Loulou channel section **/
+
 
 .section-loulou {
     position: relative; /* Nécessaire pour positionner les éléments à l'intérieur */

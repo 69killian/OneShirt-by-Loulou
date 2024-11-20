@@ -1,89 +1,121 @@
 <template>
     <div class="main-payment">
+      <!-- Formulaire de paiement, la soumission est gérée par 'submitPayment' -->
       <form @submit.prevent="submitPayment">
+        
         <div class="form-content">
           <div class="client-info">
+            <!-- Champ pour le prénom -->
             <label for="first_name">Prénom</label>
             <input type="text" id="first_name" v-model="user.first_name" placeholder="Entrez votre prénom" required>
   
+            <!-- Champ pour le nom -->
             <label for="last_name">Nom</label>
             <input type="text" id="last_name" v-model="user.last_name" placeholder="Entrez votre nom" required>
   
+            <!-- Champ pour l'email -->
             <label for="email">Email</label>
             <input type="email" id="email" v-model="user.email" placeholder="Entrez votre email" required>
   
+            <!-- Champ pour le numéro de téléphone -->
             <label for="phone">Numéro de téléphone</label>
             <input type="tel" id="phone_number" v-model="user.phone_number" placeholder="Entrez votre numéro" required>
   
+            <!-- Champ pour l'adresse -->
             <label for="address">Adresse</label>
             <input type="text" id="address" v-model="user.address" placeholder="Entrez votre adresse" required>
   
+            <!-- Champ pour le code postal -->
             <label for="postal_code">Code Postal</label>
             <input type="text" id="postal_address" v-model="user.postal_address" placeholder="Entrez votre code postal" required>
           </div>
         </div>
   
+        <!-- Bouton de soumission pour procéder au paiement -->
         <div class="button-div-payment">
           <button type="submit" @click="submitPayment()">Procéder au Paiement</button>
         </div>
       </form>
     </div>
   </template>
+
+
   
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        user: {
-          first_name: '',
-          last_name: '',
-          email: '',
-          phone_number: '',
-          address: '',
-          postal_address: ''
-        }
-      };
-    },
-    mounted() {
-      this.checkUserStatus();
-    },
-    methods: {
-        async checkUserStatus() {
-  try {
-    const response = await axios.get('/api/auth/check');
-    console.log(response.data); 
-    if (response.data.authenticated) { 
-      const userId = response.data.user.id; 
-      this.getUserInfo(userId);
-    } else {
-      this.$router.push('/connexion');
-    }
-  } catch (error) {
-    console.error("Erreur de connexion:", error);
-  }
-},
-      async getUserInfo(userId) {
-        try {
-          const response = await axios.get(`/api/users/${userId}`);
-          const user = response.data;
-          this.user.first_name = user.first_name;
-          this.user.last_name = user.last_name;
-          this.user.email = user.email;
-          this.user.phone_number = user.phone;
-          this.user.address = user.address;
-          this.user.postal_address = user.postal_code;
-        } catch (error) {
-          console.error("Erreur lors de la récupération des informations de l'utilisateur:", error);
-        }
-      },
-      submitPayment() {
-        this.$router.push('/paiementconnecté');
+<script>
+// Importation de la bibliothèque axios pour effectuer des requêtes HTTP
+import axios from 'axios';
+
+export default {
+  // Définition des données du composant
+  data() {
+    return {
+      user: {
+        first_name: '',     // Prénom de l'utilisateur
+        last_name: '',      // Nom de l'utilisateur
+        email: '',          // Email de l'utilisateur
+        phone_number: '',   // Numéro de téléphone de l'utilisateur
+        address: '',        // Adresse de l'utilisateur
+        postal_address: ''  // Code postal de l'utilisateur
       }
+    };
+  },
+
+  // Lifecycle hook 'mounted', appelé après l'initialisation du composant
+  mounted() {
+    this.checkUserStatus(); // Vérification de l'état de l'utilisateur à son arrivée sur la page
+  },
+
+  methods: {
+    // Méthode pour vérifier l'état d'authentification de l'utilisateur
+    async checkUserStatus() {
+      try {
+        // Envoi d'une requête GET à l'API pour vérifier si l'utilisateur est authentifié
+        const response = await axios.get('/api/auth/check');
+        console.log(response.data); 
+        
+        // Si l'utilisateur est authentifié, récupération de ses informations
+        if (response.data.authenticated) { 
+          const userId = response.data.user.id; 
+          this.getUserInfo(userId); // Appel pour récupérer les informations de l'utilisateur
+        } else {
+          // Si l'utilisateur n'est pas authentifié, redirection vers la page de connexion
+          this.$router.push('/connexion');
+        }
+      } catch (error) {
+        // En cas d'erreur dans la requête, affichage d'un message d'erreur dans la console
+        console.error("Erreur de connexion:", error);
+      }
+    },
+
+    // Méthode pour récupérer les informations d'un utilisateur via son ID
+    async getUserInfo(userId) {
+      try {
+        // Requête pour récupérer les informations de l'utilisateur en fonction de son ID
+        const response = await axios.get(`/api/users/${userId}`);
+        const user = response.data;
+        
+        // Mise à jour des données utilisateur dans le composant
+        this.user.first_name = user.first_name;
+        this.user.last_name = user.last_name;
+        this.user.email = user.email;
+        this.user.phone_number = user.phone;
+        this.user.address = user.address;
+        this.user.postal_address = user.postal_code;
+      } catch (error) {
+        // En cas d'erreur lors de la récupération des informations utilisateur, affichage du message d'erreur
+        console.error("Erreur lors de la récupération des informations de l'utilisateur:", error);
+      }
+    },
+
+    // Méthode pour soumettre le paiement et rediriger l'utilisateur
+    submitPayment() {
+      // Redirection vers la page de paiement connecté
+      this.$router.push('/paiementconnecté');
     }
-  };
-  </script>
+  }
+};
+</script>
+
   
   
   

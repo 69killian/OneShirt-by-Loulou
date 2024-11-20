@@ -1,36 +1,45 @@
 <template>
   <div class="main-payment">
+    <!-- Formulaire de paiement, la soumission est gérée par 'submitPayment' -->
     <form @submit.prevent="submitPayment">
+      
       <div class="form-content">
         <div class="payment-info">
+
+          <!-- Affichage du logo Stripe -->
           <img src="../../../public/images/i43cmo34.bmp" alt="Stripe" style="height: 100px; object-fit: cover;">
 
-          <!-- Affichage du montant -->
+          <!-- Affichage du montant total à payer -->
           <div class="amount">
             <p>Montant total : {{ totalPrice }} €</p>
           </div>
 
+          <!-- Liste des produits dans le panier -->
           <div class="products-list">
-  <h3>Produits dans votre panier :</h3>
-  <ul>
-    <li v-for="(product, index) in products" :key="index">
-      {{ product.quantity }} x {{ product.name }} -
-      <span v-if="product.promotion_id">
-            <!-- Prix original barré -->
-            <span class="original-price" style="text-decoration: line-through;">
-              {{ product.price }}€
-            </span>
-            <!-- Prix réduit -->
-            <span class="discounted-price">
-              {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
-            </span>
-          </span>
-          <span v-else>{{ product.price }}€ {{ product.promotion_id }}</span>
-    </li>
-  </ul>
-</div>
+            <h3>Produits dans votre panier :</h3>
+            <ul>
+              <!-- Boucle pour afficher chaque produit dans le panier -->
+              <li v-for="(product, index) in products" :key="index">
+                {{ product.quantity }} x {{ product.name }} -
 
-          <!-- Affichage des informations utilisateur -->
+                <!-- Affichage du prix, avec réduction si applicable -->
+                <span v-if="product.promotion_id">
+                  <!-- Prix original barré -->
+                  <span class="original-price" style="text-decoration: line-through;">
+                    {{ product.price }}€
+                  </span>
+                  <!-- Prix réduit -->
+                  <span class="discounted-price">
+                    {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
+                  </span>
+                </span>
+                <!-- Prix sans promotion -->
+                <span v-else>{{ product.price }}€ {{ product.promotion_id }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Informations utilisateur (Nom, Email, Téléphone, Adresse) -->
           <div class="user-info">
             <p><strong>Nom:</strong> {{ user.first_name }} {{ user.last_name }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
@@ -38,28 +47,29 @@
             <p><strong>Adresse:</strong> {{ user.address }}</p>
           </div>
 
-          <!-- Champ pour le numéro de carte -->
+          <!-- Champs pour les informations de carte bancaire -->
           <label for="card-number">Numéro de Carte</label>
-          <div id="card-number"></div>
+          <div id="card-number"></div> <!-- Espace pour entrer le numéro de carte -->
 
-          <!-- Champ pour la date d'expiration -->
           <label for="card-expiry">Date d'Expiration</label>
-          <div id="card-expiry"></div>
+          <div id="card-expiry"></div> <!-- Espace pour entrer la date d'expiration -->
 
-          <!-- Champ pour le CVC -->
           <label for="card-cvc">CVC</label>
-          <div id="card-cvc"></div>
+          <div id="card-cvc"></div> <!-- Espace pour entrer le code CVC -->
 
+          <!-- Zone d'affichage des erreurs liées à la carte -->
           <div id="card-errors" role="alert"></div>
         </div>
       </div>
 
+      <!-- Bouton de soumission pour procéder au paiement -->
       <div class="button-div-payment">
         <button type="submit">Procéder au Paiement</button>
       </div>
     </form>
   </div>
 </template>
+
 
 <script>
 import { loadStripe } from '@stripe/stripe-js';

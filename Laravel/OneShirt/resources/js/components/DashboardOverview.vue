@@ -1,23 +1,37 @@
 <template>
+  <!-- Section d'aperçu avec des cartes d'informations -->
   <section id="overview" class="overview">
+    
+    <!-- Carte pour afficher les ventes du jour -->
     <div class="card">
       <h3>Ventes du jour</h3>
+      <!-- Affichage du total des ventes du jour -->
       <p>{{ totalSales }} €</p>
     </div>
+    
+    <!-- Carte pour afficher le nombre de produits en stock -->
     <div class="card">
       <h3>Produits en stock</h3>
+      <!-- Affichage du nombre total de produits en stock -->
       <p>{{ totalStock }}</p>
     </div>
+    
+    <!-- Carte pour afficher le nombre de nouveaux clients -->
     <div class="card">
       <h3>Nouveaux clients</h3>
+      <!-- Affichage du nombre de nouveaux clients -->
       <p>{{ newClients }}</p>
     </div>
+    
+    <!-- Carte pour afficher le nombre d'avis récents -->
     <div class="card">
       <h3>Avis récents</h3>
+      <!-- Affichage du nombre d'avis récents -->
       <p>{{ recentReviews }}</p>
     </div>
   </section>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -37,22 +51,22 @@ export default {
   methods: {
     async fetchDashboardData() {
       try {
-        // Récupérer les commandes
+        // Récupération des commandes
         const ordersResponse = await axios.get('/api/orders');
         const orders = ordersResponse.data;
         this.totalSales = this.calculateTotalSales(orders);
 
-        // Récupérer les produits
+        // Récupération des produits
         const productsResponse = await axios.get('/api/products');
         const products = productsResponse.data;
         this.totalStock = this.calculateTotalStock(products);
 
-        // Récupérer les utilisateurs
+        // Récupération des utilisateurs
         const usersResponse = await axios.get('/api/users');
         const users = usersResponse.data;
         this.newClients = this.calculateNewClients(users);
 
-        // Récupérer les avis
+        // Récupération des avis
         const reviewsResponse = await axios.get('/reviews');
         const reviews = reviewsResponse.data;
         this.recentReviews = this.calculateRecentReviews(reviews);
@@ -66,16 +80,16 @@ export default {
       const todayStart = new Date(today.setHours(0, 0, 0, 0)); // début de la journée
       const todayEnd = new Date(today.setHours(23, 59, 59, 999)); // fin de la journée
 
-      // Filtrer les commandes du jour
+      // Filtre les commandes du jour
       const totalSalesAmount = orders
         .filter(order => {
           const orderDate = new Date(order.created_at);
           return orderDate >= todayStart && orderDate <= todayEnd;
         })
-        .reduce((total, order) => total + parseFloat(order.total_amount || 0), 0); // Assurez-vous que le total_amount est un nombre valide
+        .reduce((total, order) => total + parseFloat(order.total_amount || 0), 0); 
 
-      // Retourner le montant total formaté
-      return totalSalesAmount.toFixed(2); // Formater avec 2 décimales
+      // Retourne le montant total formaté
+      return totalSalesAmount.toFixed(2); // Formate avec 2 décimales
     },
 
     calculateTotalStock(products) {
@@ -96,7 +110,7 @@ export default {
   },
   computed: {
     formattedTotalSales() {
-      // Formater le montant total avec le séparateur des milliers et la virgule comme séparateur décimal
+      // Formate le montant total avec le séparateur des milliers et la virgule comme séparateur décimal
       return this.totalSales.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ").replace('.', ',') + ' €';
     }
   }

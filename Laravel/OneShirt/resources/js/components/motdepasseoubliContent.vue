@@ -1,23 +1,35 @@
 <template>
+  <!-- Section principale pour la récupération du mot de passe -->
   <div class="main-contact">
+    
+    <!-- Titre de la page -->
     <h1>Récupération de ton Mot de Passe</h1>
 
+    <!-- Formulaire pour la réinitialisation du mot de passe -->
     <form @submit.prevent="handlePasswordReset"> 
+
+      <!-- Label pour l'adresse e-mail -->
       <label for="email">Fournis ton adresse e-mail</label>
+
+      <!-- Champ d'input pour l'adresse e-mail -->
       <input 
         type="email" 
         id="email" 
         name="email" 
-        v-model="email" 
+        v-model="email"  
         required 
-        placeholder="Adresse e-mail"
+        placeholder="Adresse e-mail"  
       />
 
+      <!-- Bouton pour soumettre le formulaire -->
       <button type="submit">Envoyer le lien de réinitialisation</button>
+
+      <!-- Lien vers la page d'inscription si l'utilisateur est nouveau -->
       <router-link to="/inscription" style="margin-top: 10px;">Nouveau dans l'équipage ?</router-link>
     </form>
   </div>
 </template>
+
 
 <script>
 export default {

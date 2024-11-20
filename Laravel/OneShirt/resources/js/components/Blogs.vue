@@ -1,79 +1,112 @@
 <template>
   <div>
-  <div class="title-container">
-    <div class="titre-section-blog">Nos Articles</div>
-    <div class="subheading-section-blog">Vous allez aimer</div>
-  </div>
+    <!-- Conteneur du titre et du sous-titre de la section des blogs -->
+    <div class="title-container">
+      <div class="titre-section-blog">Nos Articles</div>
+      <div class="subheading-section-blog">Vous allez aimer</div>
+    </div>
+
+    <!-- Section des articles du blog -->
     <section class="Blogs">
+      <!-- Boucle sur les 3 premiers articles et affichage des cartes de blog -->
       <router-link
         v-for="article in articles.slice(0, 3)"
         :key="article.id"
         :to="`/article/${article.slug}`"
         class="blog-card animate"
       >
+        <!-- Image de l'article -->
         <img
           class="img-blog"
           :src="'data:image/png;base64,' + article.image"
-          alt="Blog Image"
+          alt="Image de l'article"
         />
+        <!-- Titre de l'article -->
         <p class="blog-title-card">{{ article.title }}</p>
+        <!-- Description de l'article (extrait du contenu) -->
         <p class="blog-description">{{ article.content.substring(0, 100) + '...' }}</p>
 
-        <!-- Affichage des informations de l'utilisateur correspondant -->
+        <!-- Informations sur l'utilisateur auteur de l'article -->
         <section class="user-info" v-if="getUserById(article.author_id)">
           <img
             class="avatar"
             :src="'data:image/png;base64,' + getUserById(article.author_id).profile_picture"
-            alt="User Image"
+            alt="Image de l'utilisateur"
           />
           <p style="color: white;">{{ getUserById(article.author_id).username }}</p>
         </section>
       </router-link>
     </section>
 
+    <!-- Bouton pour voir plus d'articles -->
     <div class="see-more-button">
-      <router-link to="/blog" style="color: white;"><button>Voir d'autres articles</button></router-link>
+      <router-link to="/blog" style="color: white;">
+        <button>Voir d'autres articles</button>
+      </router-link>
     </div>
-    
   </div>
 </template>
+
+
+
 
 <script>
 export default {
   name: 'BlogContent',
   data() {
     return {
+      // Tableau pour stocker les articles de blog
       articles: [],
+      // Tableau pour stocker les utilisateurs
       users: [],
     };
   },
   mounted() {
+    // Récupère les articles et les utilisateurs lors du montage du composant
     this.fetchArticles();
     this.fetchUsers();
   },
   methods: {
+    /**
+     * Récupère la liste des articles de blog depuis l'API
+     */
     async fetchArticles() {
       try {
+        // Appel à l'API pour récupérer les articles
         const response = await axios.get('/api/blog-articles');
         this.articles = response.data;
       } catch (error) {
+        // Affiche une erreur si l'appel échoue
         console.error('Erreur lors de la récupération des articles :', error);
       }
     },
+
+    /**
+     * Récupère la liste des utilisateurs depuis l'API
+     */
     async fetchUsers() {
       try {
+        // Appel à l'API pour récupérer les utilisateurs
         const response = await axios.get('/api/users');
         this.users = response.data;
       } catch (error) {
+        // Affiche une erreur si l'appel échoue
         console.error('Erreur lors de la récupération des utilisateurs :', error);
       }
     },
+
+    /**
+     * Trouve un utilisateur par son ID
+     * @param {number} id - L'ID de l'utilisateur à rechercher
+     * @returns {Object} L'utilisateur correspondant ou undefined si non trouvé
+     */
     getUserById(id) {
       return this.users.find(user => user.id === id);
-    }
-  }
+    },
+  },
 }
 </script>
+
 
 
 

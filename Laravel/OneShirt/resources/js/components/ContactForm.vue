@@ -1,32 +1,44 @@
 <template>
     <div class="main-contact">
+      <!-- Titre principal du formulaire de contact -->
       <h1>Contactez-Moi</h1>
+  
+      <!-- Description expliquant le formulaire -->
       <p class="description">
         N'hésitez pas à me laisser un message. Je vous répondrai dans les plus
         brefs délais !
       </p>
   
+      <!-- Formulaire de contact -->
       <form @submit.prevent="submitForm">
+        
+        <!-- Champ pour le nom -->
         <label for="name">Nom</label>
         <input type="text" id="name" v-model="name" required placeholder="Nom" />
   
+        <!-- Champ pour le prénom -->
         <label for="surname">Prénom</label>
         <input type="text" id="surname" v-model="surname" required placeholder="Prénom" />
-  
+    
+        <!-- Champ pour l'email -->
         <label for="email">Email</label>
         <input type="email" id="email" v-model="email" required placeholder="Email" />
-  
+    
+        <!-- Champ pour le message -->
         <label for="message">Message</label>
         <textarea id="message" v-model="message" rows="4" required placeholder="Ton Message"></textarea>
-  
+    
+        <!-- Bouton pour soumettre le formulaire -->
         <button type="submit">Soumettre ta Demande</button>
       </form>
     </div>
   </template>
   
+  
   <script>
   export default {
     name: "ContactForm",
+    
     data() {
       return {
         name: "",
@@ -35,46 +47,65 @@
         message: ""
       };
     },
+  
     methods: {
-  async submitForm() {
-    try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": csrfToken
-        },
-        body: JSON.stringify({
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          message: this.message
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'envoi du message");
+      // Méthode pour soumettre le formulaire de contact
+      async submitForm() {
+        try {
+          // Récupère le token CSRF pour la sécurité
+          const csrfToken = this.getCsrfToken();
+  
+          // Prépare et envoie les données du formulaire via fetch
+          const response = await this.sendEmail(csrfToken);
+  
+          // Si la réponse est OK, affiche un message de succès et réinitialise le formulaire
+          if (response.ok) {
+            const result = await response.json();
+            alert(result.message);
+            this.resetForm();
+          } else {
+            throw new Error("Erreur lors de l'envoi du message");
+          }
+          
+        } catch (error) {
+          // Gère les erreurs en affichant un message d'erreur
+          alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
+        }
+      },
+  
+      // Récupère le token CSRF depuis la page
+      getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      },
+  
+      // Envoie les données du formulaire via une requête POST
+      async sendEmail(csrfToken) {
+        return fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken
+          },
+          body: JSON.stringify({
+            name: this.name,
+            surname: this.surname,
+            email: this.email,
+            message: this.message
+          })
+        });
+      },
+  
+      // Réinitialise les champs du formulaire après un envoi réussi
+      resetForm() {
+        this.name = "";
+        this.surname = "";
+        this.email = "";
+        this.message = "";
       }
-
-      const result = await response.json();
-      alert(result.message);
-
-      // Réinitialiser les champs du formulaire après l'envoi réussi
-      this.name = "";
-      this.surname = "";
-      this.email = "";
-      this.message = "";
-      
-    } catch (error) {
-      alert("Une erreur est survenue lors de l'envoi du message : " + error.message);
     }
-  }
-}
-
   };
   </script>
+  
   
   
   <style scoped>

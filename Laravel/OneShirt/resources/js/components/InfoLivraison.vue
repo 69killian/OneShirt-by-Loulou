@@ -1,23 +1,31 @@
 <template>
-    <div class="info-livraison">
-      <div class="info-item">
-        <p>📦Livraison suivie offerte</p>
-        <p>Livraison en France entière</p>
-      </div>
-      <div class="info-item">
-        <p>📞Service client français 6/7</p>
-        <p>Une question ? contactez-nous</p>
-      </div>
-      <div class="info-item">
-        <p>🔥100% satisfait ou remboursé</p>
-        <p>Vous avez 14j pour vous décider</p>
-      </div>
-      <div class="info-item">
-        <p>🔐Paiement 100% sécurisé</p>
-        <p>MasterCard / Visa</p>
-      </div>
+  <div class="info-livraison">
+    <!-- Bloc d'information pour la livraison suivie -->
+    <div class="info-item">
+      <p>📦Livraison suivie offerte</p>
+      <p>Livraison en France entière</p>
     </div>
-  </template>
+
+    <!-- Bloc d'information pour le service client -->
+    <div class="info-item">
+      <p>📞Service client français 6/7</p>
+      <p>Une question ? contactez-nous</p>
+    </div>
+
+    <!-- Bloc d'information pour la satisfaction client -->
+    <div class="info-item">
+      <p>🔥100% satisfait ou remboursé</p>
+      <p>Vous avez 14j pour vous décider</p>
+    </div>
+
+    <!-- Bloc d'information pour la sécurité du paiement -->
+    <div class="info-item">
+      <p>🔐Paiement 100% sécurisé</p>
+      <p>MasterCard / Visa</p>
+    </div>
+  </div>
+</template>
+
   
   <script>
   export default {

@@ -1,7 +1,12 @@
 <template>
+  <!-- Section des commandes -->
   <section id="orders" class="orders">
+    <!-- Titre de la section des commandes -->
     <h2>Commandes</h2>
+    
+    <!-- Tableau des commandes -->
     <table>
+      <!-- En-tête du tableau avec les intitulés des colonnes -->
       <thead>
         <tr>
           <th>ID Commande</th>
@@ -13,17 +18,36 @@
           <th>État</th>
         </tr>
       </thead>
+      <!-- Corps du tableau où chaque commande est affichée -->
       <tbody>
+        <!-- Boucle qui affiche chaque commande -->
         <tr v-for="order in orders" :key="order.id">
+          <!-- ID de la commande -->
           <td>{{ order.id }}</td>
+          
+          <!-- Nom du client correspondant à l'ID utilisateur de la commande -->
           <td>{{ getUserName(order.user_id) }}</td>
+          
+          <!-- Montant total de la commande -->
           <td>{{ order.total_amount }} €</td>
+          
+          <!-- Date de création de la commande formatée en date locale -->
           <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
+          
+          <!-- Adresse de livraison de la commande -->
           <td>{{ order.shipping_address }}</td>
+          
+          <!-- Méthode de paiement choisie pour la commande -->
           <td>{{ order.payment_method }}</td>
+          
+          <!-- Bouton affichant l'état du paiement de la commande -->
           <td>
+            <!-- Bouton dont la classe change selon l'état du paiement (payé ou en attente) -->
             <button :class="['status', order.payment_status === 'paid' ? 'paid' : 'pending']">
+              <!-- Icône indiquant l'état du paiement -->
               <i :class="order.payment_status === 'paid' ? 'fas fa-check-circle' : 'fas fa-hourglass-half'"></i>
+              
+              <!-- Texte affiché pour l'état du paiement -->
               {{ order.payment_status === 'paid' ? 'Payée' : 'En attente' }}
             </button>
           </td>
@@ -32,6 +56,7 @@
     </table>
   </section>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -72,12 +97,12 @@ export default {
       }
     },
     calculateDiscountedPrice(originalPrice, promotionId) {
-    console.log("Promotion ID:", promotionId); // Vérifier si promotion_id est bien passé
+    console.log("Promotion ID:", promotionId); // Vérifie si promotion_id est bien passé
     const promotion = this.promotions.find(promo => promo.id === promotionId);
-    console.log("Promotion trouvée:", promotion); // Afficher la promotion trouvée
+    console.log("Promotion trouvée:", promotion); // Affiche la promotion trouvée
     if (promotion && promotion.discount_percentage) {
       const discount = (originalPrice * promotion.discount_percentage) / 100;
-      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifier le calcul du prix réduit
+      console.log("Calcul du prix réduit:", originalPrice - discount);  // Vérifie le calcul du prix réduit
       return (originalPrice - discount).toFixed(2); // Retourne le prix réduit
     }
     return originalPrice; // Retourne le prix original si aucune promotion
@@ -86,7 +111,7 @@ export default {
       try {
         const response = await axios.get('/promotions');
         this.promotions = response.data;
-        console.log("Promotions:", this.promotions);  // Vérifier les promotions récupérées
+        console.log("Promotions:", this.promotions);  // Vérifie les promotions récupérées
       } catch (error) {
         console.error('Erreur lors de la récupération des promotions:', error);
       }

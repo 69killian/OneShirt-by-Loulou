@@ -1,22 +1,40 @@
 <template>
+    <!-- Conteneur principal de la page de connexion -->
     <div class="main-contact">
+      
+      <!-- Titre principal -->
       <h1>Dashboard Connexion</h1>
       
+      <!-- Formulaire de connexion -->
       <form @submit.prevent="handleSubmit">
+        
+        <!-- Champ pour le nom d'utilisateur ou l'email -->
         <label for="name">Nom d'utilisateur ou Mail</label>
         <input type="text" id="name" name="name" v-model="name" required placeholder="Nom">
     
+        <!-- Champ pour le mot de passe -->
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" v-model="password" required placeholder="Mot de passe">
         
-        <router-link to="/recuperation" style="margin-bottom: 10px; text-decoration: none;">J'ai oublié mon mot de passe</router-link>
+        <!-- Lien vers la page de récupération du mot de passe -->
+        <router-link to="/recuperation" style="margin-bottom: 10px; text-decoration: none;">
+          J'ai oublié mon mot de passe
+        </router-link>
+        
+        <!-- Bouton pour soumettre le formulaire -->
         <button type="submit">Connexion</button>
-        <router-link to="/inscription" style="margin-top: 10px; text-decoration: none;">Nouveau dans l'équipage ?</router-link>
+        
+        <!-- Lien vers la page d'inscription pour les nouveaux utilisateurs -->
+        <router-link to="/inscription" style="margin-top: 10px; text-decoration: none;">
+          Nouveau dans l'équipage ?
+        </router-link>
       </form>
     
+      <!-- Affichage d'un message d'erreur si présent -->
       <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
     </div>
   </template>
+  
   
   <script>
   import axios from 'axios';

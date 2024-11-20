@@ -1,61 +1,68 @@
 <template>
-  <Header/>
+  <!-- Header de la page -->
+  <Header />
+
   <div>
+    <!-- Affichage du chargement si l'article n'est pas encore récupéré -->
+    <div v-if="!article" class="loading">Chargement...</div>
 
-
-    <div v-if="!article">Chargement...</div>
-
-    <!-- Main Picture Blog -->
-    <div v-if="article">
-  <div class="main-img-blog">
-    <img :src="'data:image/png;base64,' + article.image" alt="main-image" />
-  </div>
-  <div class="outer-container">
-    <div class="article-title">
-      <h1>{{ article.title || 'Titre non disponible' }}</h1>
-    </div>
-    <div class="content-section">
-      <div class="article-content">
-        <p>{{ article.content || 'Contenu non disponible' }}</p>
+    <!-- Contenu principal de l'article -->
+    <div v-else>
+      <div class="main-img-blog">
+        <img :src="'data:image/png;base64,' + article.image" alt="main-image" />
       </div>
+
+      <div class="outer-container">
+        <!-- Titre de l'article -->
+        <div class="article-title">
+          <h1>{{ article.title || 'Titre non disponible' }}</h1>
+        </div>
+
+        <!-- Contenu de l'article -->
+        <div class="content-section">
+          <div class="article-content">
+            <p>{{ article.content || 'Contenu non disponible' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composant pour les commentaires liés à l'article -->
+      <ArticleCommentComponent :articleSlug="article.slug" />
     </div>
-  </div>
-  <ArticleCommentComponent :articleSlug="article.slug" />
-</div>
 
-
-
-
-    
-
-        <!-- Blog Articles -->
-    <section class="Blogs">
+    <!-- Section des autres articles de blog -->
+    <section class="blogs">
       <div class="blog-with-title">
-        <div class="titre-section-blog">
-          Articles de Blog
-        </div>
-        <div class="subheading-section-blog">
-          Vous allez aimer
-        </div>
+        <div class="titre-section-blog">Articles de Blog</div>
+        <div class="subheading-section-blog">Vous allez aimer</div>
 
-        <!-- Itération sur les autres articles -->
-              <router-link 
-        v-for="(blog, index) in otherArticles.slice(0, 3)" 
-        :key="index" 
-        :to="`/article/${blog.slug}`" 
-        class="blog-card animate"
-        @click.native.prevent="navigateToArticle(blog.slug)" 
-      >
-        <img class="img-blog" :src="'data:image/png;base64,' + blog.image" alt="" />
-        <p class="blog-title-card">{{ blog.title }}</p>
-        <p class="blog-description">{{ blog.content.substring(0, 100) + '...' }}</p>
-      </router-link>
+        <!-- Itération sur les articles similaires -->
+        <router-link
+          v-for="(blog, index) in otherArticles.slice(0, 3)"
+          :key="blog.slug"
+          :to="`/article/${blog.slug}`"
+          class="blog-card animate"
+        >
+          <img
+            class="img-blog"
+            :src="'data:image/png;base64,' + blog.image"
+            alt="Image article"
+          />
+          <p class="blog-title-card">{{ blog.title }}</p>
+          <p class="blog-description">
+            {{ blog.content.substring(0, 100) + '...' }}
+          </p>
+        </router-link>
       </div>
     </section>
   </div>
-  <Newsletter/>
-  <Footer/>
+
+  <!-- Composants Newsletter et Footer -->
+  <Newsletter />
+  <Footer />
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -65,50 +72,73 @@ import Footer from '@/components/Footer.vue';
 import ArticleCommentComponent from './ArticleCommentComponent.vue';
 
 export default {
+  name: 'ArticleContent',
+
   components: {
+    Header,
+    Newsletter,
     Footer,
     ArticleCommentComponent,
-    Newsletter,
-    Header,
   },
-  name: 'ArticleContent',
+
   data() {
     return {
-      article: null,
-      otherArticles: [], // Tableau pour stocker les autres articles
+      article: null, // Données de l'article actuel
+      otherArticles: [], // Liste des autres articles
     };
   },
+
   mounted() {
     this.fetchArticle();
-    this.fetchOtherArticles(); // Appel de la méthode pour récupérer les autres articles
   },
+
   methods: {
+    /**
+     * Récupère les données de l'article en fonction du slug passé dans la route.
+     */
     async fetchArticle() {
-      const slug = this.$route.params.slug; // Récupère le slug de l'article depuis la route
+      const slug = this.$route.params.slug;
+
       try {
         const response = await axios.get(`/api/blog-articles/${slug}`);
-        this.article = response.data; // Stocke l'article récupéré dans la variable 'article'
+        this.article = response.data;
+
+        // Récupération des autres articles une fois l'article courant chargé
+        this.fetchOtherArticles();
       } catch (error) {
-        this.article = null; 
+        console.error("Erreur lors de la récupération de l'article:", error);
+        this.article = null;
       }
     },
+
+    /**
+     * Récupère tous les articles sauf l'article courant.
+     */
     async fetchOtherArticles() {
       try {
-        const response = await axios.get('/api/blog-articles'); // Récupère tous les articles de blog
-        this.otherArticles = response.data.filter(a => a.slug !== this.article.slug); // Filtre l'article courant
+        const response = await axios.get('/api/blog-articles');
+        this.otherArticles = response.data.filter(
+          (a) => this.article && a.slug !== this.article.slug
+        );
       } catch (error) {
-        window.location.reload()
+        console.error("Erreur lors de la récupération des autres articles:", error);
       }
     },
+
+    /**
+     * Navigue vers un autre article et recharge la page.
+     * @param {String} slug - Slug de l'article cible
+     */
     navigateToArticle(slug) {
-    this.$router.push(`/article/${slug}`); // Navigation vers l'article
-    setTimeout(() => {
-      window.location.reload(); // Recharge la page après un délai
-    }, 100); // Délai pour permettre à Vue de terminer la navigation
-  }
+      this.$router.push(`/article/${slug}`).then(() => {
+        // Recharge la page après la navigation pour éviter les incohérences
+        window.location.reload();
+      });
+    },
   },
-}
+};
 </script>
+
 
 
 

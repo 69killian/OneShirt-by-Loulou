@@ -1,33 +1,40 @@
 <template>
-    <!--Cette page ne s'ouvre que si un mail a été envoyé à l'utilisateur-->
-    <div class="main-contact">
-      <h1>Nouveau Mot de Passe</h1>
-  
-      <form @submit.prevent="handlePasswordUpdate"> 
-        <label for="new-password">Nouveau mot de passe</label>
-        <input 
-          type="password" 
-          id="new-password" 
-          name="new-password" 
-          v-model="newPassword" 
-          required 
-          placeholder="Nouveau mot de passe"
-        />
-  
-        <label for="confirm-password">Confirme ton mot de passe</label>
-        <input 
-          type="password" 
-          id="confirm-password" 
-          name="confirm-password" 
-          v-model="confirmPassword" 
-          required 
-          placeholder="Confirme le mot de passe"
-        />
-  
-        <button type="submit">Mettre à jour le mot de passe</button>
-      </form>
-    </div>
-  </template>
+  <!-- Cette page ne s'ouvre que si un mail a été envoyé à l'utilisateur -->
+  <div class="main-contact">
+    <!-- Titre principal de la page -->
+    <h1>Nouveau Mot de Passe</h1>
+
+    <!-- Formulaire de mise à jour du mot de passe, l'action est gérée par 'handlePasswordUpdate' -->
+    <form @submit.prevent="handlePasswordUpdate">
+      
+      <!-- Champ pour le nouveau mot de passe -->
+      <label for="new-password">Nouveau mot de passe</label>
+      <input 
+        type="password" 
+        id="new-password"  
+        name="new-password" 
+        v-model="newPassword"  
+        required 
+        placeholder="Nouveau mot de passe"  
+      />
+
+      <!-- Champ pour confirmer le mot de passe -->
+      <label for="confirm-password">Confirme ton mot de passe</label>
+      <input 
+        type="password"  
+        id="confirm-password"  
+        name="confirm-password" 
+        v-model="confirmPassword"  
+        required  
+        placeholder="Confirme le mot de passe"  
+      />
+
+      <!-- Bouton pour soumettre le formulaire et mettre à jour le mot de passe -->
+      <button type="submit">Mettre à jour le mot de passe</button>
+    </form>
+  </div>
+</template>
+
   
   <script>
   export default {

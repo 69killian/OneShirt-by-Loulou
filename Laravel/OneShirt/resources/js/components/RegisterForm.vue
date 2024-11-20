@@ -1,43 +1,62 @@
 <template>
+  <!-- Section principale du formulaire d'inscription -->
   <div class="main-contact">
+    
+    <!-- Titre principal de la section -->
     <h1>Inscris-toi</h1>
+
+    <!-- Description sous le titre -->
     <p class="description">Et rejoint l'équipage !</p>
 
+    <!-- Formulaire d'inscription avec un événement 'submit' qui appelle la méthode 'submitForm' -->
     <form @submit.prevent="submitForm">
+      
+      <!-- Champ pour le nom d'utilisateur -->
       <label for="username">Nom d'utilisateur</label>
       <input type="text" id="username" v-model="formData.username" required placeholder="Nom d'utilisateur">
       
+      <!-- Champ pour le prénom -->
       <label for="firstname">Prénom</label>
       <input type="text" id="firstname" v-model="formData.firstname" required placeholder="Prénom">
       
+      <!-- Champ pour le nom -->
       <label for="lastname">Nom</label>
       <input type="text" id="lastname" v-model="formData.lastname" required placeholder="Nom">
       
+      <!-- Champ pour l'email -->
       <label for="email">Email</label>
       <input type="email" id="email" v-model="formData.email" required placeholder="Email">
       
+      <!-- Champ pour le numéro de téléphone -->
       <label for="phone">Numéro de téléphone</label>
       <input type="tel" id="phone" v-model="formData.phone" required placeholder="Numéro de téléphone">
       
+      <!-- Champ pour la date de naissance -->
       <label for="birthdate">Date de naissance</label>
       <input type="date" id="birthdate" v-model="formData.birthdate" required>
       
+      <!-- Champ pour l'adresse -->
       <label for="address">Adresse</label>
       <input type="text" id="address" v-model="formData.address" required placeholder="Adresse">
       
+      <!-- Champ pour le code postal -->
       <label for="postalcode">Adresse postale</label>
       <input type="text" id="postalcode" v-model="formData.postalcode" required placeholder="Adresse postale">
       
+      <!-- Champ pour le mot de passe -->
       <label for="password">Mot de passe</label>
-    <input type="password" id="password" v-model="formData.password" required placeholder="Mot de passe">
+      <input type="password" id="password" v-model="formData.password" required placeholder="Mot de passe">
 
-    <label for="password_confirmation">Confirmer le mot de passe</label>
-    <input type="password" id="password_confirmation" v-model="formData.password_confirmation" required placeholder="Confirmer le mot de passe">
+      <!-- Champ pour la confirmation du mot de passe -->
+      <label for="password_confirmation">Confirmer le mot de passe</label>
+      <input type="password" id="password_confirmation" v-model="formData.password_confirmation" required placeholder="Confirmer le mot de passe">
 
-    <button type="submit">Inscription</button>
+      <!-- Bouton d'envoi du formulaire -->
+      <button type="submit">Inscription</button>
     </form>
   </div>
 </template>
+
 
 <script>
 export default {

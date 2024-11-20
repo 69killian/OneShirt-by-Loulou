@@ -1,16 +1,19 @@
 <template>
   <section class="banner-wrapper">
-    <div 
-      :class="['banner', 'banner' + (index + 1)]" 
-      v-for="(banner, index) in banners" 
+    <!-- Boucle sur chaque bannière et affiche-les -->
+    <div
+      v-for="(banner, index) in banners"
       :key="index"
-      @click="redirectToFigurines(index)"
-      @mouseover="pauseAnimation; zoomIn($event)"
-      @mouseleave="resumeAnimation; zoomOut($event)"
+      :class="['banner', `banner${index + 1}`]" 
+      @click="redirectToFigurines(index)" 
+      @mouseover="handleMouseOver" 
+      @mouseleave="handleMouseLeave"
     >
+      <!-- Vous pouvez ajouter des contenus à l'intérieur des divs, comme des images ou des textes -->
     </div>
   </section>
 </template>
+
 
 <script>
 export default {
@@ -26,51 +29,74 @@ export default {
     };
   },
   mounted() {
-    this.startTopBannerAnimation();
+    this.demarrerAnimationBanniere();
   },
   methods: {
-    startTopBannerAnimation() {
-      const topBanners = this.$el.querySelectorAll('.banner');
-      const delay = 3000;
-      const animationDuration = 1000;
+    // Démarre l'animation des bannières
+    demarrerAnimationBanniere() {
+      const bannières = this.$el.querySelectorAll('.banner');
+      const délai = 3000;
+      const duréeAnimation = 1000;
 
-      const animate = () => {
-        topBanners.forEach((banner, i) => {
-          banner.style.transition = `transform ${animationDuration}ms ease-in-out`;
-          banner.style.transform = `translateX(${(i - this.currentBannerIndex) * 100}%)`;
+      const animer = () => {
+        bannières.forEach((bannière, i) => {
+          bannière.style.transition = `transform ${duréeAnimation}ms ease-in-out`;
+          bannière.style.transform = `translateX(${(i - this.currentBannerIndex) * 100}%)`;
         });
 
-        this.currentBannerIndex = (this.currentBannerIndex + 1) % topBanners.length;
+        this.currentBannerIndex = (this.currentBannerIndex + 1) % bannières.length;
       };
 
-      animate();
-      this.animationInterval = setInterval(animate, delay);
+      animer();
+      this.animationInterval = setInterval(animer, délai);
     },
+
+    // Arrête l'animation au survol
     pauseAnimation() {
-      clearInterval(this.animationInterval); // Arrête le défilement
+      clearInterval(this.animationInterval);
     },
+
+    // Relance l'animation après le survol
     resumeAnimation() {
-      this.startTopBannerAnimation(); // Relance le défilement
+      this.demarrerAnimationBanniere();
     },
+
+    // Gère l'événement du survol (zoom avant)
+    handleMouseOver(event) {
+      this.pauseAnimation();
+      this.zoomIn(event);
+    },
+
+    // Gère l'événement de sortie du survol (zoom arrière)
+    handleMouseLeave(event) {
+      this.resumeAnimation();
+      this.zoomOut(event);
+    },
+
+    // Redirige vers les figurines ou vêtements
     redirectToFigurines(index) {
-      // Vérifie si l'index est 2 pour rediriger vers /vetements
       if (index === 2) {
         this.$router.push('/vetements');
       } else {
         this.$router.push('/figurines');
       }
     },
+
+    // Zoom avant
     zoomIn(event) {
-      event.target.style.transform = 'scale(1.2)'; // Zoom in
+      event.target.style.transform = 'scale(1.2)'; // Zoom avant
       event.target.style.transition = 'transform 0.5s ease'; // Transition
     },
+
+    // Zoom arrière
     zoomOut(event) {
-      event.target.style.transform = 'scale(1)'; // Zoom out
+      event.target.style.transform = 'scale(1)'; // Zoom arrière
       event.target.style.transition = 'transform 0.5s ease'; // Transition
     },
   },
 };
 </script>
+
 
 <style scoped>
 /* Style général */

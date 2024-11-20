@@ -1,36 +1,58 @@
 <template>
+  <!-- Section principale contenant tous les produits -->
   <section class="Products">
+    
+    <!-- Titre principal de la section des produits -->
     <div class="title-products">
       Embarquez pour une aventure épique avec la boutique OneShirt !
     </div>
+
+    <!-- Sous-titre expliquant l'objectif de la boutique -->
     <div class="subheading-products">
       Accompagnez l’équipage du chapeau de paille à retrouver le mythique trésor que tous les pirates recherchent : le One Piece !
     </div>
+
+    <!-- Boucle pour afficher chaque produit dans le tableau 'limitedProducts' -->
     <div v-for="(product, index) in limitedProducts" :key="product.id" class="product-item">
+      
+      <!-- Lien vers la page de détail du produit -->
       <router-link :to="`/produit/${product.id}`" class="product-link" style="color: black; text-decoration: none;">
+        
+        <!-- Affichage de l'image du produit, récupération de l'image en base64 -->
         <img :src="product.images[0]?.image_base64" alt="Product Images">
+        
+        <!-- Affichage du nom du produit -->
         <p>{{ product.name }}</p>
+        
+        <!-- Affichage du prix si une promotion existe -->
         <span v-if="product.promotion_id" style="display: flex; gap: 5px;">
             <!-- Prix original barré -->
             <p class="original-price" style="text-decoration: line-through;">
               {{ product.price }}€
             </p>
-            <!-- Prix réduit -->
+            <!-- Prix réduit (appliqué via promotion) -->
             <p class="discounted-price" style="color: blueviolet;">
               {{ calculateDiscountedPrice(product.price, product.promotion_id) }}€
             </p>
           </span>
-          <p v-else>{{ product.price }}€ {{ product.promotion_id }}</p>
+          
+        <!-- Affichage du prix si pas de promotion -->
+        <p v-else>{{ product.price }}€ {{ product.promotion_id }}</p>
       </router-link>
     </div>
+
+    <!-- Ligne de séparation décorative -->
     <div style="margin-top: 20px; color: white;">
       ____________________________________________________________
     </div>
+
+    <!-- Sous-titre supplémentaire avec une description plus détaillée de la boutique -->
     <div class="subheading-products" style="margin-top: 30px;">
       La boutique OneShirt propose un excellent choix de figurines One Piece, de T-Shirts et objets de collection. <br>Que vous soyez un fan du manga ou à la recherche d’un cadeau unique, ces figurines ne manqueront pas de vous étonner ! Découvrez-les maintenant !
     </div>
   </section>
 </template>
+
 
 <script>
 export default {
